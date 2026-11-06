@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /check.html
+Disallow: /milan/
+Disallow: /amsterdam/
+Disallow: /barcelona/
+Disallow: /prague/
+Disallow: /dublin/
+Sitemap: https://pubgolf.eu/sitemap.xml
