@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Databasecheck</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; padding: 20px 16px 40px; background: #0E3B2C; color: #F7F5F0; font: 16px/1.45 -apple-system, system-ui, Arial, sans-serif; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  p { margin: 0 0 16px; color: #C9D8D1; }
+  ol { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  li { background: rgba(0,0,0,.25); border-radius: 10px; padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start; }
+  .s { flex: 0 0 auto; font-weight: 800; min-width: 64px; }
+  .ok { color: #7BE0A6; } .bad { color: #FF9A92; } .wait { color: #F2D16B; }
+  small { display: block; color: #A9BDB4; }
+  #sum { margin-top: 18px; font-size: 20px; font-weight: 800; }
+</style>
+</head>
+<body>
+<h1>Databasecheck</h1>
+<p>Controleert of de Firebase-regels werken zoals bedoeld. Elke regel hoort op <b class="ok">OK</b> te staan. Maak op de beheerpagina een spelcode om mee te testen en open deze pagina met <b>check.html?code=JOUWCODE</b>. De check maakt een testscore en een testfoto aan en wist die meteen weer.</p>
+<ol id="list"></ol>
+<div id="sum" class="wait">Bezig…</div>
+<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
+<script>
+(async function() {
+  var q = /[?&]code=([^&#]*)/.exec(location.search), CODE = q ? decodeURIComponent(q[1]).replace(/[^A-Za-z0-9-]/g, '').toUpperCase() : '';
+  var GAME = 'games/' + CODE;
+  var list = document.getElementById('list'), sum = document.getElementById('sum');
+  if (!CODE) {
+    // no code in the link: ask for one
+    sum.className = 'wait'; sum.innerHTML = '<form id="cf" style="display:flex;gap:8px;flex-wrap:wrap;font-size:16px;font-weight:600"><input id="cc" placeholder="Spelcode, bijv. MIL-K7PQ-M2XD" style="flex:1 1 220px;font:600 18px/1.2 system-ui;padding:12px;border-radius:10px;border:0;text-transform:uppercase" autocapitalize="characters"><button style="font:800 16px system-ui;padding:12px 20px;border-radius:999px;border:0;background:#F2D16B;color:#13241C">Check starten</button></form><small style="margin-top:8px">Een actieve spelcode staat op de beheerpagina (admin.html) bij "Alle spelcodes".</small>';
+    document.getElementById('cf').addEventListener('submit', function(e) { e.preventDefault(); var v = document.getElementById('cc').value.trim(); if (v) location.search = '?code=' + encodeURIComponent(v); });
+    return;
+  }
+  if (!window.PC_FIREBASE) { sum.textContent = 'Geen Firebase-config gevonden.'; sum.className = 'bad'; return; }
+  firebase.initializeApp(window.PC_FIREBASE);
+  if (window.PC_FIREBASE.appCheckKey && firebase.appCheck) { try { firebase.appCheck().activate(window.PC_FIREBASE.appCheckKey, true); } catch (e) {} }
+  var db = firebase.firestore();
+  var id = 'rulecheck-' + Date.now().toString(36), now = Date.now();
+  function timeout(p) { return Promise.race([p, new Promise(function(_, r) { setTimeout(function() { r({ code: 'timeout' }); }, 12000); })]); }
+  // expect: true = must be allowed, false = must be refused
+  var tests = [
+    ['Scores van het spel lezen', true, function() { return db.collection(GAME + '/scores').get(); }],
+    ['Spelgegevens lezen (teams, namen)', true, function() { return db.collection(GAME + '/kv').get(); }],
+    ['Score voor team 3 opslaan', true, function() { return db.doc(GAME + '/scores/' + id).set({ id: id, at: now, type: 'manual', deltas: { '3': 0 }, reason: 'databasecheck' }); }],
+    ['Die testscore weer wissen', true, function() { return db.doc(GAME + '/scores/' + id).delete(); }],
+    ['Score voor een team 7 (bestaat niet)', false, function() { return db.doc(GAME + '/scores/' + id + 'b').set({ id: id + 'b', at: now, type: 'manual', deltas: { '7': 1 } }); }],
+    ['Score met een onbekend veld', false, function() { return db.doc(GAME + '/scores/' + id + 'c').set({ id: id + 'c', at: now, type: 'manual', deltas: { '1': 1 }, hack: true }); }],
+    ['Onbekende spelgegevens opslaan', false, function() { return db.doc(GAME + '/kv/iets').set({ v: 1, at: now }); }],
+    ['Foto met vervaldatum opslaan', true, function() { return db.doc(GAME + '/photos/' + id).set({ id: id, at: now, url: 'data:image/jpeg;base64,AAAA', caption: 'databasecheck', team: '', kind: 'vrij', expireAt: new Date(now + 7 * 864e5) }); }],
+    ['Die testfoto weer wissen', true, function() { return db.doc(GAME + '/photos/' + id).delete(); }],
+    ['Foto zonder vervaldatum', false, function() { return db.doc(GAME + '/photos/' + id + 'd').set({ id: id + 'd', at: now, url: 'data:image/jpeg;base64,AAAA' }); }],
+    ['Foto die langer dan 7 dagen blijft', false, function() { return db.doc(GAME + '/photos/' + id + 'e').set({ id: id + 'e', at: now, url: 'data:image/jpeg;base64,AAAA', expireAt: new Date(now + 20 * 864e5) }); }],
+    ['Foto in een ander formaat (PNG)', false, function() { return db.doc(GAME + '/photos/' + id).set({ id: id, at: now, url: 'data:image/png;base64,AAAA', expireAt: new Date(now + 7 * 864e5) }); }],
+    ['Iets opslaan buiten het spel', false, function() { return db.doc('test/' + id).set({ x: 1 }); }],
+    ['Gegevens van je eigen spel lezen (spelers, datum)', true, function() { return db.doc(GAME).get(); }],
+    ['Boekingen (klantgegevens) opvragen', false, function() { return db.collection('bookings').get(); }],
+    ['Alle spellen opvragen', false, function() { return db.collection('games').get(); }],
+    ['Een spel met een onbekende code lezen', false, function() { return db.collection('games/bestaat-niet/scores').get(); }],
+    ['Het spel zelf aanpassen', false, function() { return db.doc(GAME).set({ active: true }); }],
+    ['Stadsinhoud van dit spel lezen (route, quiz)', true, function() { return db.doc(GAME + '/kv/pack').get().then(function(d) { if (!d.exists) throw { code: 'stadsinhoud ontbreekt: druk op de beheerpagina op Bijwerken in actieve spellen' }; }); }],
+    ['Stadsinhoud van dit spel aanpassen', false, function() { return db.doc(GAME + '/kv/pack').set({ json: '{}', at: now }); }],
+    ['Stadsinhoud van dit spel wissen', false, function() { return db.doc(GAME + '/kv/pack').delete(); }],
+    ['Alle stadsinhoud opvragen', false, function() { return db.collection('content').get(); }],
+    ['Stadsinhoud van Amsterdam lezen zonder code', false, function() { return db.doc('content/amsterdam').get(); }],
+    ['De oude testcode (die altijd werkte)', false, function() { return db.collection('games/milan-2026-814ae6c442/scores').get(); }],
+    ['Een verzonnen code', false, function() { return db.doc('games/AMS-ABCD-EFGH/kv/pack').get(); }]
+  ];
+  var good = 0;
+  for (var i = 0; i < tests.length; i++) {
+    var t = tests[i], li = document.createElement('li');
+    li.innerHTML = '<span class="s wait">…</span><span>' + t[0] + '<small>' + (t[1] ? 'Moet lukken' : 'Moet geweigerd worden') + '</small></span>';
+    list.appendChild(li);
+    var allowed, why = '';
+    try { await timeout(t[2]()); allowed = true; } catch (e) { allowed = false; why = e && e.code || String(e); }
+    var pass = t[1] ? allowed : (!allowed && why === 'permission-denied');
+    if (pass) good++;
+    var s = li.querySelector('.s'); s.textContent = pass ? 'OK' : 'FOUT'; s.className = 's ' + (pass ? 'ok' : 'bad');
+    if (!pass) li.querySelector('small').textContent += ' · ' + (allowed ? 'werd toegestaan' : 'melding: ' + why);
+  }
+  try { await db.doc(GAME + '/scores/' + id).delete(); await db.doc(GAME + '/photos/' + id).delete(); } catch (e) {}
+  sum.textContent = good === tests.length ? 'Alles in orde: ' + good + ' van ' + tests.length + ' OK' : (tests.length - good) + ' van ' + tests.length + ' niet in orde. Stuur een screenshot.';
+  sum.className = good === tests.length ? 'ok' : 'bad';
+})();
+</script>
+</body>
+</html>

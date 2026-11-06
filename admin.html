@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Spelcodes beheren</title>
+<style>
+  :root { color-scheme: dark; --paper: #F7F5F0; --muted: #A9BDB4; --red: #B5121B; --gold: #F2D16B; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px 16px 48px; background: #0E3B2C; color: var(--paper); font: 16px/1.45 -apple-system, system-ui, Arial, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  h1 { font-size: 28px; margin: 0; }
+  h2 { font-size: 19px; margin: 0 0 10px; }
+  p { margin: 0; color: var(--muted); }
+  .card { background: rgba(0,0,0,.25); border: 1px solid rgba(247,245,240,.18); border-radius: 12px; padding: 16px; }
+  button { font: 700 15px/1 inherit; font-family: inherit; color: #fff; background: var(--red); border: 0; border-radius: 999px; padding: 12px 18px; min-height: 44px; cursor: pointer; }
+  button.alt { background: transparent; border: 2px solid rgba(247,245,240,.6); color: var(--paper); }
+  button:disabled { opacity: .5; cursor: default; }
+  label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+  input, select { font: 16px inherit; font-family: inherit; color: #13241C; background: var(--paper); border: 0; border-radius: 8px; padding: 10px 12px; min-height: 44px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; align-items: end; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .msg { min-height: 1.4em; color: var(--gold); }
+  .new { font: 800 26px/1.1 ui-monospace, Menlo, monospace; letter-spacing: .06em; color: var(--gold); word-break: break-all; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 6px; border-bottom: 1px solid rgba(247,245,240,.15); vertical-align: top; }
+  th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+  td.code { font: 700 14px ui-monospace, Menlo, monospace; white-space: nowrap; }
+  .off { opacity: .5; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 800; border-radius: 999px; padding: 3px 8px; background: rgba(123,224,166,.18); color: #7BE0A6; }
+  .tag.no { background: rgba(255,154,146,.18); color: #FF9A92; }
+  td .row button { padding: 8px 12px; min-height: 36px; font-size: 13px; }
+  @media (max-width: 600px) { th:nth-child(3), td:nth-child(3) { display: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Spelcodes</h1>
+  <p>Maak een spelcode per groep. De groep opent de link en speelt in een eigen spel. Alleen de beheerder kan hier inloggen.</p>
+
+  <div class="card" id="login">
+    <div class="row"><button id="signin">Inloggen met Google</button><span class="msg" id="who"></span></div>
+  </div>
+
+  <div class="card" id="maker" hidden>
+    <h2>Nieuwe spelcode</h2>
+    <div class="grid">
+      <label>Stad<select id="city"></select></label>
+      <label>Voor wie (naam, e-mail of telefoon)<input id="label" type="text" maxlength="120" placeholder="Bijv. Lisa · lisa@mail.com"></label>
+      <label>Aantal spelers<select id="players"></select></label>
+      <label>Speeldatum<input id="playdate" type="date"></label>
+      <button id="make">Maak spelcode</button>
+    </div>
+    <div id="made" hidden style="margin-top:14px">
+      <div class="new" id="newcode"></div>
+      <div class="row" style="margin-top:10px"><button class="alt" id="copy">Kopieer link</button><button class="alt" id="wa">Stuur via WhatsApp</button></div>
+    </div>
+    <p class="msg" id="mmsg"></p>
+    <p style="margin-top:8px">De code werkt op de speeldatum en de dag erna (bijvoorbeeld als het regent). Daarna stopt hij. 30 dagen later wist "Opruimen" het hele spel.</p>
+  </div>
+
+  <div class="card" id="contentcard" hidden>
+    <h2>Stadsinhoud</h2>
+    <p>De route, bars, drankjes, quiz en speciale holes staan niet in de website zelf. Ze staan hier in de database en elke spelcode krijgt een eigen kopie die alleen met die code te openen is. Upload na elke nieuwe versie het bestand <b>packs/&lt;stad&gt;.json</b> uit de broncode en druk daarna op "Bijwerken in actieve spellen".</p>
+    <div id="cstatus" style="margin:10px 0"></div>
+    <div class="row"><label class="alt" style="display:inline-flex;flex-direction:row;align-items:center;cursor:pointer;padding:10px 16px;border-radius:999px;border:2px solid currentColor">Upload stadsinhoud (.json)<input type="file" id="packfile" accept="application/json,.json" hidden></label>
+    <button class="alt" id="spread">Bijwerken in actieve spellen</button></div>
+    <p class="msg" id="pmsg"></p>
+  </div>
+
+  <div class="card" id="listcard" hidden>
+    <div class="row" style="justify-content:space-between"><h2>Alle spelcodes</h2><button class="alt" id="reload">Vernieuwen</button></div>
+    <table><thead><tr><th>Code</th><th>Voor wie</th><th>Spelers</th><th>Speeldatum</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+    <p class="msg" id="lmsg"></p>
+  </div>
+
+  <div class="card" id="cleancard" hidden>
+    <h2>Opruimen (privacy)</h2>
+    <p>Wist foto's die ouder zijn dan 7 dagen, en wist spellen helemaal (namen, scores, foto's) zodra de speeldatum 30 dagen voorbij is. De boeking zelf blijft bewaard voor je administratie. Druk hier bijvoorbeeld één keer per week op.</p>
+    <div class="row" style="margin-top:12px"><button id="clean">Opruimen</button><span class="msg" id="cmsg"></span></div>
+  </div>
+</main>
+<script src="firebase-config.js"></script>
+<script>document.write('<script src="cities.js?t=' + Date.now() + '"><\/script>'); // always the newest list of cities, never a cached one</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
+<script>
+(function() {
+  // the cities come from cities.js (cities.json in the source, written by build.py)
+  var CL = window.PC_CITIES || {}, PREFIX = {}, ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  Object.keys(CL).forEach(function(k) { PREFIX[k] = CL[k].prefix; });
+  var SITE = location.origin + location.pathname.replace(/admin\.html$/, '');
+  // every city has its own site; this page lives on the Milan one
+  var SITES = {}, CITYNAME = {};
+  Object.keys(CL).forEach(function(k) { SITES[k] = CL[k].site; CITYNAME[k] = CL[k].nameNl; var o = document.createElement('option'); o.value = k; o.textContent = CL[k].nameNl; $('city').appendChild(o); });
+  function site(city) { return SITES[city] || SITE; }
+  function $(id) { return document.getElementById(id); }
+  function link(code, city) { return site(city) + '?code=' + encodeURIComponent(code); }
+  function rand(n) { var a = new Uint32Array(n), s = ''; crypto.getRandomValues(a); for (var i = 0; i < n; i++) s += ABC[a[i] % ABC.length]; return s; }
+  function newCode(city) { return (PREFIX[city] || 'PUB') + '-' + rand(4) + '-' + rand(4); }
+  function day(t) { if (!t) return '–'; var d = t.toDate ? t.toDate() : (typeof t === 'string' ? new Date(t + 'T12:00:00') : new Date(t)); return d.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }); }
+  function addDays(iso, n) { var d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  function today() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  for (var p = 2; p <= 12; p++) { var o = document.createElement('option'); o.value = p; o.textContent = p + ' spelers' + (p <= 6 ? ' (klein)' : ' (groot)'); if (p === 6) o.selected = true; $('players').appendChild(o); }
+  $('playdate').value = addDays(today(), 7); $('playdate').min = today();
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+  if (!window.PC_FIREBASE) { $('who').textContent = 'Geen Firebase-config gevonden.'; return; }
+  firebase.initializeApp(window.PC_FIREBASE);
+  if (window.PC_FIREBASE.appCheckKey && firebase.appCheck) { try { firebase.appCheck().activate(window.PC_FIREBASE.appCheckKey, true); } catch (e) {} }
+  var auth = firebase.auth(), db = firebase.firestore();
+
+  $('signin').addEventListener('click', function() {
+    if (auth.currentUser) { auth.signOut(); return; }
+    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e) { $('who').textContent = 'Inloggen lukte niet: ' + (e.code || e.message); });
+  });
+  auth.onAuthStateChanged(function(u) {
+    $('signin').textContent = u ? 'Uitloggen' : 'Inloggen met Google';
+    $('who').textContent = u ? 'Ingelogd als ' + u.email : '';
+    $('maker').hidden = $('listcard').hidden = $('cleancard').hidden = $('contentcard').hidden = !u;
+    if (u) { load(); contentStatus(); }
+  });
+
+  async function load() {
+    $('lmsg').textContent = 'Laden…';
+    try {
+      var snap = await db.collection('games').get(), books = {};
+      try { (await db.collection('bookings').get()).docs.forEach(function(d) { books[d.id] = d.data(); }); } catch (e) {}
+      var games = snap.docs.map(function(d) { var g = d.data(); g.code = d.id; if (books[d.id]) g.label = books[d.id].label; return g; });
+      games.sort(function(a, b) { return (b.created ? b.created.toMillis() : 0) - (a.created ? a.created.toMillis() : 0); });
+      $('rows').innerHTML = '';
+      games.forEach(function(g) {
+        var live = g.active === true && (!g.expires || g.expires.toMillis() > Date.now());
+        var tr = document.createElement('tr'); if (!live) tr.className = 'off';
+        tr.innerHTML = '<td class="code">' + esc(g.code) + '<br><span class="tag' + (live ? '' : ' no') + '">' + (live ? 'actief' : (g.active ? 'verlopen' : 'uit')) + '</span></td>'
+          + '<td>' + esc(g.label || '') + '<br><span class="tag">' + esc(CITYNAME[g.city || 'milan'] || g.city) + '</span></td><td>' + (g.players || '–') + '</td><td>' + (g.playDate ? day(g.playDate) : day(g.expires)) + '</td>'
+          + '<td><div class="row"><button class="alt" data-a="copy">Link</button><button class="alt" data-a="check">Check</button><button class="alt" data-a="toggle">' + (g.active ? 'Zet uit' : 'Zet aan') + '</button><button class="alt" data-a="del">Wissen</button></div></td>';
+        tr.addEventListener('click', function(e) { var b = e.target.closest('button'); if (b) act(b, g); });
+        $('rows').appendChild(tr);
+      });
+      $('lmsg').textContent = games.length ? '' : 'Nog geen spelcodes.';
+    } catch (e) {
+      $('lmsg').textContent = e.code === 'permission-denied' ? 'Dit account is geen beheerder.' : 'Laden lukte niet: ' + (e.code || e.message);
+      $('maker').hidden = e.code === 'permission-denied';
+    }
+  }
+  async function act(b, g) {
+    if (b.dataset.a === 'copy') { copy(link(g.code, g.city || 'milan'), b); return; }
+    if (b.dataset.a === 'check') { window.open('check.html?code=' + encodeURIComponent(g.code), '_blank'); return; }
+    if (b.dataset.a === 'toggle') { await db.doc('games/' + g.code).update({ active: !g.active }); load(); return; }
+    if (b.dataset.a === 'del') {
+      if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Zeker?'; return; }
+      b.disabled = true; b.textContent = 'Wissen…';
+      for (var c of ['scores', 'kv', 'photos']) { var s = await db.collection('games/' + g.code + '/' + c).get(); for (var d of s.docs) await d.ref.delete(); }
+      await db.doc('games/' + g.code).delete();
+      load();
+    }
+  }
+  function copy(text, b) {
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function() { var t = b.textContent; b.textContent = 'Gekopieerd'; setTimeout(function() { b.textContent = t; }, 1500); }, function() { prompt('Kopieer deze link:', text); });
+  }
+  // ---------- city content (packs) ----------
+  async function pack(city) { var d = await db.doc('content/' + city).get(); return d.exists ? d.data() : null; }
+  async function contentStatus() {
+    var h = [];
+    for (var c of Object.keys(CITYNAME)) {
+      try { var p = await pack(c); h.push('<div><b>' + esc(CITYNAME[c]) + ':</b> ' + (p ? 'versie van ' + esc(String(p.built || '').replace('T', ' ')) + ' (' + Math.round((p.json || '').length / 1024) + ' kB)' : '<span style="color:#FF9A92">nog niet geüpload</span>') + '</div>'); }
+      catch (e) { h.push('<div><b>' + esc(CITYNAME[c]) + ':</b> ' + esc(e.code || e.message) + '</div>'); }
+    }
+    $('cstatus').innerHTML = h.join('');
+  }
+  async function copyPack(code, p) { await db.doc('games/' + code + '/kv/pack').set({ json: p.json, built: p.built || '', at: Date.now() }); }
+  $('packfile').addEventListener('change', async function() {
+    var f = this.files[0]; this.value = ''; if (!f) return;
+    $('pmsg').textContent = 'Uploaden…';
+    try {
+      var txt = await f.text(), p = JSON.parse(txt);
+      if (!p.city || !CITYNAME[p.city] || !p.cfg || !p.cfg.holes || !p.cfg.holes.length) throw { message: 'Dit is geen stadsinhoud (packs/<stad>.json).' };
+      if (txt.length > 900000) throw { message: 'Bestand is te groot (' + Math.round(txt.length / 1024) + ' kB).' };
+      await db.doc('content/' + p.city).set({ json: txt, built: p.built || '', at: Date.now() });
+      $('pmsg').textContent = CITYNAME[p.city] + ' geüpload (' + p.cfg.holes.length + ' holes). Druk nu op "Bijwerken in actieve spellen".';
+      contentStatus();
+    } catch (e) { $('pmsg').textContent = 'Uploaden lukte niet: ' + (e.code || e.message); }
+  });
+  $('spread').addEventListener('click', async function() {
+    var b = $('spread'); b.disabled = true; $('pmsg').textContent = 'Bezig…';
+    try {
+      var packs = {}, n = 0, miss = [];
+      for (var c of Object.keys(CITYNAME)) packs[c] = await pack(c);
+      var games = (await db.collection('games').get()).docs.map(function(d) { var g = d.data(); g.code = d.id; return g; });
+      for (var g of games) {
+        var live = g.active === true && g.expires && g.expires.toMillis() > Date.now(), p = packs[g.city || 'milan'];
+        if (!live) continue;
+        if (!p) { miss.push(g.code); continue; }
+        await copyPack(g.code, p); n++;
+      }
+      $('pmsg').textContent = 'Klaar: ' + n + ' actieve spel' + (n === 1 ? '' : 'len') + ' bijgewerkt.' + (miss.length ? ' Geen stadsinhoud voor: ' + miss.join(', ') : '');
+    } catch (e) { $('pmsg').textContent = 'Bijwerken lukte niet: ' + (e.code || e.message); }
+    b.disabled = false;
+  });
+  var made = null, madeCity = "milan";
+  $('make').addEventListener('click', async function() {
+    var city = $('city').value, players = +$('players').value, play = $('playdate').value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(play)) { $('mmsg').textContent = 'Kies een speeldatum.'; return; }
+    var last = addDays(play, 1), expires = new Date(addDays(last, 1) + 'T12:00:00'); // usable on the play date and the day after
+    $('make').disabled = true; $('mmsg').textContent = '';
+    try {
+      var cp = await pack(city);
+      if (!cp) { $('mmsg').textContent = 'Upload eerst de stadsinhoud voor ' + CITYNAME[city] + ' (hieronder).'; $('make').disabled = false; return; }
+      var code, tries = 0;
+      do { code = newCode(city); tries++; } while ((await db.doc('games/' + code).get()).exists && tries < 5);
+      await db.doc('games/' + code).set({ active: true, city: city, players: players, playDate: play, lastDate: last, created: firebase.firestore.FieldValue.serverTimestamp(), expires: firebase.firestore.Timestamp.fromDate(expires) });
+      await copyPack(code, cp);
+      await db.doc('bookings/' + code).set({ label: $('label').value.trim(), city: city, players: players, playDate: play, source: 'handmatig', created: firebase.firestore.FieldValue.serverTimestamp() });
+      made = code; madeCity = city; $('newcode').textContent = code; $('made').hidden = false; $('label').value = '';
+      load();
+    } catch (e) { $('mmsg').textContent = 'Maken lukte niet: ' + (e.code || e.message); }
+    $('make').disabled = false;
+  });
+  $('copy').addEventListener('click', function() { if (made) copy(link(made, madeCity), $('copy')); });
+  $('wa').addEventListener('click', function() { if (made) window.open('https://wa.me/?text=' + encodeURIComponent('Jullie pubcrawl staat klaar! Open de link op je telefoon en deel hem met je groep: ' + link(made, madeCity) + ' (spelcode ' + made + '). Routekaart met adressen: ' + site(madeCity) + 'routekaart.html?code=' + encodeURIComponent(made)), '_blank'); });
+  $('reload').addEventListener('click', load);
+  $('clean').addEventListener('click', async function() {
+    var b = $('clean'), now = Date.now(), cutoff = now - 30 * 86400000, photoCut = now - 7 * 86400000, photos = 0, wiped = 0;
+    b.disabled = true; $('cmsg').textContent = 'Bezig…';
+    async function wipe(id) { for (var c of ['scores', 'kv', 'photos']) { var s = await db.collection('games/' + id + '/' + c).get(); for (var d of s.docs) await d.ref.delete(); } }
+    try {
+      var games = (await db.collection('games').get()).docs.map(function(d) { var g = d.data(); g.code = d.id; return g; });
+      for (var g of games) {
+        // when did this game end? last play day, else the expiry, else the date in its schedule
+        var end = g.lastDate ? Date.parse(g.lastDate + 'T23:59:59') : (g.expires && g.expires.toMillis ? g.expires.toMillis() : null);
+        if (!end) { try { var sc = await db.doc('games/' + g.code + '/kv/schedule').get(); if (sc.exists && sc.data().v && sc.data().v.date) end = Date.parse(sc.data().v.date + 'T23:59:59'); } catch (e) {} }
+        if (end && end < cutoff) {
+          await wipe(g.code); await db.doc('games/' + g.code).delete(); wiped++; continue;
+        }
+        var snap = await db.collection('games/' + g.code + '/photos').get();
+        for (var d of snap.docs) { var p = d.data(), exp = p.expireAt && p.expireAt.toMillis ? p.expireAt.toMillis() : null; if ((p.at && p.at < photoCut) || (exp && exp < now)) { await d.ref.delete(); photos++; } }
+      }
+      $('cmsg').textContent = 'Klaar: ' + wiped + ' oude spel' + (wiped === 1 ? '' : 'len') + ' gewist, ' + photos + ' oude foto' + (photos === 1 ? '' : "'s") + ' gewist.';
+      load();
+    } catch (e) { $('cmsg').textContent = 'Opruimen lukte niet: ' + (e.code || e.message); }
+    b.disabled = false;
+  });
+})();
+</script>
+</body>
+</html>
