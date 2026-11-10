@@ -50,11 +50,14 @@
       <label>Voor wie (naam, e-mail of telefoon)<input id="label" type="text" maxlength="120" placeholder="Bijv. Lisa · lisa@mail.com"></label>
       <label>Aantal spelers<select id="players"></select></label>
       <label>Speeldatum<input id="playdate" type="date"></label>
+      <label>E-mail van de groep (voor de bevestiging)<input id="email" type="email" maxlength="200" placeholder="Optioneel"></label>
+      <label>Starttijd<input id="start" type="time" value="18:00"></label>
+      <label>Taal van de mail<select id="mlang"><option value="en">English</option><option value="nl">Nederlands</option></select></label>
       <button id="make">Maak spelcode</button>
     </div>
     <div id="made" hidden style="margin-top:14px">
       <div class="new" id="newcode"></div>
-      <div class="row" style="margin-top:10px"><button class="alt" id="copy">Kopieer link</button><button class="alt" id="wa">Stuur via WhatsApp</button></div>
+      <div class="row" style="margin-top:10px"><button class="alt" id="copy">Kopieer link</button><button class="alt" id="wa">Stuur via WhatsApp</button><button class="alt" id="mail">Stuur per mail</button></div>
     </div>
     <p class="msg" id="mmsg"></p>
     <p style="margin-top:8px">De code werkt op de speeldatum en de dag erna (bijvoorbeeld als het regent). Daarna stopt hij. 30 dagen later wist "Opruimen" het hele spel.</p>
@@ -200,7 +203,7 @@
     } catch (e) { $('pmsg').textContent = 'Bijwerken lukte niet: ' + (e.code || e.message); }
     b.disabled = false;
   });
-  var made = null, madeCity = "milan";
+  var made = null, madeCity = "milan", madeInfo = {};
   $('make').addEventListener('click', async function() {
     var city = $('city').value, players = +$('players').value, play = $('playdate').value;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(play)) { $('mmsg').textContent = 'Kies een speeldatum.'; return; }
@@ -213,14 +216,32 @@
       do { code = newCode(city); tries++; } while ((await db.doc('games/' + code).get()).exists && tries < 5);
       await db.doc('games/' + code).set({ active: true, city: city, players: players, playDate: play, lastDate: last, created: firebase.firestore.FieldValue.serverTimestamp(), expires: firebase.firestore.Timestamp.fromDate(expires) });
       await copyPack(code, cp);
-      await db.doc('bookings/' + code).set({ label: $('label').value.trim(), city: city, players: players, playDate: play, source: 'handmatig', created: firebase.firestore.FieldValue.serverTimestamp() });
-      made = code; madeCity = city; $('newcode').textContent = code; $('made').hidden = false; $('label').value = '';
+      await db.doc('bookings/' + code).set({ label: $('label').value.trim(), email: $('email').value.trim().toLowerCase(), startTime: $('start').value, lang: $('mlang').value, city: city, players: players, playDate: play, source: 'handmatig', created: firebase.firestore.FieldValue.serverTimestamp() });
+      made = code; madeCity = city; madeInfo = { email: $('email').value.trim(), start: $('start').value, lang: $('mlang').value, players: players, play: play }; $('newcode').textContent = code; $('made').hidden = false; $('label').value = '';
       load();
     } catch (e) { $('mmsg').textContent = 'Maken lukte niet: ' + (e.code || e.message); }
     $('make').disabled = false;
   });
   $('copy').addEventListener('click', function() { if (made) copy(link(made, madeCity), $('copy')); });
-  $('wa').addEventListener('click', function() { if (made) window.open('https://wa.me/?text=' + encodeURIComponent('Jullie pubcrawl staat klaar! Open de link op je telefoon en deel hem met je groep: ' + link(made, madeCity) + ' (spelcode ' + made + '). Routekaart met adressen: ' + site(madeCity) + 'routekaart.html?code=' + encodeURIComponent(made)), '_blank'); });
+  $('wa').addEventListener('click', function() { if (made) window.open('https://wa.me/?text=' + encodeURIComponent('Jullie Pubgolf staat klaar! Open de link op je telefoon en deel hem met je groep: ' + link(made, madeCity) + ' (spelcode ' + made + '). Routekaart met adressen: ' + site(madeCity) + 'routekaart.html?code=' + encodeURIComponent(made)), '_blank'); });
+  // confirmation email from your own mailbox (no server needed): opens your mail app with the text filled in
+  $('mail').addEventListener('click', function() {
+    if (!made) return;
+    var en = madeInfo.lang === 'en', i = madeInfo, name = CITYNAME[madeCity] || madeCity, url = link(made, madeCity), map = site(madeCity) + 'routekaart.html?code=' + encodeURIComponent(made);
+    var d = new Date(i.play + 'T12:00:00Z'), date = d.toLocaleDateString(en ? 'en-GB' : 'nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    var subject = en ? 'Your Pubgolf ' + name + ' is ready (' + made + ')' : 'Jullie Pubgolf ' + name + ' staat klaar (' + made + ')';
+    var body = (en ? ['Hi!', '', 'Your Pubgolf ' + name + ' is booked for ' + date + ', start ' + i.start + ', for up to ' + i.players + ' players.', '',
+        'Open the game: ' + url, 'Game code: ' + made, 'Share this link with your group so you all play in the same game.', '',
+        'Route map with addresses: ' + map, 'The code works on your play date and the day after.', '',
+        'Need another date? Just reply to this email before you start.', '', '18+ only. Drink responsibly; you can always play alcohol-free and it counts exactly the same.', '',
+        'Have a great night!', 'Pubgolf · pubgolf.eu']
+      : ['Hoi!', '', 'Jullie Pubgolf ' + name + ' is geboekt voor ' + date + ', start ' + i.start + ', voor maximaal ' + i.players + ' spelers.', '',
+        'Open het spel: ' + url, 'Spelcode: ' + made, 'Deel deze link met je groep, zodat jullie allemaal in hetzelfde spel spelen.', '',
+        'Routekaart met adressen: ' + map, 'De code werkt op de speeldatum en de dag erna.', '',
+        'Andere datum nodig? Beantwoord deze mail voordat jullie starten.', '', 'Alleen 18+. Drink met mate; alcoholvrij meespelen kan altijd en telt precies hetzelfde.', '',
+        'Veel plezier!', 'Pubgolf · pubgolf.eu']).join('\r\n');
+    location.href = 'mailto:' + encodeURIComponent(i.email || '') + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  });
   $('reload').addEventListener('click', load);
   $('clean').addEventListener('click', async function() {
     var b = $('clean'), now = Date.now(), cutoff = now - 30 * 86400000, photoCut = now - 7 * 86400000, photos = 0, wiped = 0;
