@@ -30,7 +30,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 28px;border-radius:999px;font-family:'Anton',Impact,sans-serif;font-size:20px;letter-spacing:.02em;text-decoration:none;border:0;cursor:pointer;transition:transform .2s ease}
 .btn:hover{transform:translateY(-2px)}
 .btn-main{background:#A50044;color:#FFFFFF}.btn-main:hover{color:#FFFFFF;background:#C4195F}
-.navlink{color:#FFFFFF;text-decoration:none;font-weight:600;font-size:15px}
+.navlink{color:#FFFFFF;text-decoration:none;font-weight:600;font-size:15px;display:inline-flex;align-items:center;min-height:44px}
 .navlink:hover{color:#EDBB00}
 .step-btn{width:48px;height:48px;border-radius:50%;border:2px solid #FFFFFF;background:transparent;color:#FFFFFF;font-family:'Anton',Impact,sans-serif;font-size:24px;cursor:pointer}
 .step-btn:hover{background:#FFFFFF;color:#0B2A5B}
@@ -157,8 +157,9 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 <div style="max-width: 1080px; margin: 0 auto; padding: 120px 32px; display: flex; gap: 56px; flex-wrap: wrap; align-items: flex-start">
 <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
 <div style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #EDBB00">BOEKEN</div>
+<div style="align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; border: 2px solid #EDBB00; color: #EDBB00; border-radius: 999px; padding: 8px 16px; font-weight: 800; font-size: 14px; letter-spacing: .06em">INTRODUCTIEPRIJS · €5 PER GROEP · STRAKS €10 · BESPAAR 50%</div>
 <h2 class="ant" style="margin: 0; font-size: clamp(44px, 5vw, 80px); line-height: .94; text-transform: uppercase">Jullie avond in Barcelona</h2>
-<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #C9D3E6">Kies een dag en een starttijd. Na betaling krijg je meteen de spelcode en de link per mail. Drankjes betaal je zelf in de bars.</p>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #C9D3E6">Eén prijs voor de hele groep, tot 12 spelers. Kies een dag en een starttijd. Na betaling krijg je meteen de spelcode en de link per mail. Drankjes betaal je zelf in de bars.</p>
 <div style="border: 2px solid #EDBB00; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px"><span class="ant" style="font-size: 26px; color: #EDBB00; text-transform: uppercase">Op z'n best op vrijdag en zaterdag</span><span style="font-size: 16px; line-height: 1.55; color: #C9D3E6">Dan zijn alle bars van de route open. Op andere dagen speel je gewoon ook: is een bar dicht, dan wijst het spel een reservebar vlakbij aan.</span></div>
 <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A9B8D6">Alleen voor 18+. <a href="/#info">Verantwoord drinken en alcoholvrij spelen</a></p>
 </div>
@@ -174,7 +175,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 <button type="button" class="step-btn" aria-label="Meer spelers" data-step="1">+</button>
 </div>
 </div>
-<div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 spelers · bijvoorbeeld 3 teams</span><span style="font-weight: 800">Prijs volgt binnenkort</span></div>
+<div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 spelers · bijvoorbeeld 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per groep</span></span><span style="font-size: 13px; opacity: .8">introductieprijs, straks €10</span></span></div>
 <button type="button" class="btn btn-main" style="width: 100%; opacity: .7; cursor: not-allowed" disabled>Boeken opent binnenkort</button>
 </form>
 </div>
@@ -189,7 +190,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 <a class="thumb" href="/steden/prague/"><img src="/assets/poster_prague.jpg" alt="Teaserposter Pubcrawl Praha"><span class="ant" style="font-size: 24px">Praha →</span></a>
 <a class="thumb" href="/steden/dublin/"><img src="/assets/poster_dublin.jpg" alt="Teaserposter Pubcrawl Dublin"><span class="ant" style="font-size: 24px">Dublin →</span></a>
 </div>
-<div style="display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.14); padding-top: 22px; margin-top: 40px; font-size: 14px; color: #A9B8D6"><span>© 2026 Thobias Bakker · Pubcrawl</span><span style="font-weight: 800; letter-spacing: .08em">18+ · DRINK MET MATE</span></div>
+<div style="display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.14); padding-top: 22px; margin-top: 40px; font-size: 14px; color: #A9B8D6"><span>© 2026 Thobias Bakker · Pubcrawl · <a href="/privacy.html" style="color: inherit; display: inline-block; padding: 14px 2px">Privacy</a> · <a href="/voorwaarden.html" style="color: inherit; display: inline-block; padding: 14px 2px">Voorwaarden</a> · <a href="mailto:bookings@forkit.nl" style="color: inherit; display: inline-block; padding: 14px 2px">bookings@forkit.nl</a></span><span style="font-weight: 800; letter-spacing: .08em">18+ · DRINK MET MATE</span></div>
 </div>
 </section>
 </div>

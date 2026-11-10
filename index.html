@@ -27,7 +27,7 @@
 body{margin:0;background:#07211A}
 a{color:#F2D16B}a:hover{color:#FFFFFF}
 .ant{font-family:'Anton',Impact,sans-serif;font-weight:400;letter-spacing:.005em}
-.navlink{color:#F7F5F0;text-decoration:none;font-weight:600;font-size:15px;padding:10px 4px}
+.navlink{color:#F7F5F0;text-decoration:none;font-weight:600;font-size:15px;padding:0 4px;display:inline-flex;align-items:center;min-height:44px}
 .navlink:hover{color:#F2D16B}
 .btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 28px;border-radius:999px;font-family:'Anton',Impact,sans-serif;font-size:20px;letter-spacing:.02em;text-decoration:none;transition:transform .2s ease, background .2s ease}
 .btn:hover{transform:translateY(-2px)}
@@ -130,6 +130,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div style="max-width: 1320px; margin: 0 auto; padding: 80px 32px 120px; width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 40px; flex-wrap: wrap">
 <div style="flex: 1 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
 <div style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #F2D16B">PUB GOLF · VIJF STEDEN · 2–6 TEAMS</div>
+<div style="align-self: flex-start; background: #F2D16B; color: #0E3B2C; border-radius: 999px; padding: 8px 16px; font-weight: 800; font-size: 14px; letter-spacing: .06em">INTRODUCTIEPRIJS: €5 PER GROEP · STRAKS €10</div>
 <h1 class="ant" style="margin: 0; font-size: clamp(64px, 9vw, 148px); line-height: .9; text-transform: uppercase">De stad<br>is je<br><span style="color: #F2D16B">golfbaan.</span></h1>
 <p style="margin: 0; max-width: 560px; font-size: 21px; line-height: 1.5; color: #C9D8D1">Pubcrawl is pub golf als avondvullend spel. Elke bar is een hole, je telefoon is de scorekaart, en onderweg ontdek je de mooiste cafés van Milaan, Amsterdam, Barcelona, Praag of Dublin.</p>
 <div style="display: flex; gap: 16px; flex-wrap: wrap">
@@ -216,7 +217,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div style="position: relative; width: 100%; height: 100%; border-radius: 38px; overflow: hidden; background: #0E3B2C">
 <div class="scr scr1" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; padding: 28px; text-align: center; background: #0E3B2C">
 <span style="font-size: 12px; font-weight: 800; letter-spacing: .22em; color: #F2D16B">JULLIE SPELCODE</span>
-<span class="ant" style="font-size: 34px; letter-spacing: .04em; background: #F7F5F0; color: #0E3B2C; padding: 10px 16px; border-radius: 8px">AMS-7K2P-QX4D</span>
+<span class="ant" style="font-size: 30px; white-space: nowrap; letter-spacing: .03em; background: #F7F5F0; color: #0E3B2C; padding: 10px 16px; border-radius: 8px">AMS-7K2P-QX4D</span>
 <span style="font-size: 15px; line-height: 1.5; color: #C9D8D1">Open de link op elke telefoon. De scores lopen live mee.</span>
 <span class="ant" style="margin-top: 10px; background: #B5121B; color: #FFFFFF; padding: 12px 28px; border-radius: 999px; font-size: 20px">Start</span>
 </div>
@@ -248,7 +249,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div class="rv" style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #F2D16B">SPEL, GEEN DRINKWEDSTRIJD</div>
 <h2 class="ant rv" style="margin: 0; font-size: clamp(44px, 5.4vw, 80px); line-height: .95; text-transform: uppercase">Speel het zoals jij wilt</h2>
 <p class="rv" style="margin: 0; font-size: 20px; line-height: 1.55; color: #C9D8D1">Pubcrawl is een avond uit met een spel erin. Kies kleine glazen, bestel tussendoor water, of speel helemaal alcoholvrij mee: elke stad heeft lokale alternatieven. Alleen voor 18+.</p>
-<a class="rv" href="#info" style="font-weight: 800; font-size: 18px">Lees ons statement over verantwoord drinken →</a>
+<a class="rv" href="#info" style="font-weight: 800; font-size: 18px; display: inline-block; padding: 12px 0">Lees ons statement over verantwoord drinken →</a>
 </div>
 <div style="flex: 1 1 420px; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
 <div class="rvs" style="background: #134A37; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 8px"><span class="ant" style="font-size: 30px; color: #F2D16B">Crodino</span><span style="font-size: 15px; color: #C9D8D1">alcoholvrije aperitivo in Milaan</span></div>
@@ -273,30 +274,35 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div class="ph"><img src="/assets/poster_milan.jpg" alt="Teaserposter Pubcrawl Milan"></div>
 <span class="ant" style="font-size: 30px; text-transform: uppercase">Milano</span>
 <span style="font-size: 15px; line-height: 1.45; color: #2E3F37">18 holes · start in Brera<br>Aperitivo, Navigli en de duivel.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per groep · introductieprijs</span>
 <span class="go" style="font-weight: 800; font-size: 15px">Bekijk Pubcrawl Milano →</span>
 </a>
 <a class="card rv" href="/steden/amsterdam/">
 <div class="ph"><img src="/assets/poster_amsterdam.jpg" alt="Teaserposter Pubcrawl Amsterdam"></div>
 <span class="ant" style="font-size: 30px; text-transform: uppercase">Amsterdam</span>
 <span style="font-size: 15px; line-height: 1.45; color: #2E3F37">15 holes · start in de Jordaan<br>Bruine cafés, jenever en De Nachtwacht.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per groep · introductieprijs</span>
 <span class="go" style="font-weight: 800; font-size: 15px">Bekijk Pubcrawl Amsterdam →</span>
 </a>
 <a class="card rv" href="/steden/barcelona/">
 <div class="ph"><img src="/assets/poster_barcelona.jpg" alt="Teaserposter Pubcrawl Barcelona"></div>
 <span class="ant" style="font-size: 30px; text-transform: uppercase">Barcelona</span>
 <span style="font-size: 15px; line-height: 1.45; color: #2E3F37">15 holes · start op de Rambla<br>Vermut, porrón en de correfoc.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per groep · introductieprijs</span>
 <span class="go" style="font-weight: 800; font-size: 15px">Bekijk Pubcrawl Barcelona →</span>
 </a>
 <a class="card rv" href="/steden/prague/">
 <div class="ph"><img src="/assets/poster_prague.jpg" alt="Teaserposter Pubcrawl Praha"></div>
 <span class="ant" style="font-size: 30px; text-transform: uppercase">Praha</span>
 <span style="font-size: 15px; line-height: 1.45; color: #2E3F37">18 holes · start in Žižkov<br>Pilsner, mlíko en de groene fee.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per groep · introductieprijs</span>
 <span class="go" style="font-weight: 800; font-size: 15px">Bekijk Pubcrawl Praha →</span>
 </a>
 <a class="card rv" href="/steden/dublin/">
 <div class="ph"><img src="/assets/poster_dublin.jpg" alt="Teaserposter Pubcrawl Dublin"></div>
 <span class="ant" style="font-size: 30px; text-transform: uppercase">Dublin</span>
 <span style="font-size: 15px; line-height: 1.45; color: #2E3F37">13 holes · start in Smithfield<br>Trad sessions, Split the G en Sint-Patrick.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per groep · introductieprijs</span>
 <span class="go" style="font-weight: 800; font-size: 15px">Bekijk Pubcrawl Dublin →</span>
 </a>
 </div>
@@ -327,7 +333,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 </div>
 <div>
 <button type="button" class="faqq" aria-expanded="false" aria-controls="faq-3" data-faq="3"><span>Wat kost het en wat zit erbij?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
-<p id="faq-3" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>De prijs volgt binnenkort. Je krijgt de spelcode, de route, alle opdrachten, quizzen en casinorondes, en de recap. Drankjes betaal je zelf in de bars.</p>
+<p id="faq-3" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>Nu €5 per groep (één spelcode, tot 12 spelers): een introductieprijs, straks wordt het €10. Je krijgt de spelcode, de route, alle opdrachten, quizzen en casinorondes, en de recap. Drankjes betaal je zelf in de bars.</p>
 </div>
 <div>
 <button type="button" class="faqq" aria-expanded="false" aria-controls="faq-4" data-faq="4"><span>Moeten we een app downloaden?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
@@ -343,7 +349,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 </div>
 <div>
 <button type="button" class="faqq" aria-expanded="false" aria-controls="faq-7" data-faq="7"><span>Wat gebeurt er met onze foto’s?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
-<p id="faq-7" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>De foto’s staan alleen in jullie spel en worden na 7 dagen automatisch verwijderd. Download de recap dus op tijd.</p>
+<p id="faq-7" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>De foto’s staan alleen in jullie spel en worden na 7 dagen automatisch verwijderd. Download de recap dus op tijd. Meer in de <a href="/privacy.html" style="color: #B5121B">privacyverklaring</a>.</p>
 </div>
 
 </div>
@@ -380,7 +386,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div role="tabpanel" id="panel-prak" aria-labelledby="tab-prak" hidden>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px">
 <div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px">Wat je nodig hebt</span><span style="font-size: 17px; line-height: 1.55">Minstens één opgeladen telefoon met internet per team, comfortabele schoenen en geld of een pinpas voor de drankjes.</span></div>
-<div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px">Privacy</span><span style="font-size: 17px; line-height: 1.55">We gebruiken je gegevens alleen voor je boeking. Foto's uit het spel worden na 7 dagen automatisch verwijderd.</span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px">Privacy</span><span style="font-size: 17px; line-height: 1.55">We gebruiken je gegevens alleen voor je boeking. Foto's uit het spel worden na 7 dagen automatisch verwijderd. <a href="/privacy.html" style="color: #B5121B; font-weight: 800">Lees de privacyverklaring</a></span></div>
 <div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px">Voorwaarden</span><span style="font-size: 17px; line-height: 1.55">Annuleren, omboeken en aansprakelijkheid lees je in de voorwaarden. <a href="/voorwaarden.html" style="color: #B5121B; font-weight: 800">Lees de voorwaarden</a></span></div>
 </div>
 </div>
@@ -401,12 +407,13 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div style="display: flex; gap: 26px; flex-wrap: wrap">
 <a href="#info" class="navlink">FAQ</a>
 <a href="#info" class="navlink">Verantwoord drinken</a>
-<a href="#info" class="navlink">Privacy</a>
+<a href="/privacy.html" class="navlink">Privacy</a>
+<a href="mailto:bookings@forkit.nl" class="navlink">Contact</a>
 <a href="/voorwaarden.html" class="navlink">Voorwaarden</a>
 </div>
 </div>
 <div style="display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; border-top: 1px solid rgba(247,245,240,.12); padding-top: 24px; font-size: 14px">
-<span>© 2026 Thobias Bakker · Pubcrawl</span>
+<span>© 2026 Thobias Bakker · Pubcrawl · <a href="mailto:bookings@forkit.nl" style="display: inline-block; padding: 14px 2px">bookings@forkit.nl</a></span>
 <span style="font-weight: 800; letter-spacing: .08em">18+ · DRINK MET MATE</span>
 </div>
 </div>
