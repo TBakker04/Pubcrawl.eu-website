@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://pubgolf.eu/</loc></url>
-  <url><loc>https://pubgolf.eu/steden/milan/</loc></url>
-  <url><loc>https://pubgolf.eu/steden/amsterdam/</loc></url>
-  <url><loc>https://pubgolf.eu/steden/barcelona/</loc></url>
-  <url><loc>https://pubgolf.eu/steden/prague/</loc></url>
-  <url><loc>https://pubgolf.eu/steden/dublin/</loc></url>
-  <url><loc>https://pubgolf.eu/voorwaarden.html</loc></url>
+  <url><loc>https://pubgolf.eu/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://pubgolf.eu/steden/milan/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://pubgolf.eu/steden/amsterdam/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://pubgolf.eu/steden/barcelona/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://pubgolf.eu/steden/prague/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://pubgolf.eu/steden/dublin/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://pubgolf.eu/voorwaarden.html</loc><lastmod>2026-11-10</lastmod></url>
 </urlset>
