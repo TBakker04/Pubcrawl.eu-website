@@ -163,7 +163,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div style="border: 2px solid #F2D16B; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px"><span class="ant" style="font-size: 26px; color: #F2D16B; text-transform: uppercase">Op z'n best op vrijdag en zaterdag</span><span style="font-size: 16px; line-height: 1.55; color: #C9D8D1">Dan zijn alle bars van de route open. Op andere dagen speel je gewoon ook: is een bar dicht, dan wijst het spel een reservebar vlakbij aan.</span></div>
 <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #A9BDB4">Alleen voor 18+. <a href="/#info">Verantwoord drinken en alcoholvrij spelen</a></p>
 </div>
-<form style="flex: 1 1 420px; min-width: 0; background: #0E3B2C; border-radius: 18px; padding: 32px; display: flex; flex-direction: column; gap: 20px">
+<form data-city="milan" style="flex: 1 1 420px; min-width: 0; background: #0E3B2C; border-radius: 18px; padding: 32px; display: flex; flex-direction: column; gap: 20px">
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">DATUM<input class="field" type="date"></label>
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">STARTTIJD
 <select class="field"><option>13:30</option><option>14:00</option><option>14:30</option><option>15:00</option><option>15:30</option><option>16:00</option><option>16:30</option><option>17:00 (vr/za)</option></select></label>
@@ -176,7 +176,10 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 </div>
 </div>
 <div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(247,245,240,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 spelers · bijvoorbeeld 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per groep</span></span><span style="font-size: 13px; opacity: .8">introductieprijs, straks €10</span></span></div>
-<button type="button" class="btn btn-main" style="width: 100%; opacity: .7; cursor: not-allowed" disabled>Boeken opent binnenkort</button>
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-adults required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Iedereen in de groep is 18 jaar of ouder.</span></label>
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-terms required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Ik ga akkoord met de <a href="/voorwaarden.html" style="color: inherit">voorwaarden</a>. Omboeken kan; geld terug en het herroepingsrecht vervallen, omdat het spel op een vaste datum is.</span></label>
+<p data-msg role="status" style="margin: 0; font-size: 15px; min-height: 0"></p>
+<button type="button" class="btn btn-main" data-book style="width: 100%; opacity: .7; cursor: not-allowed" disabled>Boeken opent binnenkort</button>
 </form>
 </div>
 </section>
@@ -206,5 +209,30 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 })();
 </script>
 <script>/* teaser pas laden en afspelen als hij in beeld komt */(function(){var vs=document.querySelectorAll('video[data-lazy]');if(!('IntersectionObserver' in window)){vs.forEach(function(v){v.preload='auto';v.play&&v.play().catch(function(){});});return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){v.preload='auto';var p=v.play();if(p&&p.catch)p.catch(function(){});}else if(!v.paused){v.pause();}});},{rootMargin:'200px 0px'});vs.forEach(function(v){io.observe(v);});})();</script>
+<script src="/booking-config.js"></script>
+<script>
+(function () {
+  // booking: only active when booking-config.js has an api address; the server checks everything again
+  var cfg = window.PC_BOOKING || {}, form = document.querySelector('#boek form'), btn = form && form.querySelector('[data-book]');
+  if (!form || !btn || !cfg.api) return;
+  var en = document.documentElement.lang === 'en', city = form.getAttribute('data-city');
+  var date = form.querySelector('input[type=date]'), time = form.querySelector('select'), msg = form.querySelector('[data-msg]');
+  var t = new Date(Date.now() + 864e5 * 0); date.min = new Date(t.getTime() - t.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+  btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; btn.textContent = en ? 'Book and pay · €' + cfg.price : 'Boek en betaal · €' + cfg.price;
+  btn.addEventListener('click', async function () {
+    var players = +form.querySelector('[data-players]').textContent, adults = form.querySelector('[data-adults]').checked, terms = form.querySelector('[data-terms]').checked;
+    var err = !date.value ? (en ? 'Pick a date.' : 'Kies een datum.') : !adults ? (en ? 'Everyone in the group must be 18 or older.' : 'Iedereen in de groep moet 18+ zijn.') : !terms ? (en ? 'Please accept the terms.' : 'Ga akkoord met de voorwaarden.') : '';
+    msg.textContent = err; if (err) return;
+    btn.disabled = true; msg.textContent = en ? 'One moment…' : 'Even geduld…';
+    try {
+      var r = await fetch(cfg.api + '/createCheckout', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ city: city, players: players, playDate: date.value, startTime: time.value.slice(0, 5), lang: en ? 'en' : 'nl', adults: adults, terms: terms }) });
+      var d = await r.json(); if (d.url) { location.href = d.url; return; }
+      msg.textContent = (en ? 'That did not work (' : 'Dat lukte niet (') + (d.error || r.status) + (en ? '). Check the date and time.' : '). Controleer de datum en tijd.');
+    } catch (e) { msg.textContent = en ? 'No connection. Try again.' : 'Geen verbinding. Probeer het opnieuw.'; }
+    btn.disabled = false;
+  });
+})();
+</script>
 </body>
 </html>

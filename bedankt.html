@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bedankt · Pubcrawl</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;800&display=swap">
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#07211A;color:#F7F5F0;font-family:Archivo,sans-serif;text-align:center;padding:24px;box-sizing:border-box}
+main{max-width:560px;display:flex;flex-direction:column;gap:18px;align-items:center}
+h1{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:clamp(48px,11vw,96px);margin:0;line-height:.92;text-transform:uppercase}
+h1 span{color:#F2D16B}
+p{color:#C9D8D1;font-size:18px;line-height:1.55;margin:0}
+.code{font-family:Anton,Impact,sans-serif;font-size:36px;letter-spacing:.04em;background:#F7F5F0;color:#0E3B2C;padding:10px 20px;border-radius:10px}
+a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:999px;font-family:Anton,Impact,sans-serif;font-size:20px;text-decoration:none;border:0;cursor:pointer}
+.red{background:#B5121B;color:#fff}.ghost{background:transparent;color:#F7F5F0;border:2px solid #F7F5F0 !important}
+.small{font-size:14px;color:#A9BDB4}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+<main>
+  <div class="small" style="letter-spacing:.2em;font-weight:800;color:#F2D16B">PUBCRAWL · PUB GOLF</div>
+  <h1 data-t="t">Geboekt. <span>Tot op de baan.</span></h1>
+  <p data-t="wait" id="wait">Even geduld, jullie spelcode wordt gemaakt…</p>
+  <div id="done" hidden style="display:flex;flex-direction:column;gap:16px;align-items:center">
+    <span class="code" id="code"></span>
+    <a class="btn red" id="open" href="#" data-t="open">Open het spel</a>
+    <button class="btn ghost" id="share" type="button" data-t="share">Deel de link met je groep</button>
+    <p data-t="mail">Je krijgt de link en de code ook per e-mail.</p>
+  </div>
+  <p id="err" hidden data-t="err">Het duurt langer dan normaal. Je krijgt de spelcode per e-mail; geen mail binnen een uur? Mail ons op bookings@forkit.nl.</p>
+  <p class="small" data-t="adult">18+ · Drink met mate · Alcoholvrij meespelen kan altijd</p>
+</main>
+<script src="/booking-config.js"></script>
+<script>
+(function () {
+  var en = /^#en/.test(location.hash) || (function () { try { return localStorage.getItem('pubcrawl-lang') === 'en'; } catch (e) { return false; } })();
+  var T = { t: 'Booked. <span>See you on the course.</span>', wait: 'One moment, your game code is being made…', open: 'Open the game', share: 'Share the link with your group',
+    mail: 'You also get the link and the code by email.', err: "It's taking longer than usual. You'll get the game code by email; no email within an hour? Email us at bookings@forkit.nl.",
+    adult: '18+ · Drink responsibly · Alcohol-free always welcome' };
+  if (en) { document.documentElement.lang = 'en'; document.title = 'Thank you · Pubcrawl'; document.querySelectorAll('[data-t]').forEach(function (e) { e.innerHTML = T[e.getAttribute('data-t')]; }); }
+  var sid = new URLSearchParams(location.search).get('session_id'), api = (window.PC_BOOKING || {}).api, tries = 0;
+  function fail() { document.getElementById('wait').hidden = true; document.getElementById('err').hidden = false; }
+  if (!sid || !api) return fail();
+  (async function poll() {
+    try {
+      var r = await fetch(api + '/booking?session_id=' + encodeURIComponent(sid)), d = await r.json();
+      if (d.code) {
+        document.getElementById('wait').hidden = true; document.getElementById('done').hidden = false;
+        document.getElementById('code').textContent = d.code; document.getElementById('open').href = d.link;
+        document.getElementById('share').onclick = function () {
+          var text = (en ? 'Our Pubcrawl is ready! Open the link on your phone: ' : 'Onze pubcrawl staat klaar! Open de link op je telefoon: ') + d.link;
+          if (navigator.share) navigator.share({ text: text }).catch(function () {}); else window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+        };
+        return;
+      }
+    } catch (e) {}
+    if (++tries < 20) setTimeout(poll, 2000); else fail();
+  })();
+})();
+</script>
+</body>
+</html>
