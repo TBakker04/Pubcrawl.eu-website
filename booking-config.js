@@ -1,3 +1,6 @@
-// Boeken. api: adres van de Cloud Functions (bv. https://europe-west1-pubcrawl-milano.cloudfunctions.net); leeg = knop uit.
-// paid: false = nog geen Stripe (tot de KvK er is): alleen kortingscodes zoals ERASMUS werken, de spelcode gaat per mail.
-window.PC_BOOKING = { api: '', price: 5, paid: false };
+// Boeken.
+// api: adres van de Cloud Functions (Blaze-plan nodig); leeg = geen server.
+// request: zonder server gaat een aanvraag met kortingscode als e-mail naar dit adres; Thobias maakt de code in admin.html
+//          en stuurt hem met de knop "Stuur per mail". freeCodes: de codes die zo werken (hoofdletters maken niet uit).
+// paid: true = betalen via Stripe (vanaf de hard launch, alleen met api).
+window.PC_BOOKING = { api: '', request: 'bookings@forkit.nl', freeCodes: ['ERASMUS'], price: 5, paid: false };

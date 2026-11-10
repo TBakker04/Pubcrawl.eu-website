@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bedankt · Pubcrawl</title>
+<title>Bedankt · Pubgolf</title>
 <meta name="robots" content="noindex">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;800&display=swap">
@@ -22,7 +22,7 @@ a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;m
 </head>
 <body>
 <main>
-  <div class="small" style="letter-spacing:.2em;font-weight:800;color:#F2D16B">PUBCRAWL · PUB GOLF</div>
+  <div class="small" style="letter-spacing:.2em;font-weight:800;color:#F2D16B">PUBGOLF · PUB GOLF</div>
   <h1 data-t="t">Geboekt. <span>Tot op de baan.</span></h1>
   <p data-t="wait" id="wait">Even geduld, jullie spelcode wordt gemaakt…</p>
   <div id="done" hidden style="display:flex;flex-direction:column;gap:16px;align-items:center">
@@ -41,7 +41,7 @@ a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;m
   var T = { t: 'Booked. <span>See you on the course.</span>', wait: 'One moment, your game code is being made…', open: 'Open the game', share: 'Share the link with your group',
     mail: 'You also get the link and the code by email.', err: "It's taking longer than usual. You'll get the game code by email; no email within an hour? Email us at bookings@forkit.nl.",
     adult: '18+ · Drink responsibly · Alcohol-free always welcome' };
-  if (en) { document.documentElement.lang = 'en'; document.title = 'Thank you · Pubcrawl'; document.querySelectorAll('[data-t]').forEach(function (e) { e.innerHTML = T[e.getAttribute('data-t')]; }); }
+  if (en) { document.documentElement.lang = 'en'; document.title = 'Thank you · Pubgolf'; document.querySelectorAll('[data-t]').forEach(function (e) { e.innerHTML = T[e.getAttribute('data-t')]; }); }
   var sid = new URLSearchParams(location.search).get('session_id'), api = (window.PC_BOOKING || {}).api, tries = 0;
   function fail() { document.getElementById('wait').hidden = true; document.getElementById('err').hidden = false; }
   if (!sid || !api) return fail();
@@ -52,7 +52,7 @@ a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;m
         document.getElementById('wait').hidden = true; document.getElementById('done').hidden = false;
         document.getElementById('code').textContent = d.code; document.getElementById('open').href = d.link;
         document.getElementById('share').onclick = function () {
-          var text = (en ? 'Our Pubcrawl is ready! Open the link on your phone: ' : 'Onze pubcrawl staat klaar! Open de link op je telefoon: ') + d.link;
+          var text = (en ? 'Our Pubgolf is ready! Open the link on your phone: ' : 'Onze Pubgolf staat klaar! Open de link op je telefoon: ') + d.link;
           if (navigator.share) navigator.share({ text: text }).catch(function () {}); else window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
         };
         return;
