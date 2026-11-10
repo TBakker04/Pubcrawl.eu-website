@@ -78,7 +78,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 </div>
 <div style="flex: 0 1 340px; min-width: 0; display: flex; justify-content: center">
 <div class="rvs" style="width: 320px; border-radius: 26px; overflow: hidden; border: 6px solid #F2D16B; box-shadow: 0 40px 80px rgba(0,0,0,.45); background: #07211A">
-<video src="/milan/teaser.mp4" poster="/assets/poster_milan.jpg" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline" controls="controls" style="display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover"></video>
+<video src="/milan/teaser.mp4" poster="/assets/poster_milan.jpg" preload="none" data-lazy="1" muted="muted" loop="loop" playsinline="playsinline" controls="controls" style="display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover"></video>
 </div>
 </div>
 </div>
@@ -194,5 +194,6 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
   show();
 })();
 </script>
+<script>/* teaser pas laden en afspelen als hij in beeld komt */(function(){var vs=document.querySelectorAll('video[data-lazy]');if(!('IntersectionObserver' in window)){vs.forEach(function(v){v.preload='auto';v.play&&v.play().catch(function(){});});return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){v.preload='auto';var p=v.play();if(p&&p.catch)p.catch(function(){});}else if(!v.paused){v.pause();}});},{rootMargin:'200px 0px'});vs.forEach(function(v){io.observe(v);});})();</script>
 </body>
 </html>
