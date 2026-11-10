@@ -1,0 +1,452 @@
+<!doctype html>
+<!-- © 2026 Thobias Bakker · Pubcrawl. Alle rechten voorbehouden. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pubcrawl – pub golf in Milan, Amsterdam, Barcelona, Prague and Dublin</title>
+<meta name="description" content="Pub golf as a full night out: every bar is a hole, your phone is the scorecard. In Milan, Amsterdam, Barcelona, Prague or Dublin, with 2 to 6 teams.">
+<link rel="canonical" href="https://pubgolf.eu/en/">
+<link rel="alternate" hreflang="nl" href="https://pubgolf.eu/">
+<link rel="alternate" hreflang="en" href="https://pubgolf.eu/en/">
+<link rel="alternate" hreflang="x-default" href="https://pubgolf.eu/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pubcrawl – pub golf in Milan, Amsterdam, Barcelona, Prague and Dublin">
+<meta property="og:description" content="Pub golf as a full night out: every bar is a hole, your phone is the scorecard. In Milan, Amsterdam, Barcelona, Prague or Dublin, with 2 to 6 teams.">
+<meta property="og:url" content="https://pubgolf.eu/en/">
+<meta property="og:image" content="https://pubgolf.eu/assets/og_home_en.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pub golf in five cities: the posters of Milan, Amsterdam, Barcelona, Prague and Dublin">
+<meta property="og:site_name" content="Pubcrawl">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Pubcrawl", "url": "https://pubgolf.eu/en/", "inLanguage": "en"}</script>
+<meta name="theme-color" content="#07211A">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Archivo:wght@400;600;800&amp;display=swap">
+<style>
+body{margin:0;background:#07211A}
+a{color:#F2D16B}a:hover{color:#FFFFFF}
+.ant{font-family:'Anton',Impact,sans-serif;font-weight:400;letter-spacing:.005em}
+.navlink{color:#F7F5F0;text-decoration:none;font-weight:600;font-size:15px;padding:0 4px;display:inline-flex;align-items:center;min-height:44px}
+.navlink:hover{color:#F2D16B}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 28px;border-radius:999px;font-family:'Anton',Impact,sans-serif;font-size:20px;letter-spacing:.02em;text-decoration:none;transition:transform .2s ease, background .2s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-red{background:#B5121B;color:#FFFFFF}
+.btn-red:hover{background:#C8202A;color:#FFFFFF}
+.btn-ghost{border:2px solid #F7F5F0;color:#F7F5F0}
+.btn-ghost:hover{background:#F7F5F0;color:#0E3B2C}
+.card{display:flex;flex-direction:column;gap:14px;text-decoration:none;color:#13241C}
+.card .ph{border-radius:10px;overflow:hidden;box-shadow:0 18px 40px rgba(7,33,26,.28);transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease}
+.card:hover .ph{transform:translateY(-10px) rotate(-1.5deg);box-shadow:0 30px 60px rgba(7,33,26,.4)}
+.card:hover .go{color:#B5121B}
+.card img{display:block;width:100%;height:auto}
+.tab{font-family:'Archivo',sans-serif;font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;border:2px solid #13241C;background:transparent;color:#13241C;border-radius:999px;padding:0 22px;min-height:48px;cursor:pointer}
+.tab-on{background:#13241C;color:#F7F5F0}
+.faqq{width:100%;display:flex;justify-content:space-between;align-items:center;gap:24px;background:none;border:0;border-top:1.5px solid rgba(19,36,28,.18);padding:22px 0;text-align:left;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:800;font-size:19px;color:#13241C}
+.faqq:hover{color:#B5121B}
+.photo{background-color:#16503B;background-image:repeating-linear-gradient(135deg, rgba(247,245,240,.05) 0 14px, rgba(247,245,240,0) 14px 28px)}
+.scr{position:absolute;inset:0;opacity:0}
+.scr1{opacity:1}
+.g5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:64px}
+.stepgrid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:80px}
+.step{min-height:520px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.phonecol{position:sticky;top:110px;height:660px}
+.strip{display:flex;gap:24px;width:max-content}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes pop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes cue{0%{transform:translateY(0);opacity:1}100%{transform:translateY(14px);opacity:0}}
+.route{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 3.2s .4s cubic-bezier(.6,0,.3,1) forwards}
+.flag{transform-box:fill-box;transform-origin:50% 100%;animation:pop .5s cubic-bezier(.2,.8,.2,1) both}
+.bob{animation:bob 3.6s ease-in-out infinite}
+.cue{animation:cue 1.6s ease-in infinite}
+@supports (animation-timeline: view()) {
+@media (prefers-reduced-motion: no-preference) {
+.rv{animation:rvUp linear both;animation-timeline:view();animation-range:entry 0% cover 26%}
+.rvl{animation:rvLeft linear both;animation-timeline:view();animation-range:entry 0% cover 30%}
+.rvs{animation:rvScale linear both;animation-timeline:view();animation-range:entry 0% cover 35%}
+.word{animation:word linear both;animation-timeline:view();animation-range:entry 10% cover 40%}
+.marq{animation:marq linear both;animation-timeline:scroll()}
+.marq2{animation:marq2 linear both;animation-timeline:scroll()}
+.slide{animation:slide linear both;animation-timeline:view();animation-range:entry 0% exit 100%}
+.par{animation:par linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+.steps{timeline-scope:--s1,--s2,--s3,--s4,--s5}
+.st1{view-timeline:--s1 block}.st2{view-timeline:--s2 block}.st3{view-timeline:--s3 block}.st4{view-timeline:--s4 block}.st5{view-timeline:--s5 block}
+.scr1{animation:scrFirst linear both;animation-timeline:--s1;animation-range:cover 0% cover 100%}
+.scr2{animation:scr linear both;animation-timeline:--s2;animation-range:cover 0% cover 100%}
+.scr3{animation:scr linear both;animation-timeline:--s3;animation-range:cover 0% cover 100%}
+.scr4{animation:scr linear both;animation-timeline:--s4;animation-range:cover 0% cover 100%}
+.scr5{animation:scrLast linear both;animation-timeline:--s5;animation-range:cover 0% cover 100%}
+}
+}
+@keyframes rvUp{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:none}}
+@keyframes rvLeft{from{opacity:0;transform:translateX(-90px)}to{opacity:1;transform:none}}
+@keyframes rvScale{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
+@keyframes word{from{opacity:.12}to{opacity:1}}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-45%)}}
+@keyframes marq2{from{transform:translateX(-45%)}to{transform:translateX(0)}}
+@keyframes slide{from{transform:translateX(18%)}to{transform:translateX(-38%)}}
+@keyframes par{from{transform:translateY(60px)}to{transform:translateY(-60px)}}
+@keyframes scrFirst{0%,62%{opacity:1}78%,100%{opacity:0}}
+@keyframes scr{0%,22%{opacity:0}38%,62%{opacity:1}78%,100%{opacity:0}}
+@keyframes scrLast{0%,22%{opacity:0}38%,100%{opacity:1}}
+@media (max-width: 1100px){.g5{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width: 860px){
+.g2{grid-template-columns:minmax(0,1fr);gap:40px}
+.stepgrid{grid-template-columns:minmax(0,1fr);gap:24px}
+.phonecol{position:relative;top:0;height:680px;order:-1}
+.step{min-height:360px}
+.navlinks{display:none !important}
+.hero-art{display:none !important}
+}
+@media (max-width: 560px){.g5{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.g4{grid-template-columns:minmax(0,1fr)}}
+.langsw{display:flex;gap:2px;align-items:center}.langsw a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:13px;font-weight:800;letter-spacing:.1em;text-decoration:none;color:inherit;opacity:.6;border-radius:999px}.langsw a[aria-current]{opacity:1;text-decoration:underline;text-underline-offset:4px}.langsw a:hover{opacity:1}</style>
+</head>
+<body>
+<div style="font-family: 'Archivo', 'Helvetica Neue', sans-serif; color: #F7F5F0; background: #07211A; overflow-x: hidden">
+
+<header style="position: sticky; top: 0; z-index: 20; background: rgba(7,33,26,.86); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(247,245,240,.08)">
+<div style="max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap">
+<a href="#top" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #F7F5F0">
+<svg width="26" height="30" viewBox="0 0 26 30" fill="none" stroke="#F2D16B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 27V3l14 5-14 5"></path><ellipse cx="9" cy="27" rx="7" ry="2"></ellipse></svg>
+<span class="ant" style="font-size: 26px; letter-spacing: .04em">PUBCRAWL</span>
+</a>
+<nav class="navlinks" aria-label="Main menu" style="display: flex; gap: 28px; align-items: center">
+<a class="navlink" href="#spel">The game</a>
+<a class="navlink" href="#hoe">How it works</a>
+<a class="navlink" href="#steden">Cities</a>
+<a class="navlink" href="#info">Good to know</a>
+</nav>
+<div style="display: flex; gap: 14px; align-items: center">
+<nav class="langsw" aria-label="Language"><a href="/" lang="nl" hreflang="nl" onclick="try{localStorage.setItem('pubcrawl-lang','nl')}catch(e){}">NL</a><a href="/en/" lang="en" hreflang="en" aria-current="true" onclick="try{localStorage.setItem('pubcrawl-lang','en')}catch(e){}">EN</a></nav>
+<a class="btn btn-red" href="#steden" style="min-height: 44px; font-size: 17px; padding: 0 22px">Pick your city</a>
+</div>
+</div>
+</header>
+
+<section id="top" style="position: relative; min-height: 880px; display: flex; align-items: center; background: radial-gradient(ellipse at 75% 40%, #134A37 0%, #0E3B2C 45%, #07211A 100%)">
+<div style="max-width: 1320px; margin: 0 auto; padding: 80px 32px 120px; width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 40px; flex-wrap: wrap">
+<div style="flex: 1 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+<div style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #F2D16B">PUB GOLF · FIVE CITIES · 2–6 TEAMS</div>
+<div style="align-self: flex-start; background: #F2D16B; color: #0E3B2C; border-radius: 999px; padding: 8px 16px; font-weight: 800; font-size: 14px; letter-spacing: .06em">INTRODUCTORY PRICE: €5 PER GROUP · SOON €10</div>
+<h1 class="ant" style="margin: 0; font-size: clamp(64px, 9vw, 148px); line-height: .9; text-transform: uppercase">The city<br>is your<br><span style="color: #F2D16B">golf course.</span></h1>
+<p style="margin: 0; max-width: 560px; font-size: 21px; line-height: 1.5; color: #C9D8D1">Pubcrawl is pub golf as a full night out. Every bar is a hole, your phone is the scorecard, and along the way you discover the best bars of Milan, Amsterdam, Barcelona, Prague or Dublin.</p>
+<div style="display: flex; gap: 16px; flex-wrap: wrap">
+<a class="btn btn-red" href="#steden">Pick your city</a>
+<a class="btn btn-ghost" href="#hoe">How it works</a>
+</div>
+</div>
+<div class="hero-art" style="flex: 1 1 460px; min-width: 0; display: flex; justify-content: center">
+<svg viewBox="0 0 520 560" style="width: 100%; max-width: 520px; height: auto" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="A dotted route past numbered hole flags">
+<path class="route" pathLength="1" d="M60 500 C 140 470, 120 380, 200 360 S 330 380, 360 300 S 300 170, 380 140 S 470 90, 450 40" stroke="#F7F5F0" stroke-width="3" stroke-dasharray="1"></path>
+<path d="M60 500 C 140 470, 120 380, 200 360 S 330 380, 360 300 S 300 170, 380 140 S 470 90, 450 40" stroke="rgba(247,245,240,.12)" stroke-width="3" stroke-dasharray="2 10"></path>
+<g class="flag" style="animation-delay: .6s"><line x1="60" y1="500" x2="60" y2="440" stroke="#F7F5F0" stroke-width="3"></line><path d="M60 440 L96 452 L60 464 Z" fill="#B5121B"></path><circle cx="60" cy="500" r="9" fill="#F2D16B"></circle></g>
+<g class="flag" style="animation-delay: 1.3s"><line x1="200" y1="360" x2="200" y2="300" stroke="#F7F5F0" stroke-width="3"></line><path d="M200 300 L236 312 L200 324 Z" fill="#B5121B"></path><circle cx="200" cy="360" r="9" fill="#F2D16B"></circle></g>
+<g class="flag" style="animation-delay: 2s"><line x1="360" y1="300" x2="360" y2="240" stroke="#F7F5F0" stroke-width="3"></line><path d="M360 240 L396 252 L360 264 Z" fill="#B5121B"></path><circle cx="360" cy="300" r="9" fill="#F2D16B"></circle></g>
+<g class="flag" style="animation-delay: 2.7s"><line x1="380" y1="140" x2="380" y2="80" stroke="#F7F5F0" stroke-width="3"></line><path d="M380 80 L416 92 L380 104 Z" fill="#B5121B"></path><circle cx="380" cy="140" r="9" fill="#F2D16B"></circle></g>
+<g class="flag" style="animation-delay: 3.4s"><circle cx="450" cy="40" r="22" stroke="#F2D16B" stroke-width="3"></circle><circle cx="450" cy="40" r="9" fill="#F2D16B"></circle></g>
+<g class="bob"><circle cx="120" cy="250" r="54" fill="#F7F5F0"></circle><text x="120" y="245" text-anchor="middle" font-family="Anton" font-size="40" fill="#0E3B2C">-2</text><text x="120" y="272" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="13" fill="#0E3B2C" letter-spacing="2">QUIZ</text></g>
+<g class="bob" style="animation-delay: 1.2s"><circle cx="270" cy="480" r="42" fill="#B5121B"></circle><text x="270" y="478" text-anchor="middle" font-family="Anton" font-size="30" fill="#FFFFFF">+1</text><text x="270" y="499" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="11" fill="#FFFFFF" letter-spacing="2">SPILLED</text></g>
+</svg>
+</div>
+</div>
+<div style="position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: .2em; color: #A9BDB4">
+<span>SCROLL</span>
+<svg class="cue" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#F2D16B" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M3 6l6 6 6-6"></path></svg>
+</div>
+</section>
+
+<div aria-hidden="true" style="background: #F2D16B; color: #0E3B2C; overflow: hidden; padding: 18px 0; border-top: 4px solid #0E3B2C; border-bottom: 4px solid #0E3B2C">
+<div class="marq ant" style="white-space: nowrap; font-size: 56px; line-height: 1; width: max-content">MILANO ✦ AMSTERDAM ✦ BARCELONA ✦ PRAHA ✦ DUBLIN ✦ MILANO ✦ AMSTERDAM ✦ BARCELONA ✦ PRAHA ✦ DUBLIN ✦ MILANO ✦ AMSTERDAM</div>
+</div>
+
+<section id="spel" style="background: #F7F5F0; color: #13241C">
+<div style="max-width: 1180px; margin: 0 auto; padding: 160px 32px 140px; display: flex; flex-direction: column; gap: 56px">
+<div class="rv" style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #B5121B">THE GAME</div>
+<h2 class="ant" style="margin: 0; font-size: clamp(56px, 8vw, 128px); line-height: .92; text-transform: uppercase">
+<span class="word" style="display: block">Not a bar crawl.</span>
+<span class="word" style="display: block; color: #B5121B">A game.</span>
+</h2>
+<div class="g2">
+<p class="rv" style="margin: 0; font-size: 22px; line-height: 1.55">A normal bar crawl goes from bar to bar and sees where you end up. Pubcrawl has a course: a hand-picked route past special bars, with a drink, a challenge and a story at every hole.</p>
+<p class="rv" style="margin: 0; font-size: 22px; line-height: 1.55">Just like golf, your score counts: sips, challenges, chance cards and casino rounds shift the standings. At the end of the night one team is on top, with a photo book full of evidence.</p>
+</div>
+</div>
+</section>
+
+<!-- photo strip: comes back with Thobias' own photos -->
+
+<section id="hoe" style="background: #07211A">
+<div style="max-width: 1180px; margin: 0 auto; padding: 140px 32px 120px">
+<div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px">
+<div class="rv" style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #F2D16B">HOW IT WORKS</div>
+<h2 class="ant rv" style="margin: 0; font-size: clamp(44px, 6vw, 88px); line-height: .95; text-transform: uppercase">Five steps to the finale</h2>
+</div>
+<div class="stepgrid steps">
+<div style="display: flex; flex-direction: column">
+<div class="step st1">
+<span class="ant" style="font-size: 80px; line-height: 1; color: #F2D16B">01</span>
+<h3 class="ant" style="margin: 0; font-size: 44px; text-transform: uppercase">Pick your city and your night</h3>
+<p style="margin: 0; font-size: 20px; line-height: 1.55; color: #C9D8D1; max-width: 520px">Book for your group, from 2 to 12 players. You get a game code and a link. No app needed: the game runs in the browser of every phone.</p>
+</div>
+<div class="step st2">
+<span class="ant" style="font-size: 80px; line-height: 1; color: #F2D16B">02</span>
+<h3 class="ant" style="margin: 0; font-size: 44px; text-transform: uppercase">Every bar is a hole</h3>
+<p style="margin: 0; font-size: 20px; line-height: 1.55; color: #C9D8D1; max-width: 520px">The draw makes 2 to 6 teams. At every hole your phone reveals the drink, the story of the place and the challenge. You only learn the route as you go.</p>
+</div>
+<div class="step st3">
+<span class="ant" style="font-size: 80px; line-height: 1; color: #F2D16B">03</span>
+<h3 class="ant" style="margin: 0; font-size: 44px; text-transform: uppercase">Casino alarm</h3>
+<p style="margin: 0; font-size: 20px; line-height: 1.55; color: #C9D8D1; max-width: 520px">Every 45 minutes the alarm goes off on everyone's phone at once. Roulette, blackjack, a horse race or the wheel of fortune: the standings can always flip.</p>
+</div>
+<div class="step st4">
+<span class="ant" style="font-size: 80px; line-height: 1; color: #F2D16B">04</span>
+<h3 class="ant" style="margin: 0; font-size: 44px; text-transform: uppercase">Special holes</h3>
+<p style="margin: 0; font-size: 20px; line-height: 1.55; color: #C9D8D1; max-width: 520px">Every city has its own special holes: a quiz about the city, local drinking rituals and a closing hole from one of the city's legends.</p>
+</div>
+<div class="step st5">
+<span class="ant" style="font-size: 80px; line-height: 1; color: #F2D16B">05</span>
+<h3 class="ant" style="margin: 0; font-size: 44px; text-transform: uppercase">Photo bombs and the finale</h3>
+<p style="margin: 0; font-size: 20px; line-height: 1.55; color: #C9D8D1; max-width: 520px">Photo challenges pop up along the way. At the end comes the finale with the results, prizes and a recap of your best photos, ready for the group chat.</p>
+</div>
+</div>
+<div class="phonecol">
+<div style="position: relative; width: 320px; height: 650px; margin: 0 auto; border-radius: 48px; background: #0A0A0A; padding: 12px; box-sizing: border-box; box-shadow: 0 40px 90px rgba(0,0,0,.55)">
+<div style="position: relative; width: 100%; height: 100%; border-radius: 38px; overflow: hidden; background: #0E3B2C">
+<div class="scr scr1" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; padding: 28px; text-align: center; background: #0E3B2C">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: .22em; color: #F2D16B">YOUR GAME CODE</span>
+<span class="ant" style="font-size: 30px; white-space: nowrap; letter-spacing: .03em; background: #F7F5F0; color: #0E3B2C; padding: 10px 16px; border-radius: 8px">AMS-7K2P-QX4D</span>
+<span style="font-size: 15px; line-height: 1.5; color: #C9D8D1">Open the link on every phone. The scores update live.</span>
+<span class="ant" style="margin-top: 10px; background: #B5121B; color: #FFFFFF; padding: 12px 28px; border-radius: 999px; font-size: 20px">Start</span>
+</div>
+<img class="scr scr2" src="/assets/game_fortuna.jpg" alt="A chance card with the challenge Duet" style="width: 100%; height: 100%; object-fit: cover">
+<img class="scr scr3" src="/assets/game_alarm.jpg" alt="Casino alarm notification: blackjack" style="width: 100%; height: 100%; object-fit: cover">
+<img class="scr scr4" src="/assets/game_rad.jpg" alt="The wheel of fortune" style="width: 100%; height: 100%; object-fit: cover">
+<img class="scr scr5" src="/assets/game_photobomb.jpg" alt="A photo bomb challenge" style="width: 100%; height: 100%; object-fit: cover">
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section style="background: #F2D16B; color: #0E3B2C">
+<div style="max-width: 1320px; margin: 0 auto; padding: 110px 32px">
+<div class="g4">
+<div class="rvs" style="display: flex; flex-direction: column; gap: 6px; border-top: 4px solid #0E3B2C; padding-top: 18px"><span class="ant" style="font-size: 96px; line-height: 1">5</span><span style="font-size: 18px; font-weight: 800">cities, each with its own route</span></div>
+<div class="rvs" style="display: flex; flex-direction: column; gap: 6px; border-top: 4px solid #0E3B2C; padding-top: 18px"><span class="ant" style="font-size: 96px; line-height: 1">13–18</span><span style="font-size: 18px; font-weight: 800">holes per night</span></div>
+<div class="rvs" style="display: flex; flex-direction: column; gap: 6px; border-top: 4px solid #0E3B2C; padding-top: 18px"><span class="ant" style="font-size: 96px; line-height: 1">2–6</span><span style="font-size: 18px; font-weight: 800">teams, 2 to 12 players</span></div>
+<div class="rvs" style="display: flex; flex-direction: column; gap: 6px; border-top: 4px solid #0E3B2C; padding-top: 18px"><span class="ant" style="font-size: 96px; line-height: 1">45′</span><span style="font-size: 18px; font-weight: 800">until the next casino alarm</span></div>
+</div>
+</div>
+</section>
+
+<section style="background: #0E3B2C; overflow: hidden">
+<div style="max-width: 1320px; margin: 0 auto; padding: 130px 32px; display: flex; gap: 72px; align-items: center; flex-wrap: wrap">
+<div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
+<div class="rv" style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #F2D16B">A GAME, NOT A DRINKING CONTEST</div>
+<h2 class="ant rv" style="margin: 0; font-size: clamp(44px, 5.4vw, 80px); line-height: .95; text-transform: uppercase">Play it your way</h2>
+<p class="rv" style="margin: 0; font-size: 20px; line-height: 1.55; color: #C9D8D1">Pubcrawl is a night out with a game in it. Choose small glasses, order water in between, or play completely alcohol-free: every city has local alternatives. 18+ only.</p>
+<a class="rv" href="#info" style="font-weight: 800; font-size: 18px; display: inline-block; padding: 12px 0">Read our statement on responsible drinking →</a>
+</div>
+<div style="flex: 1 1 420px; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<div class="rvs" style="background: #134A37; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 8px"><span class="ant" style="font-size: 30px; color: #F2D16B">Crodino</span><span style="font-size: 15px; color: #C9D8D1">alcohol-free aperitivo in Milan</span></div>
+<div class="rvs" style="background: #134A37; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 8px"><span class="ant" style="font-size: 30px; color: #F2D16B">Kofola</span><span style="font-size: 15px; color: #C9D8D1">the Czech cola, on tap in Prague</span></div>
+<div class="rvs" style="background: #134A37; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 8px"><span class="ant" style="font-size: 30px; color: #F2D16B">Orxata</span><span style="font-size: 15px; color: #C9D8D1">cold almond drink from Catalonia</span></div>
+<div class="rvs" style="background: #134A37; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 8px"><span class="ant" style="font-size: 30px; color: #F2D16B">0.0 on tap</span><span style="font-size: 15px; color: #C9D8D1">almost everywhere in Amsterdam and Dublin</span></div>
+</div>
+</div>
+</section>
+
+<section id="steden" style="background: #F7F5F0; color: #13241C">
+<div aria-hidden="true" style="overflow: hidden; padding-top: 90px">
+<div class="marq2 ant" style="white-space: nowrap; font-size: 150px; line-height: 1; color: transparent; -webkit-text-stroke: 2px #0E3B2C; width: max-content">PICK YOUR CITY ✦ PICK YOUR CITY ✦ PICK YOUR CITY ✦ PICK YOUR CITY</div>
+</div>
+<div style="max-width: 1320px; margin: 0 auto; padding: 50px 32px 150px; display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap">
+<h2 class="ant rv" style="margin: 0; font-size: clamp(44px, 5.4vw, 80px); line-height: .95; text-transform: uppercase">Five cities.<br>Five courses.</h2>
+<p class="rv" style="margin: 0; max-width: 440px; font-size: 19px; line-height: 1.5; color: #2E3F37">Every Pubcrawl has its own route, its own special holes and its own style. Click a city for the night, the start times and booking.</p>
+</div>
+<div class="g5">
+<a class="card rv" href="/en/cities/milan/">
+<div class="ph"><img src="/assets/poster_milan.jpg" alt="Teaser poster Pubcrawl Milan"></div>
+<span class="ant" style="font-size: 30px; text-transform: uppercase">Milano</span>
+<span style="font-size: 15px; line-height: 1.45; color: #2E3F37">18 holes · start in Brera<br>Aperitivo, the Navigli and the devil.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per group · introductory price</span>
+<span class="go" style="font-weight: 800; font-size: 15px">See Pubcrawl Milano →</span>
+</a>
+<a class="card rv" href="/en/cities/amsterdam/">
+<div class="ph"><img src="/assets/poster_amsterdam.jpg" alt="Teaser poster Pubcrawl Amsterdam"></div>
+<span class="ant" style="font-size: 30px; text-transform: uppercase">Amsterdam</span>
+<span style="font-size: 15px; line-height: 1.45; color: #2E3F37">15 holes · start in the Jordaan<br>Brown cafés, jenever and The Night Watch.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per group · introductory price</span>
+<span class="go" style="font-weight: 800; font-size: 15px">See Pubcrawl Amsterdam →</span>
+</a>
+<a class="card rv" href="/en/cities/barcelona/">
+<div class="ph"><img src="/assets/poster_barcelona.jpg" alt="Teaser poster Pubcrawl Barcelona"></div>
+<span class="ant" style="font-size: 30px; text-transform: uppercase">Barcelona</span>
+<span style="font-size: 15px; line-height: 1.45; color: #2E3F37">15 holes · start on the Rambla<br>Vermut, porrón and the correfoc.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per group · introductory price</span>
+<span class="go" style="font-weight: 800; font-size: 15px">See Pubcrawl Barcelona →</span>
+</a>
+<a class="card rv" href="/en/cities/prague/">
+<div class="ph"><img src="/assets/poster_prague.jpg" alt="Teaser poster Pubcrawl Praha"></div>
+<span class="ant" style="font-size: 30px; text-transform: uppercase">Praha</span>
+<span style="font-size: 15px; line-height: 1.45; color: #2E3F37">18 holes · start in Žižkov<br>Pilsner, mlíko and the green fairy.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per group · introductory price</span>
+<span class="go" style="font-weight: 800; font-size: 15px">See Pubcrawl Praha →</span>
+</a>
+<a class="card rv" href="/en/cities/dublin/">
+<div class="ph"><img src="/assets/poster_dublin.jpg" alt="Teaser poster Pubcrawl Dublin"></div>
+<span class="ant" style="font-size: 30px; text-transform: uppercase">Dublin</span>
+<span style="font-size: 15px; line-height: 1.45; color: #2E3F37">13 holes · start in Smithfield<br>Trad sessions, Split the G and Saint Patrick.</span>
+<span style="font-size: 14px; font-weight: 800; color: #B5121B">€5 per group · introductory price</span>
+<span class="go" style="font-weight: 800; font-size: 15px">See Pubcrawl Dublin →</span>
+</a>
+</div>
+</div>
+</section>
+
+<section id="info" style="background: #EFEBE1; color: #13241C">
+<div style="max-width: 1080px; margin: 0 auto; padding: 130px 32px 140px; display: flex; flex-direction: column; gap: 36px">
+<div class="rv" style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #B5121B">GOOD TO KNOW</div>
+<h2 class="ant rv" style="margin: 0; font-size: clamp(44px, 5.4vw, 80px); line-height: .95; text-transform: uppercase">Questions before the first hole</h2>
+<div role="tablist" aria-label="Information" style="display: flex; gap: 10px; flex-wrap: wrap">
+<button type="button" role="tab" id="tab-faq" aria-controls="panel-faq" class="tab tab-on" aria-selected="true" data-tab="faq">FAQ</button><button type="button" role="tab" id="tab-drink" aria-controls="panel-drink" class="tab" aria-selected="false" data-tab="drink">Responsible drinking</button><button type="button" role="tab" id="tab-af" aria-controls="panel-af" class="tab" aria-selected="false" data-tab="af">Playing alcohol-free</button><button type="button" role="tab" id="tab-prak" aria-controls="panel-prak" class="tab" aria-selected="false" data-tab="prak">Practical and privacy</button>
+</div>
+
+<div role="tabpanel" id="panel-faq" aria-labelledby="tab-faq">
+<div style="display: flex; flex-direction: column; border-bottom: 1.5px solid rgba(19,36,28,.18)">
+<div>
+<button type="button" class="faqq" aria-expanded="true" aria-controls="faq-0" data-faq="0"><span>What is pub golf?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">−</span></button>
+<p id="faq-0" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37">A bar crawl played like golf. Every bar is a hole with a drink and a challenge. Each team keeps score; challenges, quiz questions, chance cards and casino rounds shift the standings. The lowest score wins.</p>
+</div>
+<div>
+<button type="button" class="faqq" aria-expanded="false" aria-controls="faq-1" data-faq="1"><span>How many people can play?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
+<p id="faq-1" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>From 2 to 12 players, split into 2 to 6 teams. With four players you can also make four teams of one.</p>
+</div>
+<div>
+<button type="button" class="faqq" aria-expanded="false" aria-controls="faq-2" data-faq="2"><span>How long does a Pubcrawl take?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
+<p id="faq-2" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>It depends on the city: from about 5 hours in Dublin (13 holes) to a whole afternoon and evening in Milan (18 holes). Every city page shows the duration and the start times.</p>
+</div>
+<div>
+<button type="button" class="faqq" aria-expanded="false" aria-controls="faq-3" data-faq="3"><span>What does it cost and what's included?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
+<p id="faq-3" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>Now €5 per group (one game code, up to 12 players): an introductory price, soon it will be €10. You get the game code, the route, all challenges, quizzes and casino rounds, and the recap. You pay for your own drinks in the bars.</p>
+</div>
+<div>
+<button type="button" class="faqq" aria-expanded="false" aria-controls="faq-4" data-faq="4"><span>Do we need to download an app?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
+<p id="faq-4" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>No. The game runs in the browser. Open the link with your game code and the scores update live on every phone.</p>
+</div>
+<div>
+<button type="button" class="faqq" aria-expanded="false" aria-controls="faq-5" data-faq="5"><span>What if a bar is closed or full?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
+<p id="faq-5" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>Every hole has a backup bar a few minutes' walk away. The game knows the opening hours and points you to the backup bar when needed.</p>
+</div>
+<div>
+<button type="button" class="faqq" aria-expanded="false" aria-controls="faq-6" data-faq="6"><span>Can we choose our own date and start time?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
+<p id="faq-6" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>Yes. You choose the day and a start time within the city's window, so every bar along the way is open.</p>
+</div>
+<div>
+<button type="button" class="faqq" aria-expanded="false" aria-controls="faq-7" data-faq="7"><span>What happens to our photos?</span><span class="ant" style="font-size: 28px; color: #B5121B" aria-hidden="true">+</span></button>
+<p id="faq-7" style="margin: 0 0 24px; max-width: 780px; font-size: 18px; line-height: 1.6; color: #2E3F37" hidden>The photos are only in your game and are deleted automatically after 7 days, so download the recap in time. More in the <a href="/privacy.html#en" style="color: #B5121B">privacy statement</a>.</p>
+</div>
+
+</div>
+</div>
+
+<div role="tabpanel" id="panel-drink" aria-labelledby="tab-drink" hidden>
+<div style="display: flex; flex-direction: column; gap: 28px">
+<p class="ant" style="margin: 0; font-size: 40px; line-height: 1.05; text-transform: uppercase; max-width: 820px">Pubcrawl is a game for discovering the city, not a drinking contest.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px">
+<div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px; color: #B5121B">18+ only</span><span style="font-size: 17px; line-height: 1.55">Everyone in the group is 18 or older and carries valid ID. Bars may ask for it.</span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px; color: #B5121B">You choose your glass</span><span style="font-size: 17px; line-height: 1.55">Order small sizes, skip a drink or take an alcohol-free alternative. Water between holes is part of the game.</span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px; color: #B5121B">Look out for each other</span><span style="font-size: 17px; line-height: 1.55">If someone isn't doing well, stop. The bar staff always have the final say, and nobody drives after the game.</span></div>
+</div>
+</div>
+</div>
+
+<div role="tabpanel" id="panel-af" aria-labelledby="tab-af" hidden>
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; max-width: 780px; font-size: 19px; line-height: 1.6">You can play every Pubcrawl alcohol-free, on your own or as a whole team. Order an alcohol-free drink at every hole; you play all the challenges, quizzes and casino rounds as usual.</p>
+<div style="background: #0E3B2C; color: #F7F5F0; border-radius: 14px; padding: 26px 30px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap">
+<span class="ant" style="font-size: 34px; line-height: 1; color: #F2D16B; text-transform: uppercase">Counts exactly the same</span>
+<span style="flex: 1 1 380px; font-size: 17px; line-height: 1.55">An alcohol-free drink counts just as much in the score as any other drink. So you play for the win in full, with or without alcohol.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px">
+<div style="background: #F7F5F0; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .18em; color: #B5121B">MILANO</span><span class="ant" style="font-size: 24px">Crodino</span><span style="font-size: 15px; line-height: 1.5">Alcohol-free aperitivo, bittersweet and orange.</span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .18em; color: #B5121B">AMSTERDAM</span><span class="ant" style="font-size: 24px">0.0 lager</span><span style="font-size: 15px; line-height: 1.5">Almost every pub has alcohol-free beer.</span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .18em; color: #B5121B">BARCELONA</span><span class="ant" style="font-size: 24px">Orxata</span><span style="font-size: 15px; line-height: 1.5">A cold drink made from tiger nuts.</span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .18em; color: #B5121B">PRAHA</span><span class="ant" style="font-size: 24px">Kofola</span><span style="font-size: 15px; line-height: 1.5">Czech herbal cola, often on tap.</span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; font-weight: 800; letter-spacing: .18em; color: #B5121B">DUBLIN</span><span class="ant" style="font-size: 24px">Guinness 0.0</span><span style="font-size: 15px; line-height: 1.5">Same black, same head, no alcohol.</span></div>
+</div>
+</div>
+</div>
+
+<div role="tabpanel" id="panel-prak" aria-labelledby="tab-prak" hidden>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px">
+<div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px">What you need</span><span style="font-size: 17px; line-height: 1.55">At least one charged phone with internet per team, comfortable shoes and cash or a card for the drinks.</span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px">Privacy</span><span style="font-size: 17px; line-height: 1.55">We only use your details for your booking. Photos from the game are deleted automatically after 7 days. <a href="/privacy.html#en" style="color: #B5121B; font-weight: 800">Read the privacy statement</a></span></div>
+<div style="background: #F7F5F0; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 26px">Terms</span><span style="font-size: 17px; line-height: 1.55">Cancelling, rebooking and liability are covered in the terms. <a href="/voorwaarden.html#en" style="color: #B5121B; font-weight: 800">Read the terms</a></span></div>
+</div>
+</div>
+</div>
+</section>
+
+<footer style="background: #07211A; color: #C9D8D1">
+<div style="max-width: 1320px; margin: 0 auto; padding: 100px 32px 50px; display: flex; flex-direction: column; gap: 60px">
+<div class="ant rvs" style="font-size: clamp(80px, 15vw, 230px); line-height: .85; color: #F7F5F0; letter-spacing: .01em">PUBCRAWL</div>
+<div style="display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap">
+<div style="display: flex; gap: 26px; flex-wrap: wrap">
+<a href="/en/cities/milan/" class="navlink">Milano</a>
+<a href="/en/cities/amsterdam/" class="navlink">Amsterdam</a>
+<a href="/en/cities/barcelona/" class="navlink">Barcelona</a>
+<a href="/en/cities/prague/" class="navlink">Praha</a>
+<a href="/en/cities/dublin/" class="navlink">Dublin</a>
+</div>
+<div style="display: flex; gap: 26px; flex-wrap: wrap">
+<a href="#info" class="navlink">FAQ</a>
+<a href="#info" class="navlink">Responsible drinking</a>
+<a href="/privacy.html#en" class="navlink">Privacy</a>
+<a href="mailto:bookings@forkit.nl" class="navlink">Contact</a>
+<a href="/voorwaarden.html#en" class="navlink">Terms</a>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; border-top: 1px solid rgba(247,245,240,.12); padding-top: 24px; font-size: 14px">
+<span>© 2026 Thobias Bakker · Pubcrawl · <a href="mailto:bookings@forkit.nl" style="display: inline-block; padding: 14px 2px">bookings@forkit.nl</a></span>
+<span style="font-weight: 800; letter-spacing: .08em">18+ · DRINK RESPONSIBLY</span>
+</div>
+</div>
+</footer>
+</div>
+<script>
+(function () {
+  // info tabs (FAQ, responsible drinking, alcohol-free, practical)
+  var tabs = document.querySelectorAll('[data-tab]');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (o) {
+        var on = o === t; o.classList.toggle('tab-on', on); o.setAttribute('aria-selected', on ? 'true' : 'false');
+        document.getElementById('panel-' + o.getAttribute('data-tab')).hidden = !on;
+      });
+    });
+  });
+  // FAQ: one answer open at a time
+  var qs = document.querySelectorAll('[data-faq]');
+  qs.forEach(function (q) {
+    q.addEventListener('click', function () {
+      var open = q.getAttribute('aria-expanded') !== 'true';
+      qs.forEach(function (o) {
+        var on = o === q && open; o.setAttribute('aria-expanded', on ? 'true' : 'false');
+        o.lastElementChild.textContent = on ? '−' : '+';
+        document.getElementById('faq-' + o.getAttribute('data-faq')).hidden = !on;
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
