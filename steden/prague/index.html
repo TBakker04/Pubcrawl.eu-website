@@ -175,6 +175,8 @@ a{color:#C9A45C}a:hover{color:#E1DCC9}
 </div>
 </div>
 <div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(201,164,92,.4); padding-top: 18px; font-size: 17px"><span data-teams>6 spelers · bijvoorbeeld 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per groep</span></span><span style="font-size: 13px; opacity: .8">introductieprijs, straks €10</span></span></div>
+<label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">KORTINGSCODE<input class="field" type="text" data-promo autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="Optioneel"></label>
+<label data-emailrow hidden style="display: none; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">E-MAIL VOOR DE SPELCODE<input class="field" type="email" data-email autocomplete="email" maxlength="200"></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-adults required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Iedereen in de groep is 18 jaar of ouder.</span></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-terms required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Ik ga akkoord met de <a href="/voorwaarden.html" style="color: inherit">voorwaarden</a>. Omboeken kan; geld terug en het herroepingsrecht vervallen, omdat het spel op een vaste datum is.</span></label>
 <p data-msg role="status" style="margin: 0; font-size: 15px; min-height: 0"></p>
@@ -211,23 +213,37 @@ a{color:#C9A45C}a:hover{color:#E1DCC9}
 <script src="/booking-config.js"></script>
 <script>
 (function () {
-  // booking: only active when booking-config.js has an api address; the server checks everything again
+  // booking: only active when booking-config.js has an api address; the server checks everything again.
+  // paid:false = no Stripe yet: only discount codes (e.g. ERASMUS) work; the game code goes by email.
   var cfg = window.PC_BOOKING || {}, form = document.querySelector('#boek form'), btn = form && form.querySelector('[data-book]');
   if (!form || !btn || !cfg.api) return;
   var en = document.documentElement.lang === 'en', city = form.getAttribute('data-city');
   var date = form.querySelector('input[type=date]'), time = form.querySelector('select'), msg = form.querySelector('[data-msg]');
-  var t = new Date(Date.now() + 864e5 * 0); date.min = new Date(t.getTime() - t.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
-  btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; btn.textContent = en ? 'Book and pay · €' + cfg.price : 'Boek en betaal · €' + cfg.price;
+  var promo = form.querySelector('[data-promo]'), email = form.querySelector('[data-email]'), erow = form.querySelector('[data-emailrow]');
+  var t = new Date(); date.min = new Date(t.getTime() - t.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+  function label() {
+    var p = promo.value.trim() !== ''; erow.hidden = !p; erow.style.display = p ? 'flex' : 'none';
+    btn.textContent = p ? (en ? 'Book with code' : 'Boek met code') : cfg.paid ? (en ? 'Book and pay · €' : 'Boek en betaal · €') + cfg.price : (en ? 'Paid booking opens in February' : 'Betaald boeken opent in februari');
+  }
+  promo.addEventListener('input', label);
+  btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; label();
+  var ERR = { promo: ['Deze kortingscode bestaat niet.', 'This discount code does not exist.'], 'promo-used': ['Met dit e-mailadres is de code al gebruikt.', 'This code has already been used with this email address.'],
+    'promo-full': ['Voor vandaag zijn de gratis plekken op. Probeer het morgen weer.', 'Today\'s free spots are gone. Try again tomorrow.'], 'promo-ended': ['Deze actie is afgelopen.', 'This offer has ended.'],
+    email: ['Vul een geldig e-mailadres in.', 'Enter a valid email address.'], date: ['Kies een datum vanaf vandaag.', 'Pick a date from today.'], 'paid-closed': ['Betaald boeken opent in februari. Heb je een kortingscode? Vul hem hierboven in.', 'Paid booking opens in February. Got a discount code? Enter it above.'] };
   btn.addEventListener('click', async function () {
-    var players = +form.querySelector('[data-players]').textContent, adults = form.querySelector('[data-adults]').checked, terms = form.querySelector('[data-terms]').checked;
+    var players = +form.querySelector('[data-players]').textContent, adults = form.querySelector('[data-adults]').checked, terms = form.querySelector('[data-terms]').checked, code = promo.value.trim();
     var err = !date.value ? (en ? 'Pick a date.' : 'Kies een datum.') : !adults ? (en ? 'Everyone in the group must be 18 or older.' : 'Iedereen in de groep moet 18+ zijn.') : !terms ? (en ? 'Please accept the terms.' : 'Ga akkoord met de voorwaarden.') : '';
+    if (!err && !code && !cfg.paid) err = ERR['paid-closed'][en ? 1 : 0];
+    if (!err && code && !/^\S+@\S+\.\S+$/.test(email.value.trim())) err = ERR.email[en ? 1 : 0];
     msg.textContent = err; if (err) return;
     btn.disabled = true; msg.textContent = en ? 'One moment…' : 'Even geduld…';
     try {
       var r = await fetch(cfg.api + '/createCheckout', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ city: city, players: players, playDate: date.value, startTime: time.value.slice(0, 5), lang: en ? 'en' : 'nl', adults: adults, terms: terms }) });
-      var d = await r.json(); if (d.url) { location.href = d.url; return; }
-      msg.textContent = (en ? 'That did not work (' : 'Dat lukte niet (') + (d.error || r.status) + (en ? '). Check the date and time.' : '). Controleer de datum en tijd.');
+        body: JSON.stringify({ city: city, players: players, playDate: date.value, startTime: time.value.slice(0, 5), lang: en ? 'en' : 'nl', adults: adults, terms: terms, promo: code, email: email.value.trim() }) });
+      var d = await r.json();
+      if (d.url) { location.href = d.url; return; }
+      if (d.free) { msg.textContent = en ? 'Done! Your game code is on its way to ' + email.value.trim() + '. Check your spam folder too.' : 'Gelukt! Jullie spelcode is onderweg naar ' + email.value.trim() + '. Kijk ook in je spam.'; return; }
+      msg.textContent = ERR[d.error] ? ERR[d.error][en ? 1 : 0] : (en ? 'That did not work (' : 'Dat lukte niet (') + (d.error || r.status) + ').';
     } catch (e) { msg.textContent = en ? 'No connection. Try again.' : 'Geen verbinding. Probeer het opnieuw.'; }
     btn.disabled = false;
   });
