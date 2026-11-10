@@ -7,6 +7,9 @@
 <title>Pubcrawl – pub golf in Milaan, Amsterdam, Barcelona, Praag en Dublin</title>
 <meta name="description" content="Pub golf als avondvullend spel: elke bar is een hole, je telefoon is de scorekaart. In Milaan, Amsterdam, Barcelona, Praag of Dublin, met 2 tot 6 teams.">
 <link rel="canonical" href="https://pubgolf.eu/">
+<link rel="alternate" hreflang="nl" href="https://pubgolf.eu/">
+<link rel="alternate" hreflang="en" href="https://pubgolf.eu/en/">
+<link rel="alternate" hreflang="x-default" href="https://pubgolf.eu/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Pubcrawl – pub golf in Milaan, Amsterdam, Barcelona, Praag en Dublin">
 <meta property="og:description" content="Pub golf als avondvullend spel: elke bar is een hole, je telefoon is de scorekaart. In Milaan, Amsterdam, Barcelona, Praag of Dublin, met 2 tot 6 teams.">
@@ -102,7 +105,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 .hero-art{display:none !important}
 }
 @media (max-width: 560px){.g5{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.g4{grid-template-columns:minmax(0,1fr)}}
-</style>
+.langsw{display:flex;gap:2px;align-items:center}.langsw a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:13px;font-weight:800;letter-spacing:.1em;text-decoration:none;color:inherit;opacity:.6;border-radius:999px}.langsw a[aria-current]{opacity:1;text-decoration:underline;text-underline-offset:4px}.langsw a:hover{opacity:1}</style>
 </head>
 <body>
 <div style="font-family: 'Archivo', 'Helvetica Neue', sans-serif; color: #F7F5F0; background: #07211A; overflow-x: hidden">
@@ -120,7 +123,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <a class="navlink" href="#info">Goed om te weten</a>
 </nav>
 <div style="display: flex; gap: 14px; align-items: center">
-<span style="font-size: 13px; font-weight: 800; letter-spacing: .1em; color: #A9BDB4">NL · <span style="color: #F7F5F0">EN</span></span>
+<nav class="langsw" aria-label="Taal"><a href="/" lang="nl" hreflang="nl" aria-current="true" onclick="try{localStorage.setItem('pubcrawl-lang','nl')}catch(e){}">NL</a><a href="/en/" lang="en" hreflang="en" onclick="try{localStorage.setItem('pubcrawl-lang','en')}catch(e){}">EN</a></nav>
 <a class="btn btn-red" href="#steden" style="min-height: 44px; font-size: 17px; padding: 0 22px">Kies je stad</a>
 </div>
 </div>
