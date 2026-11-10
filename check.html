@@ -39,7 +39,7 @@
   }
   if (!window.PC_FIREBASE) { sum.textContent = 'Geen Firebase-config gevonden.'; sum.className = 'bad'; return; }
   firebase.initializeApp(window.PC_FIREBASE);
-  if (window.PC_FIREBASE.appCheckKey && firebase.appCheck) { try { firebase.appCheck().activate(window.PC_FIREBASE.appCheckKey, true); } catch (e) {} }
+  if (window.PC_FIREBASE.appCheckKey && firebase.appCheck) { try { var AC = firebase.appCheck, K = window.PC_FIREBASE.appCheckKey; AC().activate(window.PC_FIREBASE.appCheckProvider === 'enterprise' && AC.ReCaptchaEnterpriseProvider ? new AC.ReCaptchaEnterpriseProvider(K) : K, true); } catch (e) {} }
   var db = firebase.firestore();
   var id = 'rulecheck-' + Date.now().toString(36), now = Date.now();
   function timeout(p) { return Promise.race([p, new Promise(function(_, r) { setTimeout(function() { r({ code: 'timeout' }); }, 12000); })]); }

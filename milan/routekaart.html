@@ -73,11 +73,11 @@
     if (!cfg || !cfg.apiKey || !cfg.projectId) return dbP = Promise.resolve(null);
     dbP = load('https://www.gstatic.com/firebasejs/' + V + '/firebase-app-compat.js')
       .then(function() { return load('https://www.gstatic.com/firebasejs/' + V + '/firebase-firestore-compat.js'); })
-      // App Check (when firebase-config.js has appCheckKey, a reCAPTCHA v3 site key): only this website may use the database
+      // App Check (when firebase-config.js has appCheckKey: a reCAPTCHA v3 key, or an Enterprise key with appCheckProvider: 'enterprise'): only this website may use the database
       .then(function() { return cfg.appCheckKey ? load('https://www.gstatic.com/firebasejs/' + V + '/firebase-app-check-compat.js').catch(function() {}) : null; })
       .then(function() {
         if (!window.firebase.apps.length) window.firebase.initializeApp(cfg);
-        if (cfg.appCheckKey && window.firebase.appCheck) { try { window.firebase.appCheck().activate(cfg.appCheckKey, true); } catch (e) {} }
+        if (cfg.appCheckKey && window.firebase.appCheck) { try { var AC = window.firebase.appCheck; AC().activate(cfg.appCheckProvider === 'enterprise' && AC.ReCaptchaEnterpriseProvider ? new AC.ReCaptchaEnterpriseProvider(cfg.appCheckKey) : cfg.appCheckKey, true); } catch (e) {} }
         var db = window.firebase.firestore();
         try { db.enablePersistence({ synchronizeTabs: true }).catch(function() {}); } catch (e) {}
         return db;

@@ -109,7 +109,7 @@
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
   if (!window.PC_FIREBASE) { $('who').textContent = 'Geen Firebase-config gevonden.'; return; }
   firebase.initializeApp(window.PC_FIREBASE);
-  if (window.PC_FIREBASE.appCheckKey && firebase.appCheck) { try { firebase.appCheck().activate(window.PC_FIREBASE.appCheckKey, true); } catch (e) {} }
+  if (window.PC_FIREBASE.appCheckKey && firebase.appCheck) { try { var AC = firebase.appCheck, K = window.PC_FIREBASE.appCheckKey; AC().activate(window.PC_FIREBASE.appCheckProvider === 'enterprise' && AC.ReCaptchaEnterpriseProvider ? new AC.ReCaptchaEnterpriseProvider(K) : K, true); } catch (e) {} }
   var auth = firebase.auth(), db = firebase.firestore();
 
   $('signin').addEventListener('click', function() {
