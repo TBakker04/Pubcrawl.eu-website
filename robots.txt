@@ -1,6 +1,7 @@
 User-agent: *
 Disallow: /admin.html
 Disallow: /check.html
+Disallow: /bedankt.html
 Disallow: /milan/
 Disallow: /amsterdam/
 Disallow: /barcelona/

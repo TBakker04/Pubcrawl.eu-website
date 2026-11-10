@@ -167,7 +167,7 @@ a{color:#D7001A}a:hover{color:#111111}
 <p style="margin: 0; font-size: 18px; line-height: 1.6; color: #D6D6D6">One price for the whole group, up to 12 players. Pick a day and a start time. After payment you immediately get the game code and the link by email. You pay for your own drinks in the pubs.</p>
 <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #B4B4B4">18+ only. <a href="/en/#info" style="color: #FF4D5E">Responsible drinking and playing alcohol-free</a></p>
 </div>
-<form style="flex: 1 1 420px; min-width: 0; background: #1C1C1C; border-radius: 18px; padding: 32px; display: flex; flex-direction: column; gap: 20px">
+<form data-city="amsterdam" style="flex: 1 1 420px; min-width: 0; background: #1C1C1C; border-radius: 18px; padding: 32px; display: flex; flex-direction: column; gap: 20px">
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">DATE<input class="field" type="date"></label>
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">START TIME
 <select class="field"><option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option><option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option><option>20:00 (Fri/Sat)</option><option>20:30 (Fri/Sat)</option></select></label>
@@ -180,7 +180,10 @@ a{color:#D7001A}a:hover{color:#111111}
 </div>
 </div>
 <div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 players · for example 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per group</span></span><span style="font-size: 13px; opacity: .8">introductory price, soon €10</span></span></div>
-<button type="button" class="btn btn-main" style="width: 100%; opacity: .7; cursor: not-allowed" disabled>Booking opens soon</button>
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-adults required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Everyone in the group is 18 or older.</span></label>
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-terms required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>I accept the <a href="/voorwaarden.html#en" style="color: inherit">terms</a>. Rebooking is possible; refunds and the right of withdrawal do not apply, because the game is on a fixed date.</span></label>
+<p data-msg role="status" style="margin: 0; font-size: 15px; min-height: 0"></p>
+<button type="button" class="btn btn-main" data-book style="width: 100%; opacity: .7; cursor: not-allowed" disabled>Booking opens soon</button>
 </form>
 </div>
 </section>
@@ -210,5 +213,30 @@ a{color:#D7001A}a:hover{color:#111111}
 })();
 </script>
 <script>/* teaser pas laden en afspelen als hij in beeld komt */(function(){var vs=document.querySelectorAll('video[data-lazy]');if(!('IntersectionObserver' in window)){vs.forEach(function(v){v.preload='auto';v.play&&v.play().catch(function(){});});return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){v.preload='auto';var p=v.play();if(p&&p.catch)p.catch(function(){});}else if(!v.paused){v.pause();}});},{rootMargin:'200px 0px'});vs.forEach(function(v){io.observe(v);});})();</script>
+<script src="/booking-config.js"></script>
+<script>
+(function () {
+  // booking: only active when booking-config.js has an api address; the server checks everything again
+  var cfg = window.PC_BOOKING || {}, form = document.querySelector('#boek form'), btn = form && form.querySelector('[data-book]');
+  if (!form || !btn || !cfg.api) return;
+  var en = document.documentElement.lang === 'en', city = form.getAttribute('data-city');
+  var date = form.querySelector('input[type=date]'), time = form.querySelector('select'), msg = form.querySelector('[data-msg]');
+  var t = new Date(Date.now() + 864e5 * 0); date.min = new Date(t.getTime() - t.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+  btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; btn.textContent = en ? 'Book and pay · €' + cfg.price : 'Boek en betaal · €' + cfg.price;
+  btn.addEventListener('click', async function () {
+    var players = +form.querySelector('[data-players]').textContent, adults = form.querySelector('[data-adults]').checked, terms = form.querySelector('[data-terms]').checked;
+    var err = !date.value ? (en ? 'Pick a date.' : 'Kies een datum.') : !adults ? (en ? 'Everyone in the group must be 18 or older.' : 'Iedereen in de groep moet 18+ zijn.') : !terms ? (en ? 'Please accept the terms.' : 'Ga akkoord met de voorwaarden.') : '';
+    msg.textContent = err; if (err) return;
+    btn.disabled = true; msg.textContent = en ? 'One moment…' : 'Even geduld…';
+    try {
+      var r = await fetch(cfg.api + '/createCheckout', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ city: city, players: players, playDate: date.value, startTime: time.value.slice(0, 5), lang: en ? 'en' : 'nl', adults: adults, terms: terms }) });
+      var d = await r.json(); if (d.url) { location.href = d.url; return; }
+      msg.textContent = (en ? 'That did not work (' : 'Dat lukte niet (') + (d.error || r.status) + (en ? '). Check the date and time.' : '). Controleer de datum en tijd.');
+    } catch (e) { msg.textContent = en ? 'No connection. Try again.' : 'Geen verbinding. Probeer het opnieuw.'; }
+    btn.disabled = false;
+  });
+})();
+</script>
 </body>
 </html>
