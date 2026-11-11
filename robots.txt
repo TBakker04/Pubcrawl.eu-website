@@ -7,4 +7,5 @@ Disallow: /amsterdam/
 Disallow: /barcelona/
 Disallow: /prague/
 Disallow: /dublin/
+Disallow: /lisbon/
 Sitemap: https://pubgolf.eu/sitemap.xml
