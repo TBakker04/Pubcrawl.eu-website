@@ -41,7 +41,7 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
 .thumb{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:#F7F5F0}
 .thumb img{display:block;width:100%;border-radius:8px;transition:transform .3s ease}
 .thumb:hover img{transform:translateY(-6px) rotate(-1deg)}
-.area{display:flex;flex-direction:column;gap:10px;min-width:120px;flex:1 1 120px}
+.area{display:flex;flex-direction:column;gap:10px;flex:1 1 auto;min-width:max-content}.area .ant{white-space:nowrap}@media (max-width: 700px){.line{display:none}.area{flex:1 1 100%;min-width:0;flex-direction:row;align-items:center;flex-wrap:wrap;gap:4px 14px;position:relative;padding-bottom:6px}.area>span:first-child{flex:0 0 auto;position:relative;z-index:1}.area .ant{white-space:normal}.area>span:nth-child(3){flex-basis:100%;padding-left:50px;margin-top:-6px}.area:not(:last-child)::after{content:"";position:absolute;left:16px;top:30px;bottom:-22px;width:3px;background:#FF9A4D}}
 .tri{background:linear-gradient(90deg, #169B62 0 33.33%, #F7F5F0 33.33% 66.66%, #FF883E 66.66% 100%)}
 .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
@@ -61,7 +61,7 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
 .sway{transform-origin:50% 90%;animation:sway 5s ease-in-out infinite}
 @media (max-width: 960px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:minmax(0,1fr)}.sp{grid-template-columns:minmax(0,1fr)}}
 @media (max-width: 520px){.g4{grid-template-columns:minmax(0,1fr)}.hidesm{display:none}}
-.langsw{display:flex;gap:2px;align-items:center}.langsw a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:13px;font-weight:800;letter-spacing:.1em;text-decoration:none;color:inherit;opacity:.6;border-radius:999px}.langsw a[aria-current]{opacity:1;text-decoration:underline;text-underline-offset:4px}.langsw a:hover{opacity:1}</style>
+@media (max-width: 380px){[style*="letter-spacing: .14em; white-space: nowrap"]{font-size:11px !important;letter-spacing:.08em !important}}.langsw{display:flex;gap:2px;align-items:center}.langsw a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:13px;font-weight:800;letter-spacing:.1em;text-decoration:none;color:inherit;opacity:.6;border-radius:999px}.langsw a[aria-current]{opacity:1;text-decoration:underline;text-underline-offset:4px}.langsw a:hover{opacity:1}</style>
 </head>
 <body>
 <div style="font-family: 'Archivo', 'Helvetica Neue', sans-serif; color: #F7F5F0; background: #0F4D32; overflow-x: hidden">
@@ -98,7 +98,7 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
 
 <section style="background: #F7F5F0; color: #0F4D32">
 <div class="g4" style="max-width: 1280px; margin: 0 auto; padding: 56px 32px">
-<div class="rv" style="display: flex; flex-direction: column; gap: 4px"><span class="ant" style="font-size: 64px; line-height: 1">13</span><span style="font-weight: 800; font-size: 16px">pubs, 8 buurten</span></div>
+<div class="rv" style="display: flex; flex-direction: column; gap: 4px"><span class="ant" style="font-size: 64px; line-height: 1">13</span><span style="font-weight: 800; font-size: 16px">pubs, 7 buurten</span></div>
 <div class="rv" style="display: flex; flex-direction: column; gap: 4px"><span class="ant" style="font-size: 64px; line-height: 1">±5 uur</span><span style="font-weight: 800; font-size: 16px">alles te lopen</span></div>
 <div class="rv" style="display: flex; flex-direction: column; gap: 4px"><span class="ant" style="font-size: 64px; line-height: 1">14–20:30</span><span style="font-weight: 800; font-size: 16px">starttijd (vr/za)</span></div>
 <div class="rv" style="display: flex; flex-direction: column; gap: 4px"><span class="ant" style="font-size: 64px; line-height: 1">2–6</span><span style="font-weight: 800; font-size: 16px">teams, tot 12 spelers</span></div>
@@ -135,12 +135,12 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
 <span class="ant" style="font-size: clamp(44px, 5vw, 76px); line-height: .95; text-transform: uppercase">Hole van Sint-Patrick</span>
 <span style="font-size: 19px; line-height: 1.55; max-width: 620px">Sint-Patrick verdreef volgens de legende de slangen uit Ierland. De barman kiest één Iers drankje met een verhaal, poitín bijvoorbeeld, en de teams gaan een biedronde aan.</span>
 </div>
-<div style="display: flex; gap: 30px"><div style="display: flex; flex-direction: column; align-items: center"><span class="ant" style="font-size: 84px; line-height: 1">−3</span><span style="font-weight: 800; font-size: 13px; letter-spacing: .14em">GELUKT</span></div><div style="display: flex; flex-direction: column; align-items: center"><span class="ant" style="font-size: 84px; line-height: 1">+3</span><span style="font-weight: 800; font-size: 13px; letter-spacing: .14em">MISLUKT</span></div></div>
+<div style="display: flex; gap: 30px"><div style="display: flex; flex-direction: column; align-items: center"><span class="ant" style="font-size: 84px; line-height: 1">−3</span><span style="font-weight: 800; font-size: 13px; letter-spacing: .14em; white-space: nowrap">GELUKT</span></div><div style="display: flex; flex-direction: column; align-items: center"><span class="ant" style="font-size: 84px; line-height: 1">+3</span><span style="font-weight: 800; font-size: 13px; letter-spacing: .14em; white-space: nowrap">MISLUKT</span></div></div>
 </div>
 <div class="sp">
 <div class="rv" style="background: #F7F5F0; color: #13241C; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #B4500E">MADE IN IRELAND</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Split the G</span><span style="font-size: 17px; line-height: 1.55">Neem één slok van je Guinness en mik: de lijn tussen schuim en stout moet precies door de G van het logo lopen.</span></div>
 <div class="rv" style="background: #F7F5F0; color: #13241C; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #B4500E">ZINGEN</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Whiskey in the Jar</span><span style="font-size: 17px; line-height: 1.55">Elk team zingt een refrein van een Iers lied. De andere teams geven een cijfer.</span></div>
-<div class="rv" style="background: #F7F5F0; color: #13241C; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #B4500E">PROEVEN</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Stout, porter of ale</span><span style="font-size: 17px; line-height: 1.55">Drie proefglaasjes, door een ander team neergezet. Weet jij welke welke is?</span></div>
+<div class="rv" style="background: #F7F5F0; color: #13241C; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #B4500E">PROEVEN</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Stout, porter of ale</span><span style="font-size: 17px; line-height: 1.55">Drie proefglaasjes, door een ander team neergezet. Proef jij welk glas wat is?</span></div>
 <div class="rv" style="background: #F7F5F0; color: #13241C; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #B4500E">HERSENS AAN</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Pub quiz</span><span style="font-size: 17px; line-height: 1.55">In Ierland een vast avondje uit. Vijf vragen over Dublin, in een schrijverspub.</span></div>
 </div>
 </div>
@@ -150,7 +150,7 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
 <div style="max-width: 1280px; margin: 0 auto; padding: 130px 32px; display: flex; flex-direction: column; gap: 40px">
 <div class="rv" style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #FF9A4D">DRINKEN ALS EEN DUBLINER</div>
 <div class="g3">
-<div class="rv" style="border-top: 3px solid #FF9A4D; padding-top: 22px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 38px">Rondjes</span><span style="font-size: 17px; line-height: 1.6; color: #D9E8DF">Iedereen geeft om de beurt een rondje. Je rondje overslaan is het ergste wat je in een Ierse pub kunt doen.</span></div>
+<div class="rv" style="border-top: 3px solid #FF9A4D; padding-top: 22px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 38px">Trad session</span><span style="font-size: 17px; line-height: 1.6; color: #D9E8DF">In veel pubs speelt 's avonds live Ierse muziek in de hoek. Even stil zijn en luisteren hoort erbij.</span></div>
 <div class="rv" style="border-top: 3px solid #FF9A4D; padding-top: 22px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 38px">Geduld</span><span style="font-size: 17px; line-height: 1.6; color: #D9E8DF">Een Guinness wordt in twee keer getapt. Niet aanraken tot hij helemaal zwart is.</span></div>
 <div class="rv" style="border-top: 3px solid #FF9A4D; padding-top: 22px; display: flex; flex-direction: column; gap: 10px"><span class="ant" style="font-size: 38px">Sláinte!</span><span style="font-size: 17px; line-height: 1.6; color: #D9E8DF">Proost, op je gezondheid. Alcoholvrij? Guinness 0.0: zelfde zwart, zelfde kraag.</span></div>
 </div>
@@ -170,7 +170,7 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">DATUM<input class="field" type="date"></label>
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">STARTTIJD
 <select class="field"><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option><option>18:30</option><option>19:00</option><option>19:30 (do–za)</option><option>20:00 (vr/za)</option><option>20:30 (vr/za)</option></select></label>
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px 16px; flex-wrap: wrap">
 <span style="font-weight: 800; font-size: 14px; letter-spacing: .08em">SPELERS</span>
 <div style="display: flex; align-items: center; gap: 16px">
 <button type="button" class="step-btn" aria-label="Minder spelers" data-step="-1">−</button>
@@ -178,7 +178,7 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
 <button type="button" class="step-btn" aria-label="Meer spelers" data-step="1">+</button>
 </div>
 </div>
-<div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(247,245,240,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 spelers · bijvoorbeeld 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per groep</span></span><span style="font-size: 13px; opacity: .8">introductieprijs, straks €10</span></span></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px 16px; border-top: 1px solid rgba(247,245,240,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 spelers · bijvoorbeeld 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per groep</span></span><span style="font-size: 13px; opacity: .8">introductieprijs, straks €10</span></span></div>
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">KORTINGSCODE<input class="field" type="text" data-promo autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="Optioneel"></label>
 <label data-emailrow hidden style="display: none; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">E-MAIL VOOR DE SPELCODE<input class="field" type="email" data-email autocomplete="email" maxlength="200"></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-adults required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Iedereen in de groep is 18 jaar of ouder.</span></label>
@@ -193,7 +193,7 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
 <div style="max-width: 1280px; margin: 0 auto; padding: 100px 32px 70px; display: flex; flex-direction: column; gap: 30px">
 <div style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #FF9A4D">ANDERE STEDEN</div>
 <div class="g4">
-<a class="thumb" href="/steden/milan/"><img src="/assets/poster_milan.jpg" alt="Teaserposter Pubgolf Milan"><span class="ant" style="font-size: 24px">Milano →</span></a>
+<a class="thumb" href="/steden/milan/"><img src="/assets/poster_milan.jpg" alt="Teaserposter Pubgolf Milano"><span class="ant" style="font-size: 24px">Milano →</span></a>
 <a class="thumb" href="/steden/amsterdam/"><img src="/assets/poster_amsterdam.jpg" alt="Teaserposter Pubgolf Amsterdam"><span class="ant" style="font-size: 24px">Amsterdam →</span></a>
 <a class="thumb" href="/steden/barcelona/"><img src="/assets/poster_barcelona.jpg" alt="Teaserposter Pubgolf Barcelona"><span class="ant" style="font-size: 24px">Barcelona →</span></a>
 <a class="thumb" href="/steden/prague/"><img src="/assets/poster_prague.jpg" alt="Teaserposter Pubgolf Praha"><span class="ant" style="font-size: 24px">Praha →</span></a>

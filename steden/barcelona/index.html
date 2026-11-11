@@ -41,7 +41,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 .thumb{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:#FFFFFF}
 .thumb img{display:block;width:100%;border-radius:8px;transition:transform .3s ease}
 .thumb:hover img{transform:translateY(-6px) rotate(-1deg)}
-.area{display:flex;flex-direction:column;gap:10px;min-width:140px;flex:1 1 140px}
+.area{display:flex;flex-direction:column;gap:10px;flex:1 1 auto;min-width:max-content}.area .ant{white-space:nowrap}@media (max-width: 700px){.line{display:none}.area{flex:1 1 100%;min-width:0;flex-direction:row;align-items:center;flex-wrap:wrap;gap:4px 14px;position:relative;padding-bottom:6px}.area>span:first-child{flex:0 0 auto;position:relative;z-index:1}.area .ant{white-space:normal}.area>span:nth-child(3){flex-basis:100%;padding-left:50px;margin-top:-6px}.area:not(:last-child)::after{content:"";position:absolute;left:16px;top:30px;bottom:-22px;width:3px;background:#EDBB00}}
 .stripes{background-image:repeating-linear-gradient(90deg, #A50044 0 60px, #16438A 60px 120px)}
 .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
@@ -62,7 +62,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 .flame{transform-origin:50% 100%;animation:flick .9s ease-in-out infinite}
 @media (max-width: 960px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:minmax(0,1fr)}.sp{grid-template-columns:minmax(0,1fr)}}
 @media (max-width: 520px){.g4{grid-template-columns:minmax(0,1fr)}.hidesm{display:none}}
-.langsw{display:flex;gap:2px;align-items:center}.langsw a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:13px;font-weight:800;letter-spacing:.1em;text-decoration:none;color:inherit;opacity:.6;border-radius:999px}.langsw a[aria-current]{opacity:1;text-decoration:underline;text-underline-offset:4px}.langsw a:hover{opacity:1}</style>
+@media (max-width: 380px){[style*="letter-spacing: .14em; white-space: nowrap"]{font-size:11px !important;letter-spacing:.08em !important}}.langsw{display:flex;gap:2px;align-items:center}.langsw a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:13px;font-weight:800;letter-spacing:.1em;text-decoration:none;color:inherit;opacity:.6;border-radius:999px}.langsw a[aria-current]{opacity:1;text-decoration:underline;text-underline-offset:4px}.langsw a:hover{opacity:1}</style>
 </head>
 <body>
 <div style="font-family: 'Archivo', 'Helvetica Neue', sans-serif; color: #FFFFFF; background: #0B2A5B; overflow-x: hidden">
@@ -81,7 +81,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 <div style="position: relative; max-width: 1280px; margin: 0 auto; padding: 90px 32px 110px; display: flex; gap: 60px; align-items: center; flex-wrap: wrap">
 <div style="flex: 1 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 26px">
 <div style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #EDBB00">PUB GOLF · 15 HOLES · BARCELONA</div>
-<h1 class="ant" style="margin: 0; font-size: clamp(64px, 9vw, 150px); line-height: .86; text-transform: uppercase">Pubgolf<br><span style="color: #E8336F">Barcelona</span></h1>
+<h1 class="ant" style="margin: 0; font-size: clamp(42px, 12.5vw, 150px); line-height: .86; text-transform: uppercase">Pubgolf<br><span style="color: #E8336F">Barcelona</span></h1>
 <p style="margin: 0; max-width: 560px; font-size: 21px; line-height: 1.55; color: #C9D3E6">Vermut bij de Rambla, wijn uit de porrón in de Raval, voetbal in de Gòtic en een vurige finale in Barceloneta, aan de haven.</p>
 <div style="display: flex; gap: 14px; flex-wrap: wrap">
 <a href="#boek" class="btn btn-main">Boek je avond</a>
@@ -135,11 +135,11 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 <span class="ant" style="font-size: clamp(44px, 5vw, 76px); line-height: .95; text-transform: uppercase">Hole Correfoc</span>
 <span style="font-size: 19px; line-height: 1.55; max-width: 620px">Bij de correfoc rennen duivels met vuurwerk door de straten. De barman kiest één vurig drankje en de teams gaan een biedronde aan.</span>
 </div>
-<div style="position: relative; display: flex; gap: 30px"><div style="display: flex; flex-direction: column; align-items: center"><span class="ant" style="font-size: 84px; line-height: 1">−3</span><span style="font-weight: 800; font-size: 13px; letter-spacing: .14em">GELUKT</span></div><div style="display: flex; flex-direction: column; align-items: center"><span class="ant" style="font-size: 84px; line-height: 1">+3</span><span style="font-weight: 800; font-size: 13px; letter-spacing: .14em">MISLUKT</span></div></div>
+<div style="position: relative; display: flex; gap: 30px"><div style="display: flex; flex-direction: column; align-items: center"><span class="ant" style="font-size: 84px; line-height: 1">−3</span><span style="font-weight: 800; font-size: 13px; letter-spacing: .14em; white-space: nowrap">GELUKT</span></div><div style="display: flex; flex-direction: column; align-items: center"><span class="ant" style="font-size: 84px; line-height: 1">+3</span><span style="font-weight: 800; font-size: 13px; letter-spacing: .14em; white-space: nowrap">MISLUKT</span></div></div>
 </div>
 <div class="sp">
 <div class="rv" style="background: #F5F7FB; color: #0A1A3A; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #A50044">MADE IN CATALUNYA</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Porrón</span><span style="font-size: 17px; line-height: 1.55">Wijn uit de glazen kan met de lange tuit, in een straaltje, zonder dat de tuit je lippen raakt.</span></div>
-<div class="rv" style="background: #F5F7FB; color: #0A1A3A; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #A50044">GOL!</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Més que un club</span><span style="font-size: 17px; line-height: 1.55">Twee glazen zijn het doel. Elke speler schiet een bierdopje met één vinger. Meeste goals wint.</span></div>
+<div class="rv" style="background: #F5F7FB; color: #0A1A3A; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #A50044">GOL!</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Més que un club</span><span style="font-size: 17px; line-height: 1.55">Twee glazen zijn het doel. Elke speler schiet een bierdopje met één vinger. Wie de meeste goals maakt, wint.</span></div>
 <div class="rv" style="background: #F5F7FB; color: #0A1A3A; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; gap: 10px"><span style="font-size: 13px; font-weight: 800; letter-spacing: .18em; color: #A50044">HERSENS AAN</span><span class="ant" style="font-size: 40px; text-transform: uppercase">Quiz-hole</span><span style="font-size: 17px; line-height: 1.55">Vijf vragen over Barcelona, in een bar die al twee eeuwen bestaat. Overleggen mag, googelen niet.</span></div>
 </div>
 </div>
@@ -170,7 +170,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">DATUM<input class="field" type="date"></label>
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">STARTTIJD
 <select class="field"><option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option><option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option></select></label>
-<div style="display: flex; justify-content: space-between; align-items: center; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px 16px; flex-wrap: wrap">
 <span style="font-weight: 800; font-size: 14px; letter-spacing: .08em">SPELERS</span>
 <div style="display: flex; align-items: center; gap: 16px">
 <button type="button" class="step-btn" aria-label="Minder spelers" data-step="-1">−</button>
@@ -178,7 +178,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 <button type="button" class="step-btn" aria-label="Meer spelers" data-step="1">+</button>
 </div>
 </div>
-<div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 spelers · bijvoorbeeld 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per groep</span></span><span style="font-size: 13px; opacity: .8">introductieprijs, straks €10</span></span></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px 16px; border-top: 1px solid rgba(255,255,255,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 spelers · bijvoorbeeld 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per groep</span></span><span style="font-size: 13px; opacity: .8">introductieprijs, straks €10</span></span></div>
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">KORTINGSCODE<input class="field" type="text" data-promo autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="Optioneel"></label>
 <label data-emailrow hidden style="display: none; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">E-MAIL VOOR DE SPELCODE<input class="field" type="email" data-email autocomplete="email" maxlength="200"></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-adults required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Iedereen in de groep is 18 jaar of ouder.</span></label>
@@ -193,7 +193,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 <div style="max-width: 1280px; margin: 0 auto; padding: 100px 32px 70px; display: flex; flex-direction: column; gap: 30px">
 <div style="font-size: 14px; font-weight: 800; letter-spacing: .24em; color: #EDBB00">ANDERE STEDEN</div>
 <div class="g4">
-<a class="thumb" href="/steden/milan/"><img src="/assets/poster_milan.jpg" alt="Teaserposter Pubgolf Milan"><span class="ant" style="font-size: 24px">Milano →</span></a>
+<a class="thumb" href="/steden/milan/"><img src="/assets/poster_milan.jpg" alt="Teaserposter Pubgolf Milano"><span class="ant" style="font-size: 24px">Milano →</span></a>
 <a class="thumb" href="/steden/amsterdam/"><img src="/assets/poster_amsterdam.jpg" alt="Teaserposter Pubgolf Amsterdam"><span class="ant" style="font-size: 24px">Amsterdam →</span></a>
 <a class="thumb" href="/steden/prague/"><img src="/assets/poster_prague.jpg" alt="Teaserposter Pubgolf Praha"><span class="ant" style="font-size: 24px">Praha →</span></a>
 <a class="thumb" href="/steden/dublin/"><img src="/assets/poster_dublin.jpg" alt="Teaserposter Pubgolf Dublin"><span class="ant" style="font-size: 24px">Dublin →</span></a>
