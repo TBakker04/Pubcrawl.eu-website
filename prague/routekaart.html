@@ -15,23 +15,24 @@
   header { color: #E1DCC9; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
   .kick { font-weight: 800; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #C9A45C; }
   h1 { margin: 0; font: 400 clamp(44px, 12vw, 72px)/.9 'Anton', Impact, sans-serif; }
-  h1 span { color: var(--red); }
+  h1 span { color: #C9A45C; }
+  body.light h1 span { color: var(--red); } body.light .kick { color: #111111; }
   header p { margin: 0; color: #D3CBB8; }
   .bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 4px; }
   .bar a, .bar button { font: 800 14px/1 'Archivo', sans-serif; color: #1F150C; background: #E1DCC9; border: 0; border-radius: 999px; padding: 12px 16px; min-height: 44px; text-decoration: none; display: inline-flex; align-items: center; cursor: pointer; }
   .bar .alt { background: transparent; color: #E1DCC9; border: 2px solid rgba(225,220,201,.6); }
   #map { height: 340px; border-radius: 14px; margin: 14px 0 18px; border: 3px solid #E1DCC9; }
   ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-  li.hole { background: #E1DCC9; border-radius: 12px; padding: 14px 14px 12px; display: grid; grid-template-columns: 44px 1fr; gap: 4px 12px; break-inside: avoid; }
+  li.hole { background: #FFFFFF; color: #111111; border-radius: 12px; padding: 14px 14px 12px; display: grid; grid-template-columns: 44px 1fr; gap: 4px 12px; break-inside: avoid; }
   .num { grid-row: span 6; width: 40px; height: 40px; border-radius: 50%; background: #1F150C; color: #E1DCC9; display: grid; place-items: center; font: 400 20px/1 'Anton', sans-serif; }
   .num.sp { background: var(--red); }
-  .area { font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .area { font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #555555; }
   .name { font: 400 24px/1 'Anton', sans-serif; text-transform: uppercase; }
   .tag { display: inline-block; margin-left: 6px; font: 800 10px/1 'Archivo', sans-serif; letter-spacing: .1em; color: #fff; background: var(--red); border-radius: 999px; padding: 4px 7px; vertical-align: middle; }
-  a.addr { color: #1F150C; font-weight: 600; }
-  .hours { font-size: 13px; color: var(--muted); }
-  .res { font-size: 13px; margin-top: 4px; padding-top: 6px; border-top: 1px dashed rgba(31,21,12,.25); }
-  .res a { color: #1F150C; }
+  a.addr { color: #111111; font-weight: 600; }
+  .hours { font-size: 13px; color: #555555; }
+  .res { font-size: 13px; margin-top: 4px; padding-top: 6px; border-top: 1px dashed rgba(0,0,0,.25); }
+  .res a { color: #111111; }
   .res b { font-weight: 800; }
   li.move { color: #E1DCC9; font-weight: 700; font-size: 14px; text-align: center; opacity: .9; }
   footer { color: #B5AC98; font-size: 13px; margin-top: 18px; }
@@ -40,10 +41,18 @@
     .bar, #map { display: none; } li.hole { border: 1px solid #ccc; padding: 8px 10px; } li.move { color: #1F150C; }
     .wrap { padding: 0; } h1 { font-size: 40px; }
   }
-  .need { font-size: 17px; line-height: 1.5; padding: 16px 0; }
+  .need { font-size: 17px; line-height: 1.5; padding: 16px 0; color: #E1DCC9; }
+  /* light city grounds (Amsterdam, Lisbon): black text outside the white cards, always readable */
+  body.light, body.light header, body.light li.move, body.light .need { color: #111111; }
+  body.light header p, body.light footer { color: #444444; }
+  body.light .bar a, body.light .bar button { background: #111111; color: #FFFFFF; }
+  body.light .bar .alt { background: transparent; color: #111111; border-color: rgba(0,0,0,.5); }
+  body.light #map { border-color: #111111; }
+  body.light .num { background: #111111; color: #FFFFFF; }
 </style>
 </head>
 <body>
+<script>/* light ground? then dark text outside the cards */(function(){var m=getComputedStyle(document.body).backgroundColor.match(/\d+/g);if(m&&(0.2126*m[0]+0.7152*m[1]+0.0722*m[2])/255>.5)document.body.classList.add('light');})();</script>
 <div class="wrap">
   <header>
     <span class="kick" id="kick"></span>
@@ -293,7 +302,7 @@ window.PCRenderRoute = function() {
       li.appendChild(r);
     }
     $('list').appendChild(li);
-    if (h.transitAfter) $('list').appendChild(el('li', 'move', '↓ ' + h.transitAfter.note));
+    if (h.transitAfter) $('list').appendChild(el('li', 'move', '↓ ' + PCT(h.transitAfter.note)));
   });
   $('foot').textContent = PCT('Openingstijden: {0}. Ze kunnen veranderen, dus kijk bij twijfel even na.', CFG.hoursSource || '');
   // map: numbered dots for the route, small dots for the reserve bars
