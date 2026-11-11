@@ -10,4 +10,5 @@ Disallow: /dublin/
 Disallow: /lisbon/
 Disallow: /budapest/
 Disallow: /krakow/
+Disallow: /valencia/
 Sitemap: https://pubgolf.eu/sitemap.xml
