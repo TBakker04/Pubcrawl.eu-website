@@ -17,10 +17,16 @@ p{color:#C9D8D1;font-size:18px;line-height:1.55;margin:0}
 a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:999px;font-family:Anton,Impact,sans-serif;font-size:20px;text-decoration:none;border:0;cursor:pointer}
 .red{background:#B5121B;color:#fff}.ghost{background:transparent;color:#F7F5F0;border:2px solid #F7F5F0 !important}
 .small{font-size:14px;color:#A9BDB4}
+.wa{background:#25D366;color:#0B2E1A}.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.valid{background:rgba(247,245,240,.1);border-radius:12px;padding:12px 16px;font-size:16px;color:#F7F5F0}
+.news{background:#FFFFFF;color:#111111;border-radius:16px;padding:20px;text-align:left;width:100%;box-sizing:border-box;margin-top:12px}
+.news p{color:#111111;font-size:15px}.news input[type=email]{width:100%;box-sizing:border-box;min-height:48px;border:2px solid #111111;border-radius:10px;padding:0 14px;font-size:16px;color:#111111;background:#fff;margin-top:10px}
+.news label{display:flex;gap:10px;align-items:center;font-size:15px;margin:10px 0;color:#111111}.news label input{width:20px;height:20px;margin:0}
+.news .btn{width:100%}
 [hidden]{display:none !important}
 </style>
 </head>
-<body>
+<body data-nonews>
 <main>
   <div class="small" style="letter-spacing:.2em;font-weight:800;color:#F2D16B">PUBGOLF</div>
   <h1 data-t="t">Geboekt. <span>Tot op de baan.</span></h1>
@@ -28,20 +34,33 @@ a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;m
   <div id="done" hidden style="display:flex;flex-direction:column;gap:16px;align-items:center">
     <span class="code" id="code"></span>
     <a class="btn red" id="open" href="#" data-t="open">Open het spel</a>
-    <button class="btn ghost" id="share" type="button" data-t="share">Deel de link met je groep</button>
+    <p class="valid" id="valid" hidden></p>
+    <div class="row">
+      <a class="btn wa" id="wa" href="#" target="_blank" rel="noopener" data-t="wa">Deel via WhatsApp</a>
+      <button class="btn ghost" id="copy" type="button" data-t="copy">Kopieer link</button>
+    </div>
     <p data-t="mail">Je krijgt de link en de code ook per e-mail.</p>
   </div>
   <p id="err" hidden data-t="err">Het duurt langer dan normaal. Je krijgt de spelcode per e-mail; geen mail binnen een uur? Mail ons via bookings@forkit.nl.</p>
+  <form class="news" id="news" novalidate>
+    <div class="small" style="letter-spacing:.2em;font-weight:800;color:#B5121B" data-t="nk">NIEUWE STEDEN</div>
+    <p data-t="nt">Zin in een volgende ronde in een andere stad? Krijg een mail als er een nieuwe Pubgolf online staat. Af en toe, altijd af te melden.</p>
+    <input type="email" id="nmail" autocomplete="email" inputmode="email" maxlength="200" placeholder="naam@voorbeeld.nl" aria-label="E-mail">
+    <label><input type="checkbox" id="nadult"><span data-t="na">Ik ben 18 jaar of ouder</span></label>
+    <button class="btn red" type="submit" data-t="nb">Houd me op de hoogte</button>
+    <p id="nmsg" role="status" style="margin-top:8px"></p>
+  </form>
   <p class="small" data-t="adult">18+ · Drink met mate · Alcoholvrij meespelen kan altijd</p>
 </main>
 <script src="/booking-config.js"></script>
 <script>
 (function () {
   var en = /^#en/.test(location.hash) || (function () { try { return localStorage.getItem('pubcrawl-lang') === 'en'; } catch (e) { return false; } })();
-  var T = { t: 'Booked. <span>See you on the course.</span>', wait: 'One moment, your game code is being made…', open: 'Open the game', share: 'Share the link with your group',
+  var T = { t: 'Booked. <span>See you on the course.</span>', wait: 'One moment, your game code is being made…', open: 'Open the game', wa: 'Share via WhatsApp', copy: 'Copy link',
+    nk: 'NEW CITIES', nt: 'Up for another round in another city? Get an email when a new Pubgolf goes live. Now and then, unsubscribe any time.', na: 'I am 18 or older', nb: 'Keep me posted',
     mail: 'You also get the link and the code by email.', err: "It's taking longer than usual. You'll get the game code by email; no email within an hour? Email us at bookings@forkit.nl.",
     adult: '18+ · Drink responsibly · Alcohol-free always welcome' };
-  if (en) { document.documentElement.lang = 'en'; document.title = 'Thank you · Pubgolf'; document.querySelectorAll('[data-t]').forEach(function (e) { e.innerHTML = T[e.getAttribute('data-t')]; }); }
+  if (en) { document.getElementById('nmail').placeholder = 'name@example.com'; document.documentElement.lang = 'en'; document.title = 'Thank you · Pubgolf'; document.querySelectorAll('[data-t]').forEach(function (e) { e.innerHTML = T[e.getAttribute('data-t')]; }); }
   var sid = new URLSearchParams(location.search).get('session_id'), api = (window.PC_BOOKING || {}).api, tries = 0;
   function fail() { document.getElementById('wait').hidden = true; document.getElementById('err').hidden = false; }
   if (!sid || !api) return fail();
@@ -51,9 +70,16 @@ a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;m
       if (d.code) {
         document.getElementById('wait').hidden = true; document.getElementById('done').hidden = false;
         document.getElementById('code').textContent = d.code; document.getElementById('open').href = d.link;
-        document.getElementById('share').onclick = function () {
-          var text = (en ? 'Our Pubgolf is ready! Open the link on your phone: ' : 'Onze Pubgolf staat klaar! Open de link op je telefoon: ') + d.link;
-          if (navigator.share) navigator.share({ text: text }).catch(function () {}); else window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+        // valid on the play date and the day after; the server closes the code the day after that at 12:00
+        var fmt = function (iso) { return new Date(iso + 'T12:00:00Z').toLocaleDateString(en ? 'en-GB' : 'nl-NL', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }); };
+        var when = d.playDate && d.lastDate ? (en ? 'The link works on ' + fmt(d.playDate) + ' and ' + fmt(d.lastDate) + '. After that it expires.' : 'De link werkt op ' + fmt(d.playDate) + ' en ' + fmt(d.lastDate) + '. Daarna verloopt hij.') : '';
+        document.getElementById('valid').textContent = when; document.getElementById('valid').hidden = !when;
+        var text = (en ? 'Our Pubgolf is ready! Open this link on your phone to join: ' : 'Onze Pubgolf staat klaar! Open deze link op je telefoon om mee te doen: ') + d.link +
+          (en ? ' (game code ' : ' (spelcode ') + d.code + ')' + (when ? ' ' + when : '');
+        document.getElementById('wa').href = 'https://wa.me/?text=' + encodeURIComponent(text);
+        document.getElementById('copy').onclick = function () {
+          var b = this, done = function () { b.textContent = en ? 'Copied ✓' : 'Gekopieerd ✓'; };
+          if (navigator.clipboard) navigator.clipboard.writeText(d.link).then(done, function () { prompt('', d.link); }); else prompt('', d.link);
         };
         return;
       }
@@ -61,6 +87,15 @@ a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;m
     if (++tries < 20) setTimeout(poll, 2000); else fail();
   })();
 })();
+document.getElementById('news').addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  var en = document.documentElement.lang === 'en', m = document.getElementById('nmsg'), em = document.getElementById('nmail').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,24}$/i.test(em)) { m.textContent = en ? 'Enter a valid email address.' : 'Vul een geldig e-mailadres in.'; return; }
+  if (!document.getElementById('nadult').checked) { m.textContent = en ? 'Our newsletter is for 18+ only.' : 'Onze nieuwsbrief is alleen voor 18+.'; return; }
+  try { var r = await window.PCNews.subscribe(em, 'bedankt'); m.textContent = r === 'ok' ? (en ? 'Done! Check your inbox and confirm your address.' : 'Gelukt! Kijk in je mail en bevestig je adres.') : (en ? 'Your mail app opens with the sign-up. Send it and you are on the list.' : 'Je mailprogramma opent met de aanmelding. Verstuur hem, dan sta je op de lijst.'); }
+  catch (e) { m.textContent = en ? 'That did not work. Try again later.' : 'Dat lukte niet. Probeer het later opnieuw.'; }
+});
 </script>
+<script src="/news.js"></script>
 </body>
 </html>
