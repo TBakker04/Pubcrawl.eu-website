@@ -50,13 +50,14 @@
       <label>Voor wie (naam, e-mail of telefoon)<input id="label" type="text" maxlength="120" placeholder="Bijv. Lisa · lisa@mail.com"></label>
       <label>Aantal spelers<select id="players"></select></label>
       <label>Speeldatum<input id="playdate" type="date"></label>
-      <label>E-mail van de groep (voor de bevestiging)<input id="email" type="email" maxlength="200" placeholder="Optioneel"></label>
+      <label>E-mail van de groep (de spelcode wordt automatisch gemaild)<input id="email" type="email" maxlength="200" placeholder="Optioneel, bijv. lisa@mail.com"></label>
       <label>Starttijd<input id="start" type="time" value="18:00"></label>
       <label>Taal van de mail<select id="mlang"><option value="en">English</option><option value="nl">Nederlands</option></select></label>
       <button id="make">Maak spelcode</button>
     </div>
     <div id="made" hidden style="margin-top:14px">
       <div class="new" id="newcode"></div>
+      <p class="msg" id="mailstate"></p>
       <div class="row" style="margin-top:10px"><button class="alt" id="copy">Kopieer link</button><button class="alt" id="wa">Stuur via WhatsApp</button><button class="alt" id="mail">Stuur per mail</button></div>
     </div>
     <p class="msg" id="mmsg"></p>
@@ -207,6 +208,8 @@
   $('make').addEventListener('click', async function() {
     var city = $('city').value, players = +$('players').value, play = $('playdate').value;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(play)) { $('mmsg').textContent = 'Kies een speeldatum.'; return; }
+    var em = $('email').value.trim().toLowerCase();
+    if (em && !/^[^\s@]+@[^\s@]+\.[a-z]{2,24}$/.test(em)) { $('mmsg').textContent = 'Dit e-mailadres klopt niet. Verbeter het of laat het vak leeg.'; return; }
     var last = addDays(play, 1), expires = new Date(addDays(last, 1) + 'T12:00:00'); // usable on the play date and the day after
     $('make').disabled = true; $('mmsg').textContent = '';
     try {
@@ -216,12 +219,24 @@
       do { code = newCode(city); tries++; } while ((await db.doc('games/' + code).get()).exists && tries < 5);
       await db.doc('games/' + code).set({ active: true, city: city, players: players, playDate: play, lastDate: last, created: firebase.firestore.FieldValue.serverTimestamp(), expires: firebase.firestore.Timestamp.fromDate(expires) });
       await copyPack(code, cp);
-      await db.doc('bookings/' + code).set({ label: $('label').value.trim(), email: $('email').value.trim().toLowerCase(), startTime: $('start').value, lang: $('mlang').value, city: city, players: players, playDate: play, source: 'handmatig', created: firebase.firestore.FieldValue.serverTimestamp() });
-      made = code; madeCity = city; madeInfo = { email: $('email').value.trim(), start: $('start').value, lang: $('mlang').value, players: players, play: play }; $('newcode').textContent = code; $('made').hidden = false; $('label').value = '';
+      await db.doc('bookings/' + code).set({ label: $('label').value.trim(), email: em, startTime: $('start').value, lang: $('mlang').value, city: city, players: players, playDate: play, source: 'handmatig', created: firebase.firestore.FieldValue.serverTimestamp() });
+      made = code; madeCity = city; madeInfo = { email: $('email').value.trim(), start: $('start').value, lang: $('mlang').value, players: players, play: play }; $('newcode').textContent = code; $('made').hidden = false; $('label').value = ''; $('email').value = '';
+      watchMail(code, em);
       load();
     } catch (e) { $('mmsg').textContent = 'Maken lukte niet: ' + (e.code || e.message); }
     $('make').disabled = false;
   });
+  // with an email address the server (Cloud Function manualBookingMail) mails the code by itself and marks bookings/<code>.mail
+  function watchMail(code, em) {
+    var st = $('mailstate'); st.style.color = '';
+    if (!em) { st.textContent = 'Geen e-mailadres ingevuld: stuur de code zelf via de knoppen hieronder.'; return; }
+    st.textContent = 'Mail met de code naar ' + em + ' wordt klaargezet…';
+    var tries = 0, t = setInterval(async function() {
+      tries++;
+      try { var b = await db.doc('bookings/' + code).get(); if (b.exists && b.data().mail === 'queued') { clearInterval(t); st.textContent = '✓ De spelcode wordt automatisch gemaild naar ' + em + '.'; return; } } catch (e) {}
+      if (tries >= 8) { clearInterval(t); st.style.color = '#B5121B'; st.textContent = 'Geen automatische mail bevestigd (staat de server aan?). Stuur de code voor de zekerheid met "Stuur per mail".'; }
+    }, 2000);
+  }
   $('copy').addEventListener('click', function() { if (made) copy(link(made, madeCity), $('copy')); });
   $('wa').addEventListener('click', function() { if (made) window.open('https://wa.me/?text=' + encodeURIComponent('Jullie Pubgolf staat klaar! Open de link op je telefoon en deel hem met je groep: ' + link(made, madeCity) + ' (spelcode ' + made + '). Routekaart met adressen: ' + site(madeCity) + 'routekaart.html?code=' + encodeURIComponent(made)), '_blank'); });
   // confirmation email from your own mailbox (no server needed): opens your mail app with the text filled in

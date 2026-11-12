@@ -180,8 +180,8 @@ a{color:#D7001A}a:hover{color:#111111}
 </div>
 </div>
 <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px 16px; border-top: 1px solid rgba(255,255,255,.2); padding-top: 18px; font-size: 17px"><span data-teams>6 players · for example 3 teams</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right"><span style="white-space: nowrap"><span class="ant" style="font-size: 34px; line-height: 1">€5</span> <span style="font-size: 14px; font-weight: 800">per group</span></span><span style="font-size: 13px; opacity: .8">introductory price, soon €10</span></span></div>
+<label data-emailrow style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">EMAIL FOR THE GAME CODE<input class="field" type="email" data-email autocomplete="email" inputmode="email" maxlength="200" required placeholder="name@example.com"></label>
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">DISCOUNT CODE<input class="field" type="text" data-promo autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="Optional"></label>
-<label data-emailrow hidden style="display: none; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">EMAIL FOR THE GAME CODE<input class="field" type="email" data-email autocomplete="email" maxlength="200"></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-adults required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Everyone in the group is 18 or older.</span></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-terms required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>I accept the <a href="/voorwaarden.html#en" style="color: inherit">terms</a>. Rebooking is possible; refunds and the right of withdrawal do not apply, because the game is on a fixed date.</span></label>
 <p data-msg role="status" style="margin: 0; font-size: 15px; min-height: 0"></p>
@@ -221,7 +221,7 @@ a{color:#D7001A}a:hover{color:#111111}
 <script>
 (function () {
   // booking: only active when booking-config.js has an api address; the server checks everything again.
-  // paid:false = no Stripe yet: only discount codes (e.g. ERASMUS) work; the game code goes by email.
+  // paid:false = no Stripe yet: only discount codes (e.g. ERASMUS) work. The game code always goes by email.
   var cfg = window.PC_BOOKING || {}, form = document.querySelector('#boek form'), btn = form && form.querySelector('[data-book]');
   if (!form || !btn || !(cfg.api || cfg.request)) return;
   var en = document.documentElement.lang === 'en', city = form.getAttribute('data-city');
@@ -229,7 +229,7 @@ a{color:#D7001A}a:hover{color:#111111}
   var promo = form.querySelector('[data-promo]'), email = form.querySelector('[data-email]'), erow = form.querySelector('[data-emailrow]');
   var t = new Date(); date.min = new Date(t.getTime() - t.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
   function label() {
-    var p = promo.value.trim() !== ''; erow.hidden = !p; erow.style.display = p ? 'flex' : 'none';
+    var p = promo.value.trim() !== '';
     btn.textContent = p ? (en ? 'Book with code' : 'Boek met code') : cfg.paid ? (en ? 'Book and pay · €' : 'Boek en betaal · €') + cfg.price : (en ? 'Paid booking opens in February' : 'Betaald boeken opent in februari');
   }
   promo.addEventListener('input', label);
@@ -241,7 +241,8 @@ a{color:#D7001A}a:hover{color:#111111}
     var players = +form.querySelector('[data-players]').textContent, adults = form.querySelector('[data-adults]').checked, terms = form.querySelector('[data-terms]').checked, code = promo.value.trim();
     var err = !date.value ? (en ? 'Pick a date.' : 'Kies een datum.') : !adults ? (en ? 'Everyone in the group must be 18 or older.' : 'Iedereen in de groep moet 18+ zijn.') : !terms ? (en ? 'Please accept the terms.' : 'Ga akkoord met de voorwaarden.') : '';
     if (!err && !code && !cfg.paid) err = ERR['paid-closed'][en ? 1 : 0];
-    if (!err && code && !/^\S+@\S+\.\S+$/.test(email.value.trim())) err = ERR.email[en ? 1 : 0];
+    // always an email address: the game code goes there too, so the group has it even if the site is down
+    if (!err && !/^[^\s@]+@[^\s@]+\.[a-z]{2,24}$/i.test(email.value.trim())) err = ERR.email[en ? 1 : 0];
     msg.textContent = err; if (err) return;
     if (!cfg.api) {   // no server yet: the request goes by email, the game code comes back by email
       if ((cfg.freeCodes || []).indexOf(code.toUpperCase().replace(/\s+/g, '')) < 0) { msg.textContent = ERR.promo[en ? 1 : 0]; return; }
