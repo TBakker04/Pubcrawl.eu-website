@@ -2,7 +2,7 @@
 // ACTION: het adres van het aanmeldformulier van Brevo (gratis, EU, met dubbele bevestiging en afmeldlink), bijv.
 //   'https://xxxx.sibforms.com/serve/MUIF...'. Leeg = aanmelding gaat als e-mail naar bookings@forkit.nl (werkt meteen, minder soepel).
 (function () {
-  var ACTION = '';
+  var ACTION = 'https://4b4d329e.sibforms.com/serve/MUIFAPePlXGLkgRtyg9Ex3j7nHwQfN8Cx-nsFENf1eoRzaLZDXoiptjTLzNii0L6m-mqSIZKElxP77_shHTXldv-RBoJrmK8UhTc_ch2hfy6zLApzlRfGbAHGt9NSAXgOvkYCRScSfYZlqAg9Wk8MT7DvtJLUN6kdB3u52ugETZVHjM9bTrSqAYTudgjJZ0_UXSoJt7FCa52jk9yMA==';
   var FALLBACK = 'bookings@forkit.nl';
   var KEY = 'pubgolf-news', DAY = 864e5;
   var en = document.documentElement.lang === 'en';
