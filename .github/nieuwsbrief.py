@@ -45,8 +45,8 @@ def campaign(slug, test):
     if not lists:
         sys.exit('no Brevo list found')
     body = {'name': (f'TEST {slug} {datetime.datetime.now():%Y-%m-%d %H:%M}' if test else name), 'subject': meta['subject'], 'previewText': meta['preheader'],
-            'sender': {'name': 'Pubgolf', 'email': os.environ.get('SENDER_EMAIL') or 'bookings@forkit.nl'},
-            'replyTo': os.environ.get('SENDER_EMAIL') or 'bookings@forkit.nl', 'htmlContent': html, 'recipients': {'listIds': lists}}
+            'sender': {'name': 'Pubgolf', 'email': os.environ.get('SENDER_EMAIL') or 'pubgolf@forkit.nl'},
+            'replyTo': 'bookings@forkit.nl', 'htmlContent': html, 'recipients': {'listIds': lists}}
     now = datetime.datetime.now(ZoneInfo('Europe/Amsterdam'))
     if not test and not (9 <= now.hour < 21):   # no mail at night: tomorrow (or this morning) at 10:00
         at = now.replace(hour=10, minute=0, second=0, microsecond=0)
