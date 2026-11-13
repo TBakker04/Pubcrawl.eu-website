@@ -3,6 +3,8 @@
 //   'https://xxxx.sibforms.com/serve/MUIF...'. Leeg = aanmelding gaat als e-mail naar bookings@forkit.nl (werkt meteen, minder soepel).
 (function () {
   var ACTION = 'https://4b4d329e.sibforms.com/serve/MUIFAPePlXGLkgRtyg9Ex3j7nHwQfN8Cx-nsFENf1eoRzaLZDXoiptjTLzNii0L6m-mqSIZKElxP77_shHTXldv-RBoJrmK8UhTc_ch2hfy6zLApzlRfGbAHGt9NSAXgOvkYCRScSfYZlqAg9Wk8MT7DvtJLUN6kdB3u52ugETZVHjM9bTrSqAYTudgjJZ0_UXSoJt7FCa52jk9yMA==';
+  // CUSTOMER_ACTION: a second Brevo form for customers (no confirmation mail needed: they booked and were told). Empty = ACTION.
+  var CUSTOMER_ACTION = '';
   var FALLBACK = 'bookings@forkit.nl';
   var KEY = 'pubgolf-news', DAY = 864e5;
   var en = document.documentElement.lang === 'en';
@@ -22,14 +24,15 @@
   function valid(e) { return /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,24}$/i.test(e); }
 
   // sign up one address; resolves to 'ok' (Brevo) or 'mail' (mail app opened)
-  async function subscribe(email, source) {
+  async function subscribe(email, source, customer) {
     email = String(email || '').trim();
     if (!valid(email)) throw new Error('email');
-    if (ACTION) {
+    var action = customer && CUSTOMER_ACTION ? CUSTOMER_ACTION : ACTION;
+    if (action) {
       var f = new FormData();
       f.append('EMAIL', email); f.append('OPT_IN', '1'); f.append('email_address_check', ''); f.append('locale', en ? 'en' : 'nl');
-      await fetch(ACTION, { method: 'POST', mode: 'no-cors', body: f });   // Brevo sends the confirmation mail itself
-      put({ done: Date.now() }); return 'ok';
+      await fetch(action, { method: 'POST', mode: 'no-cors', body: f });   // Brevo sends the confirmation mail itself
+      if (!customer) put({ done: Date.now() }); return 'ok';
     }
     var body = (en ? 'Please keep me posted about new Pubgolf cities.' : 'Houd me op de hoogte van nieuwe Pubgolf-steden.') + '\r\n\r\n' +
       (en ? 'Email: ' : 'E-mail: ') + email + '\r\n' + (en ? 'Language: English' : 'Taal: Nederlands') + '\r\n' + (en ? 'I am 18 or older.' : 'Ik ben 18 jaar of ouder.') + (source ? '\r\nVia: ' + source : '');
@@ -39,8 +42,10 @@
   window.PCNews = { subscribe: subscribe, live: !!ACTION };
 
   // the prompt: not on the thank-you page (it has its own block), not after signing up, not within 30 days of closing it
-  var st = get();
-  if (document.body.hasAttribute('data-nonews') || st.done || (st.closed && Date.now() - st.closed < 30 * DAY)) return;
+  // the prompt: after a few seconds; not again after signing up, and after closing only again a week later.
+  // The footer link "Nieuwsbrief" always opens it; ?nieuwsbrief in the address forces it (for testing).
+  var st = get(), force = /[?&]nieuwsbrief\b/.test(location.search);
+  var auto = force || !(document.body.hasAttribute('data-nonews') || st.done || (st.closed && Date.now() - st.closed < 7 * DAY));
 
   var css = document.createElement('style');
   css.textContent = '.pgn{position:fixed;z-index:9999;right:16px;bottom:16px;width:min(380px,calc(100vw - 32px));box-sizing:border-box;background:#FFFFFF;color:#111111;border-radius:16px;' +
@@ -61,8 +66,8 @@
     '<label><input type="checkbox" required>' + T.adult + '</label><button class="go" type="submit">' + T.btn + '</button><p class="m" role="status"></p></form>' +
     '<p class="s"><a href="/privacy.html' + (en ? '#en' : '') + '">' + T.priv + '</a> · Pubgolf · ForkitLeiden</p>';
   var shown = false;
-  function show() { if (shown) return; shown = true; document.body.appendChild(box); requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add('on'); }); }); }
-  box.querySelector('.x').onclick = function () { box.classList.remove('on'); put({ closed: Date.now() }); setTimeout(function () { box.remove(); }, 500); };
+  function show() { if (shown) return; shown = true; box.classList.remove('on'); document.body.appendChild(box); requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add('on'); }); }); }
+  box.querySelector('.x').onclick = function () { box.classList.remove('on'); var v = get(); v.closed = Date.now(); put(v); setTimeout(function () { box.remove(); shown = false; }, 500); };
   box.querySelector('form').onsubmit = async function (ev) {
     ev.preventDefault();
     var m = box.querySelector('.m'), em = box.querySelector('input[type=email]').value, ad = box.querySelector('input[type=checkbox]').checked;
@@ -71,7 +76,17 @@
     try { var r = await subscribe(em, location.pathname); m.textContent = r === 'ok' ? T.ok : T.okMail; box.querySelector('.go').disabled = true; setTimeout(function () { box.classList.remove('on'); }, 5000); }
     catch (e) { m.textContent = T.err; }
   };
-  // show after 25 s, or once the visitor has scrolled through half the page
-  setTimeout(show, 25000);
-  addEventListener('scroll', function () { if (scrollY + innerHeight > document.documentElement.scrollHeight * 0.5) show(); }, { passive: true });
+  window.PCNews.open = show;
+  // a fixed way back: "Nieuwsbrief" in the footer of every page
+  var ft = document.querySelector('footer');
+  if (ft) {
+    var a = document.createElement('a'); a.href = '#nieuwsbrief'; a.textContent = en ? 'Newsletter' : 'Nieuwsbrief';
+    a.style.cssText = 'color:inherit;display:inline-block;padding:14px 2px';
+    a.onclick = function (e) { e.preventDefault(); show(); };
+    var where = ft.querySelector('a[href^="mailto:"]');
+    if (where) { where.parentNode.insertBefore(a, where); where.parentNode.insertBefore(document.createTextNode(' · '), where); } else ft.appendChild(a);
+  }
+  if (location.hash === '#nieuwsbrief') show();
+  // show after 5 seconds
+  if (auto) setTimeout(show, force ? 300 : 5000);
 })();

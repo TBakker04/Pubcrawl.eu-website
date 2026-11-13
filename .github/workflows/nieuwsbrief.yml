@@ -1,0 +1,36 @@
+# Sends the "new city" newsletter (nieuwsbrief/<slug>.html) via Brevo as soon as a new city page is pushed.
+# Needs: repository secret BREVO_API_KEY (Settings → Secrets and variables → Actions). Optional variables:
+# BREVO_LIST_IDS (e.g. "2,3"; empty = all lists) and SENDER_EMAIL (default bookings@forkit.nl, must be a verified sender in Brevo).
+# By hand (Actions → Nieuwsbrief → Run workflow): a test to one address, or the real send for one city.
+name: Nieuwsbrief nieuwe stad
+on:
+  push:
+    branches: [main]
+    paths: ['steden/**']
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Stad, zoals in de link (bv. copenhagen)'
+        required: true
+      test_email:
+        description: 'Testmail naar dit adres. Leeg laten = ECHT versturen naar de hele lijst'
+        required: false
+permissions:
+  contents: read
+concurrency: nieuwsbrief
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 .github/nieuwsbrief.py
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_LIST_IDS: ${{ vars.BREVO_LIST_IDS }}
+          SENDER_EMAIL: ${{ vars.SENDER_EMAIL }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+          SLUG: ${{ inputs.slug }}
+          TEST_EMAIL: ${{ inputs.test_email }}
