@@ -41,7 +41,10 @@ def campaign(slug, test):
     meta = json.load(open(f'nieuwsbrief/{slug}.json', encoding='utf-8'))
     html = open(f'nieuwsbrief/{slug}.html', encoding='utf-8').read()
     name = f'Nieuwe stad: {slug}'
-    if not test:
+    again = os.environ.get('AGAIN', '').lower() == 'true'
+    if again and not test:   # by hand: send the same city once more (the automatic check still sees the original name)
+        name = f'Nieuwe stad: {slug} (opnieuw {datetime.datetime.now(ZoneInfo("Europe/Amsterdam")):%Y-%m-%d %H:%M})'
+    elif not test:
         done, o = [], 0
         while True:
             page = call('GET', f'/emailCampaigns?limit=100&offset={o}').get('campaigns') or []
