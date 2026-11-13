@@ -97,8 +97,35 @@ def status(check):
             print(f"{mask(check)}: not a contact in Brevo ({e.code})")
 
 
+def welcome(test):
+    """Welkomstmail: zet nieuwsbrief/welkom.html als template "Pubgolf welkom" in Brevo (bijwerken als hij al bestaat).
+    De Brevo-automatisering "contact toegevoegd aan de lijst -> stuur template Pubgolf welkom" verstuurt hem één keer per nieuw contact."""
+    meta = json.load(open('nieuwsbrief/welkom.json', encoding='utf-8'))
+    body = {'templateName': 'Pubgolf welkom', 'subject': meta['subject'], 'htmlContent': open('nieuwsbrief/welkom.html', encoding='utf-8').read(),
+            'sender': {'name': 'Pubgolf', 'email': os.environ.get('SENDER_EMAIL') or 'pubgolf@forkit.nl'}, 'replyTo': 'bookings@forkit.nl', 'isActive': True}
+    found = [t for t in (call('GET', '/smtp/templates?limit=100&offset=0').get('templates') or []) if t.get('name') == 'Pubgolf welkom']
+    if found:
+        tid = found[0]['id']; call('PUT', f'/smtp/templates/{tid}', body); print('template "Pubgolf welkom" bijgewerkt, id', tid)
+    else:
+        tid = call('POST', '/smtp/templates', body)['id']; print('template "Pubgolf welkom" aangemaakt, id', tid)
+    if test:
+        call('POST', f'/smtp/templates/{tid}/sendTest', {'emailTo': [test]}); print('test sent to', mask(test))
+
+
+def welcome_changed():
+    before, after = os.environ.get('BEFORE', ''), os.environ.get('AFTER', '')
+    if not before or set(before) == {'0'}:
+        return False
+    out = subprocess.run(['git', 'diff', '--name-only', before, after, '--', 'nieuwsbrief/welkom.html'], capture_output=True, text=True, check=True).stdout
+    return bool(out.strip())
+
+
 if __name__ == '__main__':
     slug, test = os.environ.get('SLUG', '').strip().lower(), os.environ.get('TEST_EMAIL', '').strip()
+    if slug == 'welkom' or (not slug and welcome_changed()):
+        if not KEY: print('BREVO_API_KEY is not set'); sys.exit(0)
+        welcome(test)
+        if slug: sys.exit(0)
     if slug == 'status':
         if not KEY: sys.exit('BREVO_API_KEY is not set')
         status(test); sys.exit(0)
