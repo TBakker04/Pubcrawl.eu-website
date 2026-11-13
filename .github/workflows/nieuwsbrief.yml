@@ -6,11 +6,11 @@ name: Nieuwsbrief nieuwe stad
 on:
   push:
     branches: [main]
-    paths: ['steden/**']
+    paths: ['steden/**', 'nieuwsbrief/welkom.html']
   workflow_dispatch:
     inputs:
       slug:
-        description: 'Stad, zoals in de link (bv. copenhagen). Of: status (alleen aantallen en resultaten, geen adressen)'
+        description: 'Stad, zoals in de link (bv. copenhagen). Of: status (alleen aantallen, geen adressen), of: welkom (welkomstmail naar Brevo zetten)'
         required: true
       test_email:
         description: 'Testmail naar dit adres. Leeg laten = ECHT versturen naar de hele lijst. Bij status: dit adres opzoeken'
