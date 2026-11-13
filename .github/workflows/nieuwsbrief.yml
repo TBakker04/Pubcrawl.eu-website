@@ -1,6 +1,6 @@
 # Sends the "new city" newsletter (nieuwsbrief/<slug>.html) via Brevo as soon as a new city page is pushed.
 # Needs: repository secret BREVO_API_KEY (Settings → Secrets and variables → Actions). Optional variables:
-# BREVO_LIST_IDS (e.g. "2,3"; empty = all lists) and SENDER_EMAIL (default bookings@forkit.nl, must be a verified sender in Brevo).
+# BREVO_LIST_IDS (e.g. "2,3"; empty = all lists) and SENDER_EMAIL (default pubgolf@forkit.nl, must be a verified sender in Brevo; replies go to bookings@forkit.nl).
 # By hand (Actions → Nieuwsbrief → Run workflow): a test to one address, or the real send for one city.
 name: Nieuwsbrief nieuwe stad
 on:
