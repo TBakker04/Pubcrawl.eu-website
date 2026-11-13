@@ -8,6 +8,11 @@ from zoneinfo import ZoneInfo
 
 API = 'https://api.brevo.com/v3'
 KEY = os.environ.get('BREVO_API_KEY', '').strip()
+# only the key itself (starts with xkeysib-): also works when a whole example from Brevo was pasted into the secret
+_m = re.search(r'xkeysib-[A-Za-z0-9-]+', KEY)
+if _m: KEY = _m.group(0)
+elif KEY and not re.fullmatch(r'[A-Za-z0-9._-]{20,200}', KEY):
+    sys.exit('BREVO_API_KEY is not a Brevo API key: paste only the key itself (it starts with xkeysib-), nothing else.')
 
 
 def call(method, path, body=None):
