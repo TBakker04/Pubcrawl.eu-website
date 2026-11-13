@@ -3,7 +3,7 @@
 Automatic: only for a city whose page steden/<slug>/index.html is NEW in this push, and never twice
 (a campaign named "Nieuwe stad: <slug>" already in Brevo means: already sent). Between 21:00 and 09:00
 (Amsterdam) the mail is scheduled for 10:00 instead of being sent at night."""
-import datetime, json, os, re, subprocess, sys, urllib.request, urllib.error
+import datetime, json, os, re, subprocess, sys, urllib.parse, urllib.request, urllib.error
 from zoneinfo import ZoneInfo
 
 API = 'https://api.brevo.com/v3'
@@ -72,8 +72,33 @@ def campaign(slug, test):
         print('sent', name, 'to lists', lists)
 
 
+def mask(a):
+    u, _, d = a.partition('@')
+    return (u[:1] + '***@' + d) if d else '***'
+
+
+def status(check):
+    """Stad = status: counts only, never addresses (the logs of this public repo can be read by anyone)."""
+    for l in call('GET', '/contacts/lists?limit=50').get('lists', []):
+        print(f"list {l['id']} '{l.get('name')}': {l.get('uniqueSubscribers', l.get('totalSubscribers'))} contacts, {l.get('totalBlacklisted', 0)} unsubscribed")
+    for c in call('GET', '/emailCampaigns?limit=50&statistics=globalStats&sort=desc').get('campaigns') or []:
+        g = (c.get('statistics') or {}).get('globalStats') or {}
+        print(f"campaign {c['id']} '{c.get('name')}' [{c.get('status')}] lists {c.get('recipients', {}).get('lists')}: sent {g.get('sent')}, delivered {g.get('delivered')}, "
+              f"bounces {g.get('hardBounces', 0)}+{g.get('softBounces', 0)}, opened {g.get('uniqueViews')}, unsubscribed {g.get('unsubscriptions')}")
+    if check:
+        req = urllib.request.Request(API + '/contacts/' + urllib.parse.quote(check), headers={'api-key': KEY, 'accept': 'application/json'})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r: c = json.loads(r.read().decode())
+            print(f"{mask(check)}: on lists {c.get('listIds')}, unsubscribed/blocked: {c.get('emailBlacklisted')}")
+        except urllib.error.HTTPError as e:
+            print(f"{mask(check)}: not a contact in Brevo ({e.code})")
+
+
 if __name__ == '__main__':
     slug, test = os.environ.get('SLUG', '').strip().lower(), os.environ.get('TEST_EMAIL', '').strip()
+    if slug == 'status':
+        if not KEY: sys.exit('BREVO_API_KEY is not set')
+        status(test); sys.exit(0)
     todo = [slug] if slug else new_cities()
     todo = [s for s in todo if os.path.exists(f'nieuwsbrief/{s}.html')]
     if not todo:
