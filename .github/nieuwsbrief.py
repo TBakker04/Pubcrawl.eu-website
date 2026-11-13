@@ -63,8 +63,8 @@ def campaign(slug, test):
     cid = call('POST', '/emailCampaigns', body)['id']
     if test:
         call('POST', f'/emailCampaigns/{cid}/sendTest', {'emailTo': [test]})
-        call('DELETE', f'/emailCampaigns/{cid}')
-        print('test sent to', test, 'for', slug)
+        # the test campaign stays as a draft ("TEST ..."): Brevo sends the test a little later, deleting it now would cancel it
+        print('test sent to', test, 'for', slug, '(draft campaign', cid, 'kept in Brevo; delete it there whenever you like)')
     elif 'scheduledAt' in body:
         print('scheduled', name, 'for', body['scheduledAt'], 'to lists', lists)
     else:
