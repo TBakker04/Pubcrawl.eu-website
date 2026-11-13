@@ -92,7 +92,7 @@ document.getElementById('news').addEventListener('submit', async function (ev) {
   var en = document.documentElement.lang === 'en', m = document.getElementById('nmsg'), em = document.getElementById('nmail').value.trim();
   if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,24}$/i.test(em)) { m.textContent = en ? 'Enter a valid email address.' : 'Vul een geldig e-mailadres in.'; return; }
   if (!document.getElementById('nadult').checked) { m.textContent = en ? 'Our newsletter is for 18+ only.' : 'Onze nieuwsbrief is alleen voor 18+.'; return; }
-  try { var r = await window.PCNews.subscribe(em, 'bedankt'); m.textContent = r === 'ok' ? (en ? 'Done! Check your inbox and confirm your address.' : 'Gelukt! Kijk in je mail en bevestig je adres.') : (en ? 'Your mail app opens with the sign-up. Send it and you are on the list.' : 'Je mailprogramma opent met de aanmelding. Verstuur hem, dan sta je op de lijst.'); }
+  try { var r = await window.PCNews.subscribe(em, 'bedankt'); m.textContent = r === 'ok' ? (en ? 'Done! You are on the list.' : 'Gelukt! Je staat op de lijst.') : (en ? 'Your mail app opens with the sign-up. Send it and you are on the list.' : 'Je mailprogramma opent met de aanmelding. Verstuur hem, dan sta je op de lijst.'); }
   catch (e) { m.textContent = en ? 'That did not work. Try again later.' : 'Dat lukte niet. Probeer het later opnieuw.'; }
 });
 </script>
