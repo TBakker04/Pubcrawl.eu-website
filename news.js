@@ -11,12 +11,12 @@
   var T = en ? {
     kick: 'NEW CITIES', title: 'Be the first to know', text: 'Get an email when a new Pubgolf city goes live. Now and then, never spam, unsubscribe any time.',
     ph: 'name@example.com', adult: 'I am 18 or older', btn: 'Keep me posted', close: 'Close',
-    bad: 'Enter a valid email address.', noadult: 'Our newsletter is for 18+ only.', ok: 'Done! Check your inbox and confirm your address.',
+    bad: 'Enter a valid email address.', noadult: 'Our newsletter is for 18+ only.', ok: 'Done! You are on the list. We will email you when a new city goes live.',
     okMail: 'Your mail app opens with the sign-up. Send it and you are on the list.', priv: 'Privacy', err: 'That did not work. Try again later.'
   } : {
     kick: 'NIEUWE STEDEN', title: 'Als eerste weten?', text: 'Krijg een mail als er een nieuwe Pubgolf-stad online staat. Af en toe, nooit spam, altijd af te melden.',
     ph: 'naam@voorbeeld.nl', adult: 'Ik ben 18 jaar of ouder', btn: 'Houd me op de hoogte', close: 'Sluiten',
-    bad: 'Vul een geldig e-mailadres in.', noadult: 'Onze nieuwsbrief is alleen voor 18+.', ok: 'Gelukt! Kijk in je mail en bevestig je adres.',
+    bad: 'Vul een geldig e-mailadres in.', noadult: 'Onze nieuwsbrief is alleen voor 18+.', ok: 'Gelukt! Je staat op de lijst. We mailen je als er een nieuwe stad online staat.',
     okMail: 'Je mailprogramma opent met de aanmelding. Verstuur hem, dan sta je op de lijst.', priv: 'Privacy', err: 'Dat lukte niet. Probeer het later opnieuw.'
   };
   function get() { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; } }
@@ -77,14 +77,36 @@
     catch (e) { m.textContent = T.err; }
   };
   window.PCNews.open = show;
-  // a fixed way back: "Nieuwsbrief" in the footer of every page
-  var ft = document.querySelector('footer');
-  if (ft) {
+  // a fixed sign-up block at the bottom of every page (above the footer line), plus a "Nieuwsbrief" link in that line
+  var mails = document.querySelectorAll('a[href^="mailto:bookings@forkit.nl"]'), last = mails[mails.length - 1];
+  var row = last && last.closest('footer > div, div[style*="border-top"]');
+  if (last) {
     var a = document.createElement('a'); a.href = '#nieuwsbrief'; a.textContent = en ? 'Newsletter' : 'Nieuwsbrief';
     a.style.cssText = 'color:inherit;display:inline-block;padding:14px 2px';
-    a.onclick = function (e) { e.preventDefault(); show(); };
-    var where = ft.querySelector('a[href^="mailto:"]');
-    if (where) { where.parentNode.insertBefore(a, where); where.parentNode.insertBefore(document.createTextNode(' · '), where); } else ft.appendChild(a);
+    a.onclick = function (e) { e.preventDefault(); var f = document.getElementById('pgnews'); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'center' }); else show(); };
+    last.parentNode.insertBefore(a, last); last.parentNode.insertBefore(document.createTextNode(' · '), last);
+  }
+  if (row && !document.body.hasAttribute('data-nonews')) {
+    var blk = document.createElement('section');
+    blk.id = 'pgnews'; blk.className = 'pgn-inline';
+    blk.style.cssText = 'background:#FFFFFF;color:#111111;border:2px solid #111111;border-radius:16px;padding:24px;margin:40px 0 0;max-width:640px;box-sizing:border-box;font-family:Archivo,Arial,sans-serif;text-align:left';
+    blk.innerHTML = '<div style="font-size:12px;font-weight:800;letter-spacing:.2em;color:#B5121B">' + T.kick + '</div>' +
+      '<h3 style="font-family:Anton,Impact,sans-serif;font-weight:400;font-size:30px;line-height:1.05;margin:6px 0 6px;text-transform:uppercase;color:#111111">' + T.title + '</h3>' +
+      '<p style="font-size:15px;line-height:1.45;margin:0 0 12px;color:#111111">' + T.text + '</p>' +
+      '<form novalidate style="display:flex;flex-wrap:wrap;gap:10px;align-items:center"><input type="email" autocomplete="email" inputmode="email" maxlength="200" placeholder="' + T.ph + '" aria-label="E-mail" ' +
+      'style="flex:1 1 240px;min-width:0;min-height:48px;border:2px solid #111111;border-radius:10px;padding:0 14px;font-size:16px;color:#111111;background:#FFFFFF;box-sizing:border-box">' +
+      '<button type="submit" style="flex:0 0 auto;min-height:48px;border:0;border-radius:999px;background:#B5121B;color:#FFFFFF;font-family:Anton,Impact,sans-serif;font-size:18px;padding:0 24px;cursor:pointer">' + T.btn + '</button>' +
+      '<label style="flex:1 1 100%;display:flex;gap:10px;align-items:center;font-size:15px;color:#111111;cursor:pointer"><input type="checkbox" style="width:20px;height:20px;margin:0">' + T.adult + '</label>' +
+      '<p role="status" style="flex:1 1 100%;margin:0;font-size:14px;color:#111111"></p></form>';
+    row.parentNode.insertBefore(blk, row);
+    blk.querySelector('form').onsubmit = async function (ev) {
+      ev.preventDefault();
+      var m = blk.querySelector('[role=status]'), em = blk.querySelector('input[type=email]').value, ad = blk.querySelector('input[type=checkbox]').checked;
+      if (!valid(em.trim())) { m.textContent = T.bad; return; }
+      if (!ad) { m.textContent = T.noadult; return; }
+      try { var r = await subscribe(em, location.pathname + ' (onderaan)'); m.textContent = r === 'ok' ? T.ok : T.okMail; blk.querySelector('button').disabled = true; }
+      catch (e) { m.textContent = T.err; }
+    };
   }
   if (location.hash === '#nieuwsbrief') show();
   // show after 5 seconds
