@@ -58,13 +58,16 @@
       <li>GitHub (hosting van de website),</li>
       <li>Google Firebase (database van het spel) en Google reCAPTCHA (beveiliging),</li>
       <li>Google Fonts (lettertypes),</li>
+      <li>Google Analytics en Microsoft Clarity (alleen met jouw toestemming, statistieken),</li>
+      <li>Google (Sheets en Apps Script: verwerking van boekingen),</li>
       <li>een betaalprovider en een maildienst voor je boeking en bevestiging,</li>
       <li>Brevo (EU, verzending van de nieuwsbrief).</li>
     </ul>
     <p>Sommige van deze diensten kunnen gegevens buiten de EU verwerken. Dat gebeurt dan op basis van de afspraken die de Europese regels daarvoor geven.</p>
 
     <h2>4. Cookies en opslag op je telefoon</h2>
-    <p>We gebruiken geen tracking- of advertentiecookies. Het spel slaat wel gegevens op je eigen telefoon op (zoals je taal en de stand van het spel), zodat het ook werkt zonder bereik. De beveiligingscontrole van Google kan eigen cookies plaatsen.</p>
+    <p>We gebruiken geen advertentiecookies. Alleen als je in de cookiemelding op <strong>Accepteren</strong> klikt, meten we met Google Analytics en Microsoft Clarity hoe bezoekers de website gebruiken (welke pagina's, welke knoppen, waar je vandaan kwam). Namen, e-mailadressen en spelcodes gaan nooit naar deze diensten; Google Analytics bewaart de gegevens maximaal 14 maanden. Zonder toestemming meten we niets. <a href="#" data-cc="show-preferencesModal">Cookie-instellingen wijzigen</a>.</p>
+    <p>Het spel slaat wel gegevens op je eigen telefoon op (zoals je taal en de stand van het spel), zodat het ook werkt zonder bereik. De beveiligingscontrole van Google kan eigen cookies plaatsen.</p>
 
     <h2>5. Je rechten</h2>
     <p>Je mag je gegevens inzien, laten verbeteren of laten verwijderen, en bezwaar maken. Mail naar <a href="mailto:bookings@forkit.nl">bookings@forkit.nl</a>; we reageren binnen een maand. Ben je het niet eens met hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.</p>
@@ -104,13 +107,16 @@
       <li>GitHub (website hosting),</li>
       <li>Google Firebase (game database) and Google reCAPTCHA (security),</li>
       <li>Google Fonts (typefaces),</li>
+      <li>Google Analytics and Microsoft Clarity (only with your consent, statistics),</li>
+      <li>Google (Sheets and Apps Script: processing bookings),</li>
       <li>a payment provider and an email service for your booking and confirmation,</li>
       <li>Brevo (EU, sending the newsletter).</li>
     </ul>
     <p>Some of these services may process data outside the EU. When they do, it is under the safeguards provided by European rules.</p>
 
     <h2>4. Cookies and storage on your phone</h2>
-    <p>We do not use tracking or advertising cookies. The game does store data on your own phone (such as your language and the game state), so it also works without signal. Google's security check may set its own cookies.</p>
+    <p>We do not use advertising cookies. Only if you click <strong>Accept</strong> in the cookie notice do we use Google Analytics and Microsoft Clarity to see how visitors use the website (which pages, which buttons, where you came from). Names, email addresses and game codes are never sent to these services; Google Analytics keeps the data for at most 14 months. Without consent we measure nothing. <a href="#" data-cc="show-preferencesModal">Change cookie settings</a>.</p>
+    <p>The game does store data on your own phone (such as your language and the game state), so it also works without signal. Google's security check may set its own cookies.</p>
 
     <h2>5. Your rights</h2>
     <p>You may access, correct or delete your data, and object to its use. Email <a href="mailto:bookings@forkit.nl">bookings@forkit.nl</a>; we reply within a month. If you disagree with how we handle your data, you can file a complaint with the Dutch Data Protection Authority (Autoriteit Persoonsgegevens).</p>
@@ -132,5 +138,6 @@
   Array.prototype.forEach.call(document.querySelectorAll('nav a'), function(a) { a.addEventListener('click', function(e) { e.preventDefault(); show(a.dataset.l); history.replaceState(null, '', '#' + a.dataset.l); }); });
 })();
 </script>
+<script src="/analytics.js" defer></script>
 </body>
 </html>
