@@ -32,6 +32,7 @@
       var f = new FormData();
       f.append('EMAIL', email); f.append('OPT_IN', '1'); f.append('email_address_check', ''); f.append('locale', en ? 'en' : 'nl');
       await fetch(action, { method: 'POST', mode: 'no-cors', body: f });   // Brevo sends the confirmation mail itself
+      if (window.pgTrack) window.pgTrack(customer ? 'newsletter_customer' : 'newsletter_signup', { page: location.pathname });
       if (!customer) put({ done: Date.now() }); return 'ok';
     }
     var body = (en ? 'Please keep me posted about new Pubgolf cities.' : 'Houd me op de hoogte van nieuwe Pubgolf-steden.') + '\r\n\r\n' +
@@ -66,7 +67,10 @@
     '<label><input type="checkbox" required>' + T.adult + '</label><button class="go" type="submit">' + T.btn + '</button><p class="m" role="status"></p></form>' +
     '<p class="s"><a href="/privacy.html' + (en ? '#en' : '') + '">' + T.priv + '</a> · Pubgolf · ForkitLeiden</p>';
   var shown = false;
-  function show() { if (shown) return; shown = true; box.classList.remove('on'); document.body.appendChild(box); requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add('on'); }); }); }
+  function show() {
+    if (shown) return;
+    if (document.documentElement.classList.contains('show--consent')) { setTimeout(show, 3000); return; }   // first the cookie banner
+    shown = true; box.classList.remove('on'); document.body.appendChild(box); requestAnimationFrame(function () { requestAnimationFrame(function () { box.classList.add('on'); }); }); }
   box.querySelector('.x').onclick = function () { box.classList.remove('on'); var v = get(); v.closed = Date.now(); put(v); setTimeout(function () { box.remove(); shown = false; }, 500); };
   box.querySelector('form').onsubmit = async function (ev) {
     ev.preventDefault();

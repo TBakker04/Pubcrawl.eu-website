@@ -4,14 +4,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Pubgolf Barcelona – pub golf in Barcelona</title>
+<title>Pub crawl game in Barcelona – Pubgolf Barcelona</title>
 <meta name="description" content="Pub golf in Barcelona: 15 holes from the Rambla through the Raval and the Gothic Quarter to a fiery finale in Barceloneta, by the harbour. For 2 to 6 teams.">
 <link rel="canonical" href="https://pubgolf.eu/en/cities/barcelona/">
 <link rel="alternate" hreflang="nl" href="https://pubgolf.eu/steden/barcelona/">
 <link rel="alternate" hreflang="en" href="https://pubgolf.eu/en/cities/barcelona/">
 <link rel="alternate" hreflang="x-default" href="https://pubgolf.eu/steden/barcelona/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Pubgolf Barcelona – pub golf in Barcelona">
+<meta property="og:title" content="Pub crawl game in Barcelona – Pubgolf Barcelona">
 <meta property="og:description" content="Pub golf in Barcelona: 15 holes from the Rambla through the Raval and the Gothic Quarter to a fiery finale in Barceloneta, by the harbour. For 2 to 6 teams.">
 <meta property="og:url" content="https://pubgolf.eu/en/cities/barcelona/">
 <meta property="og:image" content="https://pubgolf.eu/assets/og_barcelona_en.jpg">
@@ -21,7 +21,7 @@
 <meta property="og:site_name" content="Pubgolf">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Pubgolf", "item": "https://pubgolf.eu/"}, {"@type": "ListItem", "position": 2, "name": "Barcelona", "item": "https://pubgolf.eu/en/cities/barcelona/"}]}, {"@context": "https://schema.org", "@type": "WebPage", "name": "Pubgolf Barcelona – pub golf in Barcelona", "description": "Pub golf in Barcelona: 15 holes from the Rambla through the Raval and the Gothic Quarter to a fiery finale in Barceloneta, by the harbour. For 2 to 6 teams.", "url": "https://pubgolf.eu/en/cities/barcelona/", "inLanguage": "en", "image": "https://pubgolf.eu/assets/og_barcelona_en.jpg"}]</script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Pubgolf", "item": "https://pubgolf.eu/"}, {"@type": "ListItem", "position": 2, "name": "Barcelona", "item": "https://pubgolf.eu/en/cities/barcelona/"}]}, {"@context": "https://schema.org", "@type": "WebPage", "name": "Pub crawl game in Barcelona – Pubgolf Barcelona", "description": "Pub golf in Barcelona: 15 holes from the Rambla through the Raval and the Gothic Quarter to a fiery finale in Barceloneta, by the harbour. For 2 to 6 teams.", "url": "https://pubgolf.eu/en/cities/barcelona/", "inLanguage": "en", "image": "https://pubgolf.eu/assets/og_barcelona_en.jpg"}]</script>
 <meta name="theme-color" content="#07211A">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,6 +63,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
 @media (max-width: 960px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:minmax(0,1fr)}.sp{grid-template-columns:minmax(0,1fr)}}
 @media (max-width: 520px){.g4{grid-template-columns:minmax(0,1fr)}.hidesm{display:none}}
 @media (max-width: 380px){[style*="letter-spacing: .14em; white-space: nowrap"]{font-size:11px !important;letter-spacing:.08em !important}}.g5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}@media (max-width: 960px){.g5{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (max-width: 520px){.g5{grid-template-columns:repeat(2,minmax(0,1fr))}}.langsw{display:flex;gap:2px;align-items:center}.langsw a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:13px;font-weight:800;letter-spacing:.1em;text-decoration:none;color:inherit;opacity:.6;border-radius:999px}.langsw a[aria-current]{opacity:1;text-decoration:underline;text-underline-offset:4px}.langsw a:hover{opacity:1}</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Pubgolf Barcelona", "brand": {"@type": "Brand", "name": "Pubgolf"}, "description": "Pub golf in Barcelona: 15 holes from the Rambla through the Raval and the Gothic Quarter to a fiery finale in Barceloneta, by the harbour. For 2 to 6 teams.", "image": "https://pubgolf.eu/assets/poster_barcelona.jpg", "url": "https://pubgolf.eu/en/cities/barcelona/", "offers": {"@type": "Offer", "price": "5.00", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": "https://pubgolf.eu/en/cities/barcelona/#boek", "eligibleQuantity": {"@type": "QuantitativeValue", "maxValue": 12, "unitText": "players"}}}</script>
 </head>
 <body>
 <div style="font-family: 'Archivo', 'Helvetica Neue', sans-serif; color: #FFFFFF; background: #0B2A5B; overflow-x: hidden">
@@ -223,7 +224,8 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
   // booking: only active when booking-config.js has an api address; the server checks everything again.
   // paid:false = no Stripe yet: only discount codes (e.g. ERASMUS) work. The game code always goes by email.
   var cfg = window.PC_BOOKING || {}, form = document.querySelector('#boek form'), btn = form && form.querySelector('[data-book]');
-  if (!form || !btn || !(cfg.api || cfg.request)) return;
+  if (!form || !btn || !(cfg.api || cfg.request || cfg.script)) return;
+  var renderedAt = Date.now();
   var en = document.documentElement.lang === 'en', city = form.getAttribute('data-city');
   var date = form.querySelector('input[type=date]'), time = form.querySelector('select'), msg = form.querySelector('[data-msg]');
   var promo = form.querySelector('[data-promo]'), email = form.querySelector('[data-email]'), erow = form.querySelector('[data-emailrow]');
@@ -235,7 +237,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
   promo.addEventListener('input', label);
   btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; label();
   var ERR = { promo: ['Deze kortingscode bestaat niet.', 'This discount code does not exist.'], 'promo-used': ['Met dit e-mailadres is de code al gebruikt.', 'This code has already been used with this email address.'],
-    'promo-full': ['Voor vandaag zijn de gratis plekken op. Probeer het morgen weer.', 'Today\'s free spots are gone. Try again tomorrow.'], 'promo-ended': ['Deze actie is afgelopen.', 'This offer has ended.'],
+    'promo-full': ['Voor vandaag zijn de gratis plekken op. Probeer het morgen weer.', 'Today\'s free spots are gone. Try again tomorrow.'], 'promo-ended': ['Deze actie is afgelopen.', 'This offer has ended.'], 'city-unavailable': ['Deze stad is nog niet te boeken. Probeer het later opnieuw.', 'This city cannot be booked yet. Try again later.'], busy: ['Het is even druk. Probeer het over een minuut opnieuw.', 'It is busy right now. Try again in a minute.'],
     email: ['Vul een geldig e-mailadres in.', 'Enter a valid email address.'], date: ['Kies een datum vanaf vandaag.', 'Pick a date from today.'], 'paid-closed': ['Betaald boeken opent in februari. Heb je een kortingscode? Vul hem hierboven in.', 'Paid booking opens in February. Got a discount code? Enter it above.'] };
   btn.addEventListener('click', async function () {
     var players = +form.querySelector('[data-players]').textContent, adults = form.querySelector('[data-adults]').checked, terms = form.querySelector('[data-terms]').checked, code = promo.value.trim();
@@ -247,6 +249,20 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
     // customers get the new-city mails unless they tick the box (soft opt-in, see privacy)
     var news = !form.querySelector('[data-nonews]').checked;
     if (news && window.PCNews && window.PCNews.live) window.PCNews.subscribe(email.value, 'boeking ' + city, true).catch(function () {});
+    if (!cfg.api && cfg.script && code) {   // free code: the Pubgolf backend (Google Apps Script) makes the game code and mails it
+      if ((cfg.freeCodes || []).indexOf(code.toUpperCase().replace(/\s+/g, '')) < 0) { msg.textContent = ERR.promo[en ? 1 : 0]; return; }
+      btn.disabled = true; msg.textContent = en ? 'One moment…' : 'Even geduld…';
+      var utm = {}; try { utm = JSON.parse(sessionStorage.getItem('pg_utm') || '{}'); } catch (e) {}
+      try {
+        var rs = await fetch(cfg.script, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ city: city, players: players, playDate: date.value,
+          startTime: time.value.slice(0, 5), lang: en ? 'en' : 'nl', adults: adults, terms: terms, promo: code, email: email.value.trim(), news: news, utm: utm, page: location.pathname, renderedAt: renderedAt, website: '' }) });
+        var ds = await rs.json();
+        if (ds.free && !ds.pending) { msg.textContent = en ? 'Done! Your game code and link are on their way to ' + email.value.trim() + '. Check your spam folder too.' : 'Gelukt! Jullie spelcode en de link zijn onderweg naar ' + email.value.trim() + '. Kijk ook in je spam.'; if (window.pgTrack) pgTrack('generate_lead', { city: city, kind: 'free' }); return; }
+        if (ds.free) { msg.textContent = en ? 'Booking received! You will get the game code by email, usually within a day.' : 'Boeking ontvangen! Je krijgt de spelcode per mail, meestal binnen een dag.'; if (window.pgTrack) pgTrack('generate_lead', { city: city, kind: 'request' }); return; }
+        msg.textContent = ERR[ds.error] ? ERR[ds.error][en ? 1 : 0] : (en ? 'That did not work (' : 'Dat lukte niet (') + (ds.error || rs.status) + ').';
+      } catch (e) { msg.textContent = en ? 'No connection. Try again.' : 'Geen verbinding. Probeer het opnieuw.'; }
+      btn.disabled = false; return;
+    }
     if (!cfg.api) {   // no server yet: the request goes by email, the game code comes back by email
       if ((cfg.freeCodes || []).indexOf(code.toUpperCase().replace(/\s+/g, '')) < 0) { msg.textContent = ERR.promo[en ? 1 : 0]; return; }
       var cityName = form.closest('section').querySelector('h2').textContent.replace(/^(Jullie avond in|Your night in)\s*/i, '');
@@ -273,6 +289,7 @@ a{color:#EDBB00}a:hover{color:#FFFFFF}
   });
 })();
 </script>
+<script src="/analytics.js" defer></script>
 <script src="/news.js" defer></script>
 </body>
 </html>
