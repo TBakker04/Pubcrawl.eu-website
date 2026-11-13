@@ -244,7 +244,7 @@ a{color:#D6001C}a:hover{color:#111111}
     if (!err && !/^[^\s@]+@[^\s@]+\.[a-z]{2,24}$/i.test(email.value.trim())) err = ERR.email[en ? 1 : 0];
     msg.textContent = err; if (err) return;
     var news = form.querySelector('[data-news]').checked;
-    if (news && cfg.api && window.PCNews && window.PCNews.live) window.PCNews.subscribe(email.value, 'boeking ' + city).catch(function () {});
+    if (news && window.PCNews && window.PCNews.live) window.PCNews.subscribe(email.value, 'boeking ' + city).catch(function () {});
     if (!cfg.api) {   // no server yet: the request goes by email, the game code comes back by email
       if ((cfg.freeCodes || []).indexOf(code.toUpperCase().replace(/\s+/g, '')) < 0) { msg.textContent = ERR.promo[en ? 1 : 0]; return; }
       var cityName = form.closest('section').querySelector('h2').textContent.replace(/^(Jullie avond in|Your night in)\s*/i, '');
