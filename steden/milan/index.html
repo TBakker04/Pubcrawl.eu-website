@@ -180,7 +180,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <label style="display: flex; flex-direction: column; gap: 8px; font-weight: 800; font-size: 14px; letter-spacing: .08em">KORTINGSCODE<input class="field" type="text" data-promo autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="Optioneel"></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-adults required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Iedereen in de groep is 18 jaar of ouder.</span></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-terms required style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Ik ga akkoord met de <a href="/voorwaarden.html" style="color: inherit">voorwaarden</a>. Omboeken kan; geld terug en het herroepingsrecht vervallen, omdat het spel op een vaste datum is.</span></label>
-<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-news style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Houd me op de hoogte van nieuwe steden (af en toe een mail, altijd af te melden).</span></label>
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; min-height: 44px"><input type="checkbox" data-nonews style="width: 22px; height: 22px; margin: 2px 0 0; flex: 0 0 auto"><span>Als klant krijg je af en toe een mail als er een nieuwe stad bij komt (altijd af te melden). Liever niet? Vink dit aan.</span></label>
 <p data-msg role="status" style="margin: 0; font-size: 15px; min-height: 0"></p>
 <button type="button" class="btn btn-main" data-book style="width: 100%; opacity: .7; cursor: not-allowed" disabled>Boeken opent binnenkort</button>
 </form>
@@ -241,8 +241,9 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
     // always an email address: the game code goes there too, so the group has it even if the site is down
     if (!err && !/^[^\s@]+@[^\s@]+\.[a-z]{2,24}$/i.test(email.value.trim())) err = ERR.email[en ? 1 : 0];
     msg.textContent = err; if (err) return;
-    var news = form.querySelector('[data-news]').checked;
-    if (news && window.PCNews && window.PCNews.live) window.PCNews.subscribe(email.value, 'boeking ' + city).catch(function () {});
+    // customers get the new-city mails unless they tick the box (soft opt-in, see privacy)
+    var news = !form.querySelector('[data-nonews]').checked;
+    if (news && window.PCNews && window.PCNews.live) window.PCNews.subscribe(email.value, 'boeking ' + city, true).catch(function () {});
     if (!cfg.api) {   // no server yet: the request goes by email, the game code comes back by email
       if ((cfg.freeCodes || []).indexOf(code.toUpperCase().replace(/\s+/g, '')) < 0) { msg.textContent = ERR.promo[en ? 1 : 0]; return; }
       var cityName = form.closest('section').querySelector('h2').textContent.replace(/^(Jullie avond in|Your night in)\s*/i, '');
@@ -251,7 +252,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
         (en ? 'Date: ' : 'Datum: ') + date.value, (en ? 'Start time: ' : 'Starttijd: ') + time.value.slice(0, 5), (en ? 'Players: ' : 'Spelers: ') + players,
         (en ? 'Email for the game code: ' : 'E-mail voor de spelcode: ') + email.value.trim(), '',
         en ? 'Everyone in the group is 18 or older, and I accept the terms.' : 'Iedereen in de groep is 18 jaar of ouder, en ik ga akkoord met de voorwaarden.'].join('\r\n');
-      if (news) body += '\r\n' + (en ? 'Newsletter: yes, keep me posted about new cities.' : 'Nieuwsbrief: ja, houd me op de hoogte van nieuwe steden.');
+      body += '\r\n' + (news ? (en ? 'Newsletter: yes' : 'Nieuwsbrief: ja') : (en ? 'Newsletter: no, no emails about new cities' : 'Nieuwsbrief: nee, geen mails over nieuwe steden'));
       location.href = 'mailto:' + cfg.request + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
       msg.textContent = en ? 'Your mail app opens with the request. Send it, and you will get the game code by email (usually within a day).' : 'Je mailprogramma opent met de aanvraag. Verstuur hem, dan krijg je de spelcode per mail (meestal binnen een dag).';
       return;
