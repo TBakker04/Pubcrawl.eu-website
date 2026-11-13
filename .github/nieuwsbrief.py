@@ -23,7 +23,10 @@ def call(method, path, body=None):
             t = r.read().decode()
             return json.loads(t) if t else {}
     except urllib.error.HTTPError as e:
-        sys.exit(f'Brevo {method} {path}: {e.code} {e.read().decode()[:400]}')
+        msg = e.read().decode()[:400]
+        hint = {401: 'the API key is wrong or blocked (Brevo: Security -> Authorised IPs must not block unknown IPs)',
+                403: 'the API key lacks a permission: in Brevo (SMTP & API -> API keys) give it "Email campaigns" and "Contacts" (read), or set the variable BREVO_LIST_IDS'}.get(e.code, '')
+        sys.exit(f'Brevo {method} {path}: {e.code} {msg}' + (f'\n=> {hint}' if hint else ''))
 
 
 def new_cities():
