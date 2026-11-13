@@ -15,6 +15,10 @@ on:
       test_email:
         description: 'Testmail naar dit adres. Leeg laten = ECHT versturen naar de hele lijst. Bij status: dit adres opzoeken'
         required: false
+      again:
+        description: 'Opnieuw versturen, ook als deze stad al eens gemaild is'
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency: nieuwsbrief
@@ -34,3 +38,4 @@ jobs:
           AFTER: ${{ github.sha }}
           SLUG: ${{ inputs.slug }}
           TEST_EMAIL: ${{ inputs.test_email }}
+          AGAIN: ${{ inputs.again }}
