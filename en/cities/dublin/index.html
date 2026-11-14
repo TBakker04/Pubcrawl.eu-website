@@ -243,8 +243,8 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
       : { h: pending ? 'Boeking ontvangen!' : 'Veel speelplezier!', k: 'PUBGOLF ' + name.toUpperCase(),
         p: pending ? 'Je krijgt de spelcode en de link op ' + to + ', meestal binnen een dag.' : 'Jullie spelcode en de link zijn onderweg naar ' + to + '. Niet binnen een paar minuten in je inbox? Kijk ook bij spam of reclame.',
         s: 'Deel de link uit de mail met je groep, zodat jullie allemaal in hetzelfde spel spelen.', b: 'Top, tot dan!', f: '18+ · Spel, geen drinkwedstrijd · Drink met mate' };
-    o.innerHTML = '<div style="background:#FFFFFF;color:#111111;border-radius:22px;max-width:420px;width:100%;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.5);transform:translateY(24px) scale(.97);transition:transform .35s ease">' +
-      '<div style="background:#F2F2F2;display:flex;justify-content:center;padding:18px 0 0"><img src="/assets/poster_' + city + '.jpg" alt="" style="display:block;height:min(30vh,300px);width:auto;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.25)"></div>' +
+    o.innerHTML = '<div style="background:#FFFFFF;color:#111111;transition:background .3s,color .3s;border-radius:22px;max-width:420px;width:100%;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.5);transform:translateY(24px) scale(.97);transition:transform .35s ease">' +
+      '<div style="background:#F2F2F2;display:flex;justify-content:center;padding:18px 0 0;transition:background .3s"><img src="/assets/poster_' + city + '.jpg" alt="" style="display:block;height:min(30vh,300px);width:auto;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.25)"></div>' +
       '<div style="padding:22px 22px 20px;text-align:center;font-family:Archivo,Arial,sans-serif">' +
       '<div style="font-size:12px;font-weight:800;letter-spacing:.2em">' + T.k + '</div>' +
       '<div class="ant" style="font-size:40px;line-height:1;margin:8px 0 10px;text-transform:uppercase">' + T.h + '</div>' +
@@ -253,6 +253,28 @@ a{color:#FF9A4D}a:hover{color:#FFFFFF}
       '<button type="button" class="btn btn-main" style="width:100%;margin-top:6px">' + T.b + '</button>' +
       '<div style="margin-top:12px;font-size:12px;font-weight:800;letter-spacing:.06em">' + T.f + '</div></div></div>';
     o.querySelector('strong').textContent = to;   // the address as text, never as HTML
+    // the card takes the colours of the city's teaser poster: its background colour (the most common colour in the image),
+    // black or white text (whichever reads best), and the city's accent colour for the title when that is readable on it
+    var card = o.firstChild, top = card.firstChild, img = top.querySelector('img');
+    function lum(c) { var a = c.map(function (v) { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * a[0] + .7152 * a[1] + .0722 * a[2]; }
+    function ratio(x, y) { var p = lum(x), q = lum(y); return (Math.max(p, q) + .05) / (Math.min(p, q) + .05); }
+    function rgb(s) { var m = String(s).match(/\d+/g); return m && m.length >= 3 ? m.slice(0, 3).map(Number) : null; }
+    function paint() {
+      try {
+        var c = document.createElement('canvas'); c.width = 36; c.height = 50;
+        var x = c.getContext('2d'); x.drawImage(img, 0, 0, 36, 50);
+        var d = x.getImageData(0, 0, 36, 50).data, n = {}, best = '', sum = {};
+        for (var i = 0; i < d.length; i += 4) { var k = (d[i] >> 4) + ',' + (d[i + 1] >> 4) + ',' + (d[i + 2] >> 4); n[k] = (n[k] || 0) + 1; var s = sum[k] || (sum[k] = [0, 0, 0]); s[0] += d[i]; s[1] += d[i + 1]; s[2] += d[i + 2]; if (!best || n[k] > n[best]) best = k; }
+        var bg = sum[best].map(function (v) { return Math.round(v / n[best]); }), css = 'rgb(' + bg.join(',') + ')';
+        var ink = ratio(bg, [255, 255, 255]) > ratio(bg, [17, 17, 17]) ? [255, 255, 255] : [17, 17, 17];
+        card.style.background = css; top.style.background = css; card.style.color = 'rgb(' + ink.join(',') + ')';
+        var h1 = document.querySelector('h1 span'), acc = h1 && rgb(getComputedStyle(h1).color);
+        if (acc && ratio(acc, bg) >= 3) { var t = card.querySelector('.ant'); if (t) t.style.color = 'rgb(' + acc.join(',') + ')'; }
+        var b = card.querySelector('button'), bc = b && rgb(getComputedStyle(b).backgroundColor);
+        if (bc && ratio(bc, bg) < 1.6) b.style.boxShadow = '0 0 0 2px ' + card.style.color;   // keep the button visible on a poster of the same colour
+      } catch (e) {}
+    }
+    if (img.complete && img.naturalWidth) paint(); else img.addEventListener('load', paint);
     document.body.appendChild(o);
     requestAnimationFrame(function () { o.style.opacity = '1'; o.firstChild.style.transform = 'none'; });
     var close = function () { o.style.opacity = '0'; setTimeout(function () { o.remove(); }, 300); document.removeEventListener('keydown', esc); };
