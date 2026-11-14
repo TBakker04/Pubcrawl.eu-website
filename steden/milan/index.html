@@ -226,6 +226,39 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
   var en = document.documentElement.lang === 'en', city = form.getAttribute('data-city');
   var date = form.querySelector('input[type=date]'), time = form.querySelector('select'), msg = form.querySelector('[data-msg]');
   var promo = form.querySelector('[data-promo]'), email = form.querySelector('[data-email]'), erow = form.querySelector('[data-emailrow]');
+  // the date field opens its calendar on a click anywhere in the field, not only on the small icon
+  date.addEventListener('click', function () { try { if (date.showPicker) date.showPicker(); } catch (e) {} });
+  // a successful booking: a big, friendly pop-up with the city teaser (a small line of text is easy to miss)
+  function celebrate(to, pending) {
+    var name = form.closest('section').querySelector('h2').textContent.replace(/^(Jullie avond in|Your night in)\s*/i, '');
+    var o = document.createElement('div');
+    o.setAttribute('role', 'dialog'); o.setAttribute('aria-modal', 'true');
+    o.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;opacity:0;transition:opacity .3s';
+    var T = en ? { h: pending ? 'Booking received!' : 'Have fun playing!', k: 'PUBGOLF ' + name.toUpperCase(),
+        p: pending ? 'You will get your game code and link at ' + to + ', usually within a day.' : 'Your game code and link are on their way to ' + to + '. Not in your inbox within a few minutes? Check your spam or promotions folder.',
+        s: 'Share the link from the email with your group, so you all play in the same game.', b: 'Let\'s go!', f: '18+ · A game, not a drinking contest · Drink responsibly' }
+      : { h: pending ? 'Boeking ontvangen!' : 'Veel speelplezier!', k: 'PUBGOLF ' + name.toUpperCase(),
+        p: pending ? 'Je krijgt de spelcode en de link op ' + to + ', meestal binnen een dag.' : 'Jullie spelcode en de link zijn onderweg naar ' + to + '. Niet binnen een paar minuten in je inbox? Kijk ook bij spam of reclame.',
+        s: 'Deel de link uit de mail met je groep, zodat jullie allemaal in hetzelfde spel spelen.', b: 'Top, tot dan!', f: '18+ · Spel, geen drinkwedstrijd · Drink met mate' };
+    o.innerHTML = '<div style="background:#FFFFFF;color:#111111;border-radius:22px;max-width:420px;width:100%;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.5);transform:translateY(24px) scale(.97);transition:transform .35s ease">' +
+      '<div style="background:#111111;display:flex;justify-content:center"><video src="/' + city + '/teaser.mp4" poster="/assets/poster_' + city + '.jpg" autoplay muted loop playsinline style="display:block;height:min(40vh,380px);aspect-ratio:9/16;object-fit:cover"></video></div>' +
+      '<div style="padding:22px 22px 20px;text-align:center;font-family:Archivo,Arial,sans-serif">' +
+      '<div style="font-size:12px;font-weight:800;letter-spacing:.2em">' + T.k + '</div>' +
+      '<div class="ant" style="font-size:40px;line-height:1;margin:8px 0 10px;text-transform:uppercase">' + T.h + '</div>' +
+      '<p style="margin:0 0 8px;font-size:16px;line-height:1.5">' + T.p.replace(to, '<strong></strong>') + '</p>' +
+      (pending ? '' : '<p style="margin:0 0 16px;font-size:15px;line-height:1.5">' + T.s + '</p>') +
+      '<button type="button" class="btn btn-main" style="width:100%;margin-top:6px">' + T.b + '</button>' +
+      '<div style="margin-top:12px;font-size:12px;font-weight:800;letter-spacing:.06em">' + T.f + '</div></div></div>';
+    o.querySelector('strong').textContent = to;   // the address as text, never as HTML
+    document.body.appendChild(o);
+    requestAnimationFrame(function () { o.style.opacity = '1'; o.firstChild.style.transform = 'none'; });
+    var close = function () { o.style.opacity = '0'; setTimeout(function () { o.remove(); }, 300); document.removeEventListener('keydown', esc); };
+    var esc = function (e) { if (e.key === 'Escape') close(); };
+    o.querySelector('button').onclick = close;
+    o.addEventListener('click', function (e) { if (e.target === o) close(); });
+    document.addEventListener('keydown', esc);
+    o.querySelector('button').focus();
+  }
   var t = new Date(); date.min = new Date(t.getTime() - t.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
   function label() {
     var p = promo.value.trim() !== '';
@@ -254,8 +287,8 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
         var rs = await fetch(cfg.script, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ city: city, players: players, playDate: date.value,
           startTime: time.value.slice(0, 5), lang: en ? 'en' : 'nl', adults: adults, terms: terms, promo: code, email: email.value.trim(), news: news, utm: utm, page: location.pathname, renderedAt: renderedAt, website: '' }) });
         var ds = await rs.json();
-        if (ds.free && !ds.pending) { msg.textContent = en ? 'Done! Your game code and link are on their way to ' + email.value.trim() + '. Check your spam folder too.' : 'Gelukt! Jullie spelcode en de link zijn onderweg naar ' + email.value.trim() + '. Kijk ook in je spam.'; if (window.pgTrack) pgTrack('generate_lead', { city: city, kind: 'free' }); return; }
-        if (ds.free) { msg.textContent = en ? 'Booking received! You will get the game code by email, usually within a day.' : 'Boeking ontvangen! Je krijgt de spelcode per mail, meestal binnen een dag.'; if (window.pgTrack) pgTrack('generate_lead', { city: city, kind: 'request' }); return; }
+        if (ds.free && !ds.pending) { msg.textContent = en ? 'Done! Your game code and link are on their way to ' + email.value.trim() + '. Check your spam folder too.' : 'Gelukt! Jullie spelcode en de link zijn onderweg naar ' + email.value.trim() + '. Kijk ook in je spam.'; celebrate(email.value.trim(), false); if (window.pgTrack) pgTrack('generate_lead', { city: city, kind: 'free' }); return; }
+        if (ds.free) { msg.textContent = en ? 'Booking received! You will get the game code by email, usually within a day.' : 'Boeking ontvangen! Je krijgt de spelcode per mail, meestal binnen een dag.'; celebrate(email.value.trim(), true); if (window.pgTrack) pgTrack('generate_lead', { city: city, kind: 'request' }); return; }
         msg.textContent = ERR[ds.error] ? ERR[ds.error][en ? 1 : 0] : (en ? 'That did not work (' : 'Dat lukte niet (') + (ds.error || rs.status) + ').';
       } catch (e) { msg.textContent = en ? 'No connection. Try again.' : 'Geen verbinding. Probeer het opnieuw.'; }
       btn.disabled = false; return;
@@ -279,7 +312,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
         body: JSON.stringify({ city: city, players: players, playDate: date.value, startTime: time.value.slice(0, 5), lang: en ? 'en' : 'nl', adults: adults, terms: terms, promo: code, email: email.value.trim(), news: news }) });
       var d = await r.json();
       if (d.url) { location.href = d.url; return; }
-      if (d.free) { msg.textContent = en ? 'Done! Your game code is on its way to ' + email.value.trim() + '. Check your spam folder too.' : 'Gelukt! Jullie spelcode is onderweg naar ' + email.value.trim() + '. Kijk ook in je spam.'; return; }
+      if (d.free) { msg.textContent = en ? 'Done! Your game code is on its way to ' + email.value.trim() + '. Check your spam folder too.' : 'Gelukt! Jullie spelcode is onderweg naar ' + email.value.trim() + '. Kijk ook in je spam.'; celebrate(email.value.trim(), false); return; }
       msg.textContent = ERR[d.error] ? ERR[d.error][en ? 1 : 0] : (en ? 'That did not work (' : 'Dat lukte niet (') + (d.error || r.status) + ').';
     } catch (e) { msg.textContent = en ? 'No connection. Try again.' : 'Geen verbinding. Probeer het opnieuw.'; }
     btn.disabled = false;
