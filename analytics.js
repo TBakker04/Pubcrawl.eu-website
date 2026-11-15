@@ -8,7 +8,7 @@
 (function () {
   'use strict';
   var CFG = {
-    ga4: '',        // GA4 Measurement ID, bijv. 'G-XXXXXXX' (eigen property "Pubgolf", niet die van Forkit)
+    ga4: 'G-JYWK74YZ6L',   // GA4 Measurement ID, bijv. 'G-XXXXXXX' (eigen property "Pubgolf", niet die van Forkit)
     clarity: '',    // Microsoft Clarity Project ID (eigen project "Pubgolf")
     hosts: ['pubgolf.eu', 'www.pubgolf.eu']
   };
