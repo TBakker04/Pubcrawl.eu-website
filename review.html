@@ -65,10 +65,10 @@ textarea { min-height: 110px; resize: vertical; }
   var code = String(q.get('c') || '').toUpperCase().replace(/[^A-Z0-9-]/g, ''), stars = Math.max(0, Math.min(5, parseInt(q.get('s') || '0', 10) || 0));
   var cfg = window.PC_BOOKING || {}, rendered = Date.now(), $ = function (id) { return document.getElementById(id); };
   var L = en ? { h: 'How was <span>your night?</span>', stars: 'YOUR STARS', text: 'A FEW WORDS (OPTIONAL)', ph: 'What was the best hole? What could be better?', name: 'YOUR FIRST NAME (OPTIONAL)', phn: 'E.g. Lisa',
-      consent: 'You may show my review with my first name on pubgolf.eu.', code: 'YOUR GAME CODE', phc: 'E.g. LIS-K7PQ-M2XD', needcode: 'Fill in your game code: it is in the confirmation email or in the link of your game.', send: 'Send review', label: ['Not great', 'Could be better', 'Good', 'Great', 'Amazing'],
+      consent: 'You may show my review with my first name on pubgolf.eu.', code: 'YOUR GAME CODE', phc: 'E.g. LIS-K7PQ-M2XD', needcode: 'Fill in your game code: it is in the confirmation email or in the link of your game.', badTyped: 'We do not know this game code. Check it once more.', send: 'Send review', label: ['Not great', 'Could be better', 'Good', 'Great', 'Amazing'],
       pick: 'Pick your stars first.', nocode: 'This link is missing its game code. Open it from your email.', err: 'That did not work. Try again in a moment.', bad: 'This game code is unknown. Open the link from your email.',
       dk: 'THANK YOU!', dt: 'Your review is in. It helps us make every course better.', db: 'See all cities', foot: '18+ · A game, not a drinking contest · ', priv: 'Privacy' }
-    : { needcode: 'Vul jullie spelcode in: die staat in de bevestigingsmail of in de link van jullie spel.', label: ['Niet goed', 'Kan beter', 'Goed', 'Heel goed', 'Geweldig'], pick: 'Kies eerst jullie sterren.', nocode: 'Deze link mist de spelcode. Open hem vanuit je mail.',
+    : { needcode: 'Vul jullie spelcode in: die staat in de bevestigingsmail of in de link van jullie spel.', badTyped: 'Deze spelcode kennen we niet. Kijk hem nog even na.', label: ['Niet goed', 'Kan beter', 'Goed', 'Heel goed', 'Geweldig'], pick: 'Kies eerst jullie sterren.', nocode: 'Deze link mist de spelcode. Open hem vanuit je mail.',
       err: 'Dat lukte niet. Probeer het zo nog eens.', bad: 'Deze spelcode kennen we niet. Open de link vanuit je mail.' };
   if (en) {
     document.documentElement.lang = 'en'; document.title = 'Review · Pubgolf';
@@ -102,7 +102,7 @@ textarea { min-height: 110px; resize: vertical; }
       var d = await r.json();
       if (d.ok) { $('form').hidden = true; $('done').hidden = false; if (window.pgTrack) window.pgTrack('review_sent', { stars: stars }); return; }
       if (d.error === 'code' && !$('code-in').hidden) code = '';
-      $('msg').textContent = d.error === 'code' ? L.bad : L.err;
+      $('msg').textContent = d.error === 'code' ? ($('code-in').hidden ? L.bad : L.badTyped) : L.err;
     } catch (e) { $('msg').textContent = L.err; }
     $('send').disabled = false;
   });
