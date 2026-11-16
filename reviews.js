@@ -9,22 +9,23 @@
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var css = document.createElement('style');
   css.textContent = '.rv-stage{position:relative;width:100%;transition:height .3s ease}'
-    + '.rv-card{position:absolute;top:0;left:50%;width:min(560px,78vw);box-sizing:border-box;margin:0;background:#FFFFFF;color:#111111;border-radius:18px;padding:30px;display:flex;flex-direction:column;gap:14px;'
-    + 'box-shadow:0 18px 40px rgba(0,0,0,.28);transition:transform .7s cubic-bezier(.22,.8,.26,1),opacity .7s ease,filter .7s ease;will-change:transform}'
+    + '.rv-card{position:absolute;top:0;left:50%;width:min(600px,80vw);box-sizing:border-box;margin:0;background:#FFFFFF;color:#111111;border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:8px;'
+    + 'box-shadow:0 12px 28px rgba(0,0,0,.25);transition:transform .7s cubic-bezier(.22,.8,.26,1),opacity .7s ease,filter .7s ease;will-change:transform}'
     + '.rv-card[data-p="c"]{transform:translateX(-50%) scale(1);opacity:1;filter:none;z-index:3}'
     + '.rv-card[data-p="l"]{transform:translateX(-128%) scale(.84);opacity:.45;filter:blur(3px);z-index:2;cursor:pointer}'
     + '.rv-card[data-p="r"]{transform:translateX(28%) scale(.84);opacity:.45;filter:blur(3px);z-index:2;cursor:pointer}'
     + '.rv-card[data-p="ll"]{transform:translateX(-200%) scale(.7);opacity:0;filter:blur(6px);z-index:1;pointer-events:none}'
     + '.rv-card[data-p="rr"]{transform:translateX(100%) scale(.7);opacity:0;filter:blur(6px);z-index:1;pointer-events:none}'
-    + '.rv-card .st{font-size:24px;letter-spacing:3px;color:#B8901A}.rv-card blockquote{margin:0;font-size:19px;line-height:1.55}'
-    + '.rv-card figcaption{font-size:14px;font-weight:800;letter-spacing:.04em}'
-    + '.rv-nav{display:flex;justify-content:center;align-items:center;gap:14px}'
-    + '.rv-btn{width:48px;height:48px;border-radius:50%;border:2px solid #F7F5F0;background:transparent;color:#F7F5F0;font-family:Anton,Impact,sans-serif;font-size:22px;cursor:pointer}'
+    + '.rv-card .st{font-size:17px;letter-spacing:2px;color:#B8901A}.rv-card blockquote{margin:0;font-size:16px;line-height:1.5;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}.rv-card.open blockquote{-webkit-line-clamp:unset;display:block}'
+    + '.rv-more{align-self:flex-start;background:none;border:0;padding:0;min-height:32px;font:800 13px Archivo,Arial,sans-serif;color:#B5121B;text-decoration:underline;cursor:pointer}.rv-card:not([data-p="c"]) .rv-more{visibility:hidden}'
+    + '.rv-card figcaption{font-size:13px;font-weight:800;letter-spacing:.04em}'
+    + '.rv-nav{display:flex;justify-content:center;align-items:center;gap:10px}'
+    + '.rv-btn{width:40px;height:40px;border-radius:50%;border:2px solid #F7F5F0;background:transparent;color:#F7F5F0;font-family:Anton,Impact,sans-serif;font-size:18px;cursor:pointer}'
     + '.rv-btn:hover{background:#F7F5F0;color:#0E3B2C}'
-    + '.rv-dots{display:flex;gap:2px}.rv-dots button{width:28px;height:44px;border:0;background:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}'
+    + '.rv-dots{display:flex;gap:2px}.rv-dots button{width:24px;height:40px;border:0;background:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}'
     + '.rv-dots button::after{content:"";width:10px;height:10px;border-radius:50%;background:rgba(247,245,240,.35);transition:background .3s,transform .3s}'
     + '.rv-dots button[aria-current="true"]::after{background:#F2D16B;transform:scale(1.3)}'
-    + '@media (max-width:700px){.rv-card{padding:22px;width:82vw}.rv-card blockquote{font-size:17px}.rv-card[data-p="l"]{transform:translateX(-148%) scale(.86)}.rv-card[data-p="r"]{transform:translateX(48%) scale(.86)}}'
+    + '@media (max-width:700px){.rv-card{padding:18px;width:82vw}.rv-card blockquote{font-size:15px}.rv-card[data-p="l"]{transform:translateX(-148%) scale(.86)}.rv-card[data-p="r"]{transform:translateX(48%) scale(.86)}}'
     + '@media (prefers-reduced-motion: reduce){.rv-card,.rv-stage{transition:none}}';
   document.head.appendChild(css);
 
@@ -33,7 +34,7 @@
     if (!list.length) return;
     var n = list.length, slots = n === 2 ? list.concat(list) : list;   // with two reviews: left and right show the other one
     var grid = box.querySelector('[data-grid]');
-    grid.removeAttribute('style'); grid.style.cssText = 'display:flex;flex-direction:column;gap:26px';
+    grid.removeAttribute('style'); grid.style.cssText = 'display:flex;flex-direction:column;gap:16px';
     grid.setAttribute('role', 'region'); grid.setAttribute('aria-roledescription', 'carousel'); grid.setAttribute('aria-label', en ? 'Reviews' : 'Reviews');
     var stage = document.createElement('div'); stage.className = 'rv-stage'; stage.setAttribute('aria-live', 'off'); grid.appendChild(stage);
     var cards = slots.map(function (r, k) {
@@ -43,11 +44,13 @@
       s.textContent = '★★★★★'.slice(0, r.stars) + '☆☆☆☆☆'.slice(0, 5 - r.stars);
       var q = document.createElement('blockquote'); q.textContent = '“' + r.text + '”';
       var w = document.createElement('figcaption'); w.textContent = (r.name ? r.name + ' · ' : '') + 'Pubgolf ' + (en ? r.cityEn : r.cityNl);
-      c.appendChild(s); c.appendChild(q); c.appendChild(w); stage.appendChild(c);
+      var more = document.createElement('button'); more.type = 'button'; more.className = 'rv-more'; more.hidden = true; more.textContent = en ? 'Read more' : 'Lees meer';
+      more.onclick = function (e) { e.stopPropagation(); var o = c.classList.toggle('open'); more.textContent = o ? (en ? 'Show less' : 'Minder') : (en ? 'Read more' : 'Lees meer'); paused = o; restart(); fit(); };
+      c.appendChild(s); c.appendChild(q); c.appendChild(more); c.appendChild(w); stage.appendChild(c);
       return c;
     });
     var i = 0, m = cards.length, timer = null, paused = false;
-    function fit() { var h = 0; cards.forEach(function (c) { h = Math.max(h, c.offsetHeight); }); stage.style.height = h + 'px'; }
+    function fit() { cards.forEach(function (c) { var q = c.querySelector('blockquote'), b = c.querySelector('.rv-more'); if (!c.classList.contains('open')) b.hidden = q.scrollHeight <= q.clientHeight + 2; }); var h = 0; cards.forEach(function (c) { h = Math.max(h, c.offsetHeight); }); stage.style.height = h + 'px'; }
     function place() {
       cards.forEach(function (c, k) {
         var o = ((k - i) % m + m) % m, p = 'hide';
@@ -57,8 +60,8 @@
       });
       if (dots) [].forEach.call(dots.children, function (b, k) { b.setAttribute('aria-current', k === i % n ? 'true' : 'false'); });
     }
-    function go(to) { i = ((to % m) + m) % m; place(); restart(); }
-    function restart() { clearInterval(timer); timer = null; if (n > 1 && !paused) timer = setInterval(function () { i = (i + 1) % m; place(); }, MS); }
+    function go(to) { cards.forEach(function (c) { if (c.classList.contains('open')) { c.classList.remove('open'); c.querySelector('.rv-more').textContent = en ? 'Read more' : 'Lees meer'; } }); paused = false; i = ((to % m) + m) % m; place(); fit(); restart(); }
+    function restart() { clearInterval(timer); timer = null; if (n > 1 && !paused && !stage.querySelector('.rv-card.open')) timer = setInterval(function () { i = (i + 1) % m; place(); }, MS); }
     var dots = null;
     if (n > 1) {
       var nav = document.createElement('div'); nav.className = 'rv-nav';
