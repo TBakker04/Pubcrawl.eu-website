@@ -38,6 +38,8 @@ textarea { min-height: 110px; resize: vertical; }
   <div class="kick" id="kick">PUBGOLF</div>
   <h1 id="h1">Hoe was <span>jullie avond?</span></h1>
   <form class="card" id="form" novalidate>
+    <label class="lbl" for="code-in" id="l-code" hidden>JULLIE SPELCODE</label>
+    <input type="text" id="code-in" hidden maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Bijv. LIS-K7PQ-M2XD">
     <span class="lbl" id="l-stars">JULLIE STERREN</span>
     <div class="stars" id="stars" role="group" aria-labelledby="l-stars"></div>
     <label class="lbl" for="text" id="l-text">EEN PAAR WOORDEN (OPTIONEEL)</label>
@@ -63,15 +65,15 @@ textarea { min-height: 110px; resize: vertical; }
   var code = String(q.get('c') || '').toUpperCase().replace(/[^A-Z0-9-]/g, ''), stars = Math.max(0, Math.min(5, parseInt(q.get('s') || '0', 10) || 0));
   var cfg = window.PC_BOOKING || {}, rendered = Date.now(), $ = function (id) { return document.getElementById(id); };
   var L = en ? { h: 'How was <span>your night?</span>', stars: 'YOUR STARS', text: 'A FEW WORDS (OPTIONAL)', ph: 'What was the best hole? What could be better?', name: 'YOUR FIRST NAME (OPTIONAL)', phn: 'E.g. Lisa',
-      consent: 'You may show my review with my first name on pubgolf.eu.', send: 'Send review', label: ['Not great', 'Could be better', 'Good', 'Great', 'Amazing'],
+      consent: 'You may show my review with my first name on pubgolf.eu.', code: 'YOUR GAME CODE', phc: 'E.g. LIS-K7PQ-M2XD', needcode: 'Fill in your game code: it is in the confirmation email or in the link of your game.', send: 'Send review', label: ['Not great', 'Could be better', 'Good', 'Great', 'Amazing'],
       pick: 'Pick your stars first.', nocode: 'This link is missing its game code. Open it from your email.', err: 'That did not work. Try again in a moment.', bad: 'This game code is unknown. Open the link from your email.',
       dk: 'THANK YOU!', dt: 'Your review is in. It helps us make every course better.', db: 'See all cities', foot: '18+ · A game, not a drinking contest · ', priv: 'Privacy' }
-    : { label: ['Niet goed', 'Kan beter', 'Goed', 'Heel goed', 'Geweldig'], pick: 'Kies eerst jullie sterren.', nocode: 'Deze link mist de spelcode. Open hem vanuit je mail.',
+    : { needcode: 'Vul jullie spelcode in: die staat in de bevestigingsmail of in de link van jullie spel.', label: ['Niet goed', 'Kan beter', 'Goed', 'Heel goed', 'Geweldig'], pick: 'Kies eerst jullie sterren.', nocode: 'Deze link mist de spelcode. Open hem vanuit je mail.',
       err: 'Dat lukte niet. Probeer het zo nog eens.', bad: 'Deze spelcode kennen we niet. Open de link vanuit je mail.' };
   if (en) {
     document.documentElement.lang = 'en'; document.title = 'Review · Pubgolf';
     $('h1').innerHTML = L.h; $('l-stars').textContent = L.stars; $('l-text').textContent = L.text; $('text').placeholder = L.ph; $('l-name').textContent = L.name; $('name').placeholder = L.phn;
-    $('t-consent').textContent = L.consent; $('send').textContent = L.send; $('d-kick').textContent = L.dk; $('d-text').textContent = L.dt; $('d-btn').textContent = L.db; $('d-btn').href = '/en/cities/';
+    $('t-consent').textContent = L.consent; $('l-code').textContent = L.code; $('code-in').placeholder = L.phc; $('send').textContent = L.send; $('d-kick').textContent = L.dk; $('d-text').textContent = L.dt; $('d-btn').textContent = L.db; $('d-btn').href = '/en/cities/';
     $('foot').innerHTML = L.foot + '<a href="/privacy.html#en">' + L.priv + '</a>';
   }
   if (code) $('kick').textContent = 'PUBGOLF · ' + code;
@@ -86,9 +88,11 @@ textarea { min-height: 110px; resize: vertical; }
     });
   }
   draw();
-  if (!code) { $('msg').textContent = L.nocode; $('send').disabled = true; }
+  // no code in the link (a general link shared with friends): ask for it
+  if (!code) { $('l-code').hidden = false; $('code-in').hidden = false; }
   $('form').addEventListener('submit', async function (ev) {
     ev.preventDefault();
+    if (!code) { var typed = $('code-in').value.toUpperCase().replace(/\s+/g, '').replace(/[^A-Z0-9-]/g, ''); if (/^[A-Z]{3}[A-Z0-9]{8}$/.test(typed)) typed = typed.slice(0, 3) + '-' + typed.slice(3, 7) + '-' + typed.slice(7); if (!/^[A-Z]{3}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(typed)) { $('msg').textContent = L.needcode; return; } code = typed; }
     if (!stars) { $('msg').textContent = L.pick; return; }
     if (!cfg.script) { $('msg').textContent = L.err; return; }
     $('send').disabled = true; $('msg').textContent = '…';
@@ -97,6 +101,7 @@ textarea { min-height: 110px; resize: vertical; }
         text: $('text').value, name: $('name').value, consent: $('consent').checked, lang: en ? 'en' : 'nl', website: $('website').value, renderedAt: rendered }) });
       var d = await r.json();
       if (d.ok) { $('form').hidden = true; $('done').hidden = false; if (window.pgTrack) window.pgTrack('review_sent', { stars: stars }); return; }
+      if (d.error === 'code' && !$('code-in').hidden) code = '';
       $('msg').textContent = d.error === 'code' ? L.bad : L.err;
     } catch (e) { $('msg').textContent = L.err; }
     $('send').disabled = false;

@@ -269,9 +269,18 @@
   async function loadReviews() {
     var tb = $('rv-rows'); tb.innerHTML = ''; $('rv-msg').textContent = 'Laden…';
     try {
-      var snap = await db.collection('bookings').where('review.stars', '>=', 1).get(), list = [];
-      snap.forEach(function(d) { var b = d.data(); list.push({ code: d.id, city: b.city, r: b.review }); });
-      list.sort(function(a, b) { var x = a.r.at && a.r.at.toMillis ? a.r.at.toMillis() : 0, y = b.r.at && b.r.at.toMillis ? b.r.at.toMillis() : 0; return y - x; });
+      // each review lives in bookings/<code>.reviews.<id> (older test reviews: bookings/<code>.review)
+      var seen = {}, list = [], docs = {};
+      var q1 = await db.collection('bookings').where('reviewCount', '>=', 1).get(), q2 = await db.collection('bookings').where('review.stars', '>=', 1).get();
+      [q1, q2].forEach(function(snap) { snap.forEach(function(d) { docs[d.id] = d.data(); }); });
+      Object.keys(docs).forEach(function(code) {
+        var b = docs[code], all = b.reviews || {};
+        Object.keys(all).forEach(function(id) { list.push({ code: code, city: b.city, path: 'reviews.' + id, r: all[id], doc: b }); });
+        if (b.review && b.review.stars) list.push({ code: code, city: b.city, path: 'review', r: b.review, doc: b });
+      });
+      var ms = function(r) { return r.at && r.at.toMillis ? r.at.toMillis() : 0; };
+      list.sort(function(a, b) { return ms(b.r) - ms(a.r); });
+      function anyPublic(b) { var all = b.reviews || {}; return Object.keys(all).some(function(k) { return all[k].public; }) || !!(b.review && b.review.public); }
       list.forEach(function(it) {
         var tr = document.createElement('tr'), r = it.r, when = r.at && r.at.toDate ? r.at.toDate().toLocaleDateString('nl-NL') : '';
         var cells = [when, (CITYNAME[it.city] || it.city) + ' · ' + it.code, '★'.repeat(r.stars) + '☆'.repeat(5 - r.stars), (r.text || '–') + (r.name ? ' — ' + r.name : '') + (r.consent ? '' : ' (geen toestemming)')];
@@ -281,8 +290,12 @@
         btn.disabled = !r.consent || !r.text; if (!r.text) btn.title = 'Zonder tekst verschijnt een review niet op de site';
         btn.onclick = async function() {
           btn.disabled = true;
-          try { await db.doc('bookings/' + it.code).update({ 'review.public': !r.public }); r.public = !r.public; btn.className = r.public ? 'alt' : ''; btn.textContent = r.public ? 'Offline halen' : 'Online zetten'; $('rv-msg').textContent = r.public ? 'Online gezet: binnen 10 minuten zichtbaar op de homepage.' : 'Offline gehaald.'; }
-          catch (e) { $('rv-msg').textContent = 'Lukte niet: ' + (e.code || e.message); }
+          try {
+            r.public = !r.public; var upd = {}; upd[it.path + '.public'] = r.public; upd.hasPublic = anyPublic(it.doc);
+            await db.doc('bookings/' + it.code).update(upd);
+            btn.className = r.public ? 'alt' : ''; btn.textContent = r.public ? 'Offline halen' : 'Online zetten';
+            $('rv-msg').textContent = r.public ? 'Online gezet: binnen 10 minuten zichtbaar op de homepage.' : 'Offline gehaald.';
+          } catch (e) { r.public = !r.public; $('rv-msg').textContent = 'Lukte niet: ' + (e.code || e.message); }
           btn.disabled = false;
         };
         td.appendChild(btn); tr.appendChild(td); tb.appendChild(tr);
