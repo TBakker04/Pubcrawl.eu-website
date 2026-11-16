@@ -122,8 +122,8 @@ def welcome_changed():
 
 def welcome_all(test):
     """Welkomstmail eenmalig naar iedereen die nu op de lijst staat (ook wie zich aanmeldde voordat de automatisering bestond).
-    Als campagne, zodat de afmeldlink werkt: de huidige contacten (zonder afgemelde) gaan naar een eigen lijst "Welkom inhaal",
-    zodat de automatisering op lijst 2 niet opnieuw afgaat. Nooit twee keer (campagne "Welkom: iedereen" bestaat al = klaar), tenzij again."""
+    Als campagne naar de lijst, zodat de afmeldlink werkt; afgemelde contacten slaat Brevo zelf over.
+    Een campagne voegt niemand aan de lijst toe, dus de automatisering "toegevoegd aan lijst 2" gaat niet opnieuw af. Nooit twee keer (campagne "Welkom: iedereen" bestaat al = klaar), tenzij again."""
     name = 'Welkom: iedereen'
     again = os.environ.get('AGAIN', '').lower() == 'true'
     if not test:
@@ -153,17 +153,11 @@ def welcome_all(test):
         cid = call('POST', '/emailCampaigns', body)['id']
         call('POST', f'/emailCampaigns/{cid}/sendTest', {'emailTo': [test]}); print('test sent to', mask(test), '(draft campaign', cid, 'kept)')
         return
-    folders = call('GET', '/contacts/folders?limit=10').get('folders') or []
-    fid = folders[0]['id'] if folders else call('POST', '/contacts/folders', {'name': 'Pubgolf'})['id']
     stamp = f'{datetime.datetime.now(ZoneInfo("Europe/Amsterdam")):%Y-%m-%d %H:%M}'
-    lid = call('POST', '/contacts/lists', {'name': f'Welkom inhaal {stamp}', 'folderId': fid})['id']
-    em = sorted(emails)
-    for k in range(0, len(em), 150):
-        call('POST', f'/contacts/lists/{lid}/contacts/add', {'emails': em[k:k + 150]})
-    body.update(name=f'{name} {stamp}', recipients={'listIds': [lid]})
+    body.update(name=f'{name} {stamp}', recipients={'listIds': src})
     cid = call('POST', '/emailCampaigns', body)['id']
     call('POST', f'/emailCampaigns/{cid}/sendNow')
-    print('sent', body['name'], 'to', len(em), 'contacts (list', lid, ')')
+    print('sent', body['name'], 'to lists', src, '(', len(emails), 'contacts )')
 
 
 if __name__ == '__main__':
