@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Klassement · Pubgolf</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&display=swap">
+<style>
+:root { --green: #07211A; --mid: #0E3B2C; --cream: #F7F5F0; --gold: #F2D16B; --red: #B5121B; --ink: #111111; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at 75% 0%, #134A37 0%, #0E3B2C 40%, #07211A 100%) fixed; color: var(--cream); font-family: Archivo, Arial, sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 36px 20px 48px; display: flex; flex-direction: column; gap: 22px; }
+.kick { font-size: 13px; font-weight: 800; letter-spacing: .22em; color: var(--gold); }
+h1 { font-family: Anton, Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: clamp(38px, 7vw, 84px); line-height: .92; margin: 0; }
+.sub { margin: 0; font-size: 16px; color: #C9D8D1; }
+.groups { display: flex; flex-wrap: wrap; gap: 8px; }
+.groups span { border: 1.5px solid rgba(247,245,240,.3); border-radius: 999px; padding: 6px 14px; font-size: 14px; font-weight: 600; }
+ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+li { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 16px; align-items: center; background: #FFFFFF; color: var(--ink); border-radius: 14px; padding: 14px 20px; }
+li .pos { font-family: Anton, Impact, sans-serif; font-size: 36px; line-height: 1; color: var(--red); text-align: center; }
+li .nm { font-weight: 800; font-size: clamp(18px, 2.4vw, 26px); line-height: 1.2; overflow-wrap: anywhere; }
+li .meta { display: block; font-size: 13px; font-weight: 600; color: #4A5B53; margin-top: 2px; }
+li .sc { font-family: Anton, Impact, sans-serif; font-size: clamp(30px, 4vw, 44px); line-height: 1; text-align: right; }
+li .sc small { display: block; font-family: Archivo, Arial, sans-serif; font-size: 11px; font-weight: 800; letter-spacing: .1em; color: #4A5B53; }
+li.first { background: var(--gold); }
+li.first .pos { color: var(--ink); }
+.empty { background: rgba(255,255,255,.08); border-radius: 14px; padding: 22px; font-size: 17px; line-height: 1.5; }
+.foot { font-size: 13px; color: #A9BDB4; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.foot a { color: inherit; }
+@media (max-width: 520px) { li { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; padding: 12px 14px; } li .pos { font-size: 28px; } }
+@media (min-width: 1400px) { main { max-width: 1300px; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="kick" id="kick">PUBGOLF · LIVE KLASSEMENT</div>
+  <h1 id="title">Klassement</h1>
+  <p class="sub" id="sub">Laagste score wint. Ververst vanzelf.</p>
+  <div class="groups" id="groups"></div>
+  <ol id="list" aria-live="polite"></ol>
+  <div class="empty" id="empty" hidden></div>
+  <div class="foot"><span id="upd"></span><span>18+ · <span id="game">Spel, geen drinkwedstrijd</span> · <a href="/">pubgolf.eu</a></span></div>
+</main>
+<script src="/booking-config.js"></script>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search), id = (q.get('e') || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  var en = q.get('lang') === 'en' || (q.get('lang') !== 'nl' && !/^nl/i.test(navigator.language || ''));
+  var cfg = window.PC_BOOKING || {}, $ = function (x) { return document.getElementById(x); };
+  var L = en ? { kick: 'PUBGOLF · LIVE LEADERBOARD', title: 'Leaderboard', sub: 'Lowest score wins. Updates by itself.', group: 'Group', holes: function (n) { return n === 1 ? 'after 1 hole' : 'after ' + n + ' holes'; },
+      notyet: 'not started', started: function (n) { return n ? n + ' holes' : 'started'; }, wait: 'No scores yet. As soon as the first team enters a score, the leaderboard appears here.',
+      bad: 'This leaderboard link is not right. Check the link you received.', err: 'Could not load the scores. Trying again…', upd: 'Updated', game: 'A game, not a drinking contest', pts: 'SCORE' }
+    : { kick: 'PUBGOLF · LIVE KLASSEMENT', title: 'Klassement', sub: 'Laagste score wint. Ververst vanzelf.', group: 'Groep', holes: function (n) { return 'na ' + n + (n === 1 ? ' hole' : ' holes'); },
+      notyet: 'nog niet gestart', started: function (n) { return n ? n + ' holes' : 'gestart'; }, wait: 'Nog geen scores. Zodra het eerste team een score invult, staat het klassement hier.',
+      bad: 'Deze klassement-link klopt niet. Kijk de link nog even na.', err: 'De scores laden nu niet. We proberen het zo opnieuw…', upd: 'Bijgewerkt', game: 'Spel, geen drinkwedstrijd', pts: 'SCORE' };
+  if (en) { document.documentElement.lang = 'en'; document.title = 'Leaderboard · Pubgolf'; }
+  $('kick').textContent = L.kick; $('title').textContent = L.title; $('sub').textContent = L.sub; $('game').textContent = L.game;
+  function msg(t) { $('empty').hidden = false; $('empty').textContent = t; }
+  function num(n) { var s = String(n); return en ? s : s.replace('.', ','); }
+  function draw(d) {
+    if (d.name) { $('title').textContent = d.name; document.title = d.name + ' · Pubgolf'; }
+    $('groups').innerHTML = '';
+    (d.groups || []).forEach(function (g) { var s = document.createElement('span'); s.textContent = L.group + ' ' + g.group + ' · ' + (g.started ? L.started(g.holes) : L.notyet); $('groups').appendChild(s); });
+    $('list').innerHTML = '';
+    var T = d.teams || [], pos = 0, prev = null;
+    T.forEach(function (t, k) {
+      if (t.score !== prev) { pos = k + 1; prev = t.score; }
+      var li = document.createElement('li'); if (pos === 1 && t.holes > 0) li.className = 'first';
+      var p = document.createElement('span'); p.className = 'pos'; p.textContent = pos;
+      var n = document.createElement('div'); n.className = 'nm'; n.textContent = t.name;
+      var m = document.createElement('span'); m.className = 'meta'; m.textContent = L.group + ' ' + t.group + ' · ' + L.holes(t.holes); n.appendChild(m);
+      var s = document.createElement('div'); s.className = 'sc'; s.textContent = num(t.score); var sm = document.createElement('small'); sm.textContent = L.pts; s.appendChild(sm);
+      li.appendChild(p); li.appendChild(n); li.appendChild(s); $('list').appendChild(li);
+    });
+    $('empty').hidden = T.length > 0; if (!T.length) msg(L.wait);
+    $('upd').textContent = L.upd + ' ' + new Date().toLocaleTimeString(en ? 'en-GB' : 'nl-NL', { hour: '2-digit', minute: '2-digit' });
+  }
+  async function load() {
+    if (!id || !cfg.script) { msg(L.bad); return; }
+    try {
+      var d = await (await fetch(cfg.script + '?action=event&e=' + encodeURIComponent(id))).json();
+      if (d.error === 'event') { msg(L.bad); return; }
+      if (d.error) throw new Error(d.error);
+      draw(d);
+    } catch (e) { if (!$('list').children.length) msg(L.err); }
+    setTimeout(load, 30000);
+  }
+  load();
+})();
+</script>
+</body>
+</html>
