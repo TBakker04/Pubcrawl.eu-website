@@ -47,6 +47,24 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 @media (max-width: 860px){.g2{grid-template-columns:minmax(0,1fr);gap:28px}.g3{grid-template-columns:minmax(0,1fr);gap:28px}.navlinks{display:none !important}}
 @media (max-width: 560px){.g5{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}}
 @media (prefers-reduced-motion: reduce){.card .ph{transition:none}}
+.menubtn{display:none;align-items:center;justify-content:center;gap:8px;min-height:44px;min-width:44px;padding:0 12px;border:1.5px solid rgba(247,245,240,.5);border-radius:999px;background:transparent;color:#F7F5F0;font:800 14px 'Archivo',sans-serif;letter-spacing:.06em;cursor:pointer}
+.menubtn svg{display:block}
+@media (max-width: 380px){.menubtn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
+@media (max-width: 860px){.hdr{padding:8px 16px !important;gap:6px !important;flex-wrap:nowrap !important}.menubtn{display:inline-flex}.langsw{margin-left:auto}
+.navlinks.open{display:flex !important;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch !important;gap:0 !important;background:#07211A;padding:6px 20px 18px;border-bottom:1px solid rgba(247,245,240,.12);box-shadow:0 18px 30px rgba(0,0,0,.35)}
+.navlinks.open .navlink{font-size:20px;min-height:54px;border-bottom:1px solid rgba(247,245,240,.1);padding:0 4px}
+.navlinks.open .navlink:last-child{border-bottom:0}}
+.hc-dots{display:none}
+@media (max-width: 560px){
+.g5.hc{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -32px;padding:6px 15% 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.g5.hc::-webkit-scrollbar{display:none}
+.g5.hc .card{flex:0 0 70%;scroll-snap-align:center;transition:opacity .35s ease,transform .35s ease;opacity:.5;transform:scale(.92)}
+.g5.hc .card.on{opacity:1;transform:none}
+.hc-dots{display:flex;justify-content:center;gap:2px;margin-top:-8px}
+.hc-dots button{width:22px;height:36px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.hc-dots button::after{content:"";width:8px;height:8px;border-radius:50%;background:rgba(19,36,28,.25);transition:background .3s,transform .3s}
+.hc-dots button[aria-current="true"]::after{background:#B5121B;transform:scale(1.3)}}
+@media (prefers-reduced-motion: reduce){.g5.hc .card{transition:none}}
 .langsw{display:flex;gap:2px;align-items:center}.langsw a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:13px;font-weight:800;letter-spacing:.1em;text-decoration:none;color:inherit;opacity:.6;border-radius:999px}.langsw a[aria-current]{opacity:1;text-decoration:underline;text-underline-offset:4px}.langsw a:hover{opacity:1}
 .bz{max-width:1320px;margin:0 auto;padding:80px 32px;display:flex;flex-direction:column;gap:36px}
 .bz h2{margin:0;font-size:clamp(36px,4.6vw,60px);line-height:.98;text-transform:uppercase}
@@ -94,12 +112,12 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div style="font-family: 'Archivo', 'Helvetica Neue', sans-serif; color: #F7F5F0; background: #07211A; overflow-x: hidden">
 
 <header style="position: sticky; top: 0; z-index: 20; background: rgba(7,33,26,.92); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(247,245,240,.08)">
-<div style="max-width: 1320px; margin: 0 auto; padding: 10px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap">
+<div class="hdr" style="max-width: 1320px; margin: 0 auto; padding: 10px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap">
 <a href="/en/" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #F7F5F0; min-height: 44px">
 <svg width="26" height="30" viewBox="0 0 26 30" fill="none" stroke="#F2D16B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 27V3l14 5-14 5"></path><ellipse cx="9" cy="27" rx="7" ry="2"></ellipse></svg>
 <span class="ant" style="font-size: 26px; letter-spacing: .04em">PUBGOLF</span>
 </a>
-<nav class="navlinks" aria-label="Main menu" style="display: flex; gap: 28px; align-items: center">
+<nav class="navlinks" id="mainnav" aria-label="Main menu" style="display: flex; gap: 28px; align-items: center">
 <a class="navlink" href="/en/#steden">Cities</a>
 <a class="navlink" href="/en/how-it-works/">How it works</a>
 <a class="navlink" href="/en/#spel">The game</a>
@@ -107,6 +125,17 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <a class="navlink" href="/en/company-events/" aria-current="page" style="color: #F2D16B">Company events</a>
 </nav>
 <nav class="langsw" aria-label="Language"><a href="/bedrijfsfeest/" lang="nl" hreflang="nl" onclick="try{localStorage.setItem('pubcrawl-lang','nl')}catch(e){}">NL</a><a href="/en/company-events/" lang="en" hreflang="en" aria-current="true" onclick="try{localStorage.setItem('pubcrawl-lang','en')}catch(e){}">EN</a></nav>
+<button type="button" class="menubtn" aria-expanded="false" aria-controls="mainnav"><svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 1h18M1 7h18M1 13h18"></path></svg><span>Menu</span></button>
+<script>
+(function () {
+  var b = document.currentScript.previousElementSibling, n = document.getElementById('mainnav'); if (!n || !b) return;
+  function set(o) { n.classList.toggle('open', o); b.setAttribute('aria-expanded', o ? 'true' : 'false'); }
+  b.addEventListener('click', function () { set(!n.classList.contains('open')); });
+  n.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  document.addEventListener('click', function (e) { if (!e.target.closest('header')) set(false); });
+})();
+</script>
 </div>
 </header>
 
@@ -290,6 +319,27 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 </script>
 <script>
 (function () {
+  // cities on phones: one card in the middle, the previous and next one peeking; moves on by itself every 3.5 s
+  var g = document.getElementById('hc'), dots = document.getElementById('hc-dots'); if (!g || !dots) return;
+  var cards = [].slice.call(g.querySelectorAll('.card')), mq = window.matchMedia('(max-width: 560px)'), i = 0, t = null, hold = 0, seen = false;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  cards.forEach(function (c, k) { var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', (k + 1) + ' / ' + cards.length); b.onclick = function () { hold = Date.now(); go(k); }; dots.appendChild(b); });
+  function mark() { cards.forEach(function (c, k) { c.classList.toggle('on', k === i); dots.children[k].setAttribute('aria-current', k === i ? 'true' : 'false'); }); }
+  function go(k) { i = (k + cards.length) % cards.length; var c = cards[i]; g.scrollTo({ left: c.offsetLeft - (g.clientWidth - c.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' }); mark(); }
+  var st = null;
+  g.addEventListener('scroll', function () { clearTimeout(st); st = setTimeout(function () {
+    var mid = g.scrollLeft + g.clientWidth / 2, best = 0, d = 1e9;
+    cards.forEach(function (c, k) { var x = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if (x < d) { d = x; best = k; } });
+    i = best; mark(); }, 80); }, { passive: true });
+  ['touchstart', 'pointerdown', 'focusin'].forEach(function (e) { g.addEventListener(e, function () { hold = Date.now(); }, { passive: true }); });
+  function tick() { if (!mq.matches || !seen || document.hidden || Date.now() - hold < 8000) return; go(i + 1); }
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { seen = es[0].isIntersecting; }, { threshold: .5 }).observe(g); else seen = true;
+  function start() { clearInterval(t); t = null; if (mq.matches) { mark(); t = setInterval(tick, 3500); } else cards.forEach(function (c) { c.classList.remove('on'); }); }
+  if (mq.addEventListener) mq.addEventListener('change', start); start();
+})();
+</script>
+<script>
+(function () {
   var f = document.getElementById('b2b'); if (!f) return;
   var M = {"need": "Fill in your company and the number of people.", "hi": "Hello Pubgolf,", "intro": "We would like a proposal for a company event.", "co": "Company", "city": "City", "n": "Number of people", "date": "Preferred date", "opt": "Options", "msg": "Notes", "tel": "Phone number (optional):", "subj": "Company event request"}, $ = function (id) { return document.getElementById(id); };
   try { var d = $('b-date'); d.min = new Date().toISOString().slice(0, 10); d.addEventListener('click', function () { if (d.showPicker) try { d.showPicker(); } catch (e) {} }); } catch (e) {}
@@ -306,6 +356,7 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 })();
 </script>
 <script src="/booking-config.js"></script>
+<script src="/reviews.js?v=3" defer></script>
 <script src="/analytics.js" defer></script>
 <script src="/news.js" defer></script>
 </body>
