@@ -2,6 +2,7 @@ User-agent: *
 Disallow: /admin.html
 Disallow: /check.html
 Disallow: /bedankt.html
+Disallow: /review.html
 Disallow: /nieuwsbrief/
 Disallow: /.github/
 Disallow: /milan/

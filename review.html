@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review · Pubgolf</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;800&display=swap">
+<style>
+:root { --green: #07211A; --cream: #F7F5F0; --gold: #F2D16B; --red: #B5121B; --ink: #111111; }
+body { margin: 0; min-height: 100vh; background: var(--green); color: var(--cream); font-family: Archivo, Arial, sans-serif; display: flex; justify-content: center; padding: 24px 16px; box-sizing: border-box; }
+main { width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 16px; }
+.kick { font-size: 13px; font-weight: 800; letter-spacing: .22em; color: var(--gold); }
+h1 { font-family: Anton, Impact, sans-serif; font-weight: 400; text-transform: uppercase; font-size: clamp(44px, 12vw, 72px); line-height: .92; margin: 0; }
+h1 span { color: var(--gold); }
+.card { background: #FFFFFF; color: var(--ink); border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.lbl { font-size: 13px; font-weight: 800; letter-spacing: .12em; }
+.stars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.stars button { min-height: 64px; border: 2px solid var(--ink); border-radius: 12px; background: #F7F5F0; color: var(--ink); cursor: pointer; font-family: Anton, Impact, sans-serif; font-size: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px 2px; }
+.stars button small { font-family: Archivo, Arial, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.1; }
+.stars button[aria-pressed="true"] { background: var(--gold); }
+textarea, input[type=text] { width: 100%; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 10px; padding: 12px 14px; font: 16px Archivo, Arial, sans-serif; color: var(--ink); background: #FFFFFF; }
+textarea { min-height: 110px; resize: vertical; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; }
+.check input { width: 20px; height: 20px; margin: 2px 0 0; flex: 0 0 auto; }
+.send { min-height: 52px; border: 0; border-radius: 999px; background: var(--red); color: #FFFFFF; font-family: Anton, Impact, sans-serif; font-size: 20px; cursor: pointer; }
+.send:disabled { opacity: .6; cursor: default; }
+.msg { margin: 0; font-size: 15px; min-height: 0; }
+.small { font-size: 13px; color: #C9D8D1; }
+.small a { color: inherit; }
+.done { text-align: center; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="kick" id="kick">PUBGOLF</div>
+  <h1 id="h1">Hoe was <span>jullie avond?</span></h1>
+  <form class="card" id="form" novalidate>
+    <span class="lbl" id="l-stars">JULLIE STERREN</span>
+    <div class="stars" id="stars" role="group" aria-labelledby="l-stars"></div>
+    <label class="lbl" for="text" id="l-text">EEN PAAR WOORDEN (OPTIONEEL)</label>
+    <textarea id="text" maxlength="500" placeholder="Wat was de leukste hole? Wat kan beter?"></textarea>
+    <label class="lbl" for="name" id="l-name">JE VOORNAAM (OPTIONEEL)</label>
+    <input type="text" id="name" maxlength="40" autocomplete="given-name" placeholder="Bijv. Lisa">
+    <label class="check"><input type="checkbox" id="consent"><span id="t-consent">Jullie mogen mijn review met mijn voornaam op pubgolf.eu laten zien.</span></label>
+    <input type="text" id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+    <button type="submit" class="send" id="send">Review versturen</button>
+    <p class="msg" id="msg" role="status"></p>
+  </form>
+  <div class="card done" id="done" hidden>
+    <span class="lbl" style="color:#B5121B" id="d-kick">BEDANKT!</span>
+    <p style="margin:0;font-size:17px;line-height:1.5" id="d-text">Je review is binnen. Daarmee maken we elke baan beter.</p>
+    <a href="/steden/" class="send" style="display:flex;align-items:center;justify-content:center;text-decoration:none" id="d-btn">Bekijk alle steden</a>
+  </div>
+  <p class="small" id="foot">18+ · Spel, geen drinkwedstrijd · <a href="/privacy.html">Privacy</a></p>
+</main>
+<script src="/booking-config.js"></script>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search), en = q.get('lang') === 'en' || /^#en/.test(location.hash);
+  var code = String(q.get('c') || '').toUpperCase().replace(/[^A-Z0-9-]/g, ''), stars = Math.max(0, Math.min(5, parseInt(q.get('s') || '0', 10) || 0));
+  var cfg = window.PC_BOOKING || {}, rendered = Date.now(), $ = function (id) { return document.getElementById(id); };
+  var L = en ? { h: 'How was <span>your night?</span>', stars: 'YOUR STARS', text: 'A FEW WORDS (OPTIONAL)', ph: 'What was the best hole? What could be better?', name: 'YOUR FIRST NAME (OPTIONAL)', phn: 'E.g. Lisa',
+      consent: 'You may show my review with my first name on pubgolf.eu.', send: 'Send review', label: ['Not great', 'Could be better', 'Good', 'Great', 'Amazing'],
+      pick: 'Pick your stars first.', nocode: 'This link is missing its game code. Open it from your email.', err: 'That did not work. Try again in a moment.', bad: 'This game code is unknown. Open the link from your email.',
+      dk: 'THANK YOU!', dt: 'Your review is in. It helps us make every course better.', db: 'See all cities', foot: '18+ · A game, not a drinking contest · ', priv: 'Privacy' }
+    : { label: ['Niet goed', 'Kan beter', 'Goed', 'Heel goed', 'Geweldig'], pick: 'Kies eerst jullie sterren.', nocode: 'Deze link mist de spelcode. Open hem vanuit je mail.',
+      err: 'Dat lukte niet. Probeer het zo nog eens.', bad: 'Deze spelcode kennen we niet. Open de link vanuit je mail.' };
+  if (en) {
+    document.documentElement.lang = 'en'; document.title = 'Review · Pubgolf';
+    $('h1').innerHTML = L.h; $('l-stars').textContent = L.stars; $('l-text').textContent = L.text; $('text').placeholder = L.ph; $('l-name').textContent = L.name; $('name').placeholder = L.phn;
+    $('t-consent').textContent = L.consent; $('send').textContent = L.send; $('d-kick').textContent = L.dk; $('d-text').textContent = L.dt; $('d-btn').textContent = L.db; $('d-btn').href = '/en/cities/';
+    $('foot').innerHTML = L.foot + '<a href="/privacy.html#en">' + L.priv + '</a>';
+  }
+  if (code) $('kick').textContent = 'PUBGOLF · ' + code;
+  function draw() {
+    $('stars').innerHTML = '';
+    [1, 2, 3, 4, 5].forEach(function (n) {
+      var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', n <= stars && stars ? 'true' : 'false');
+      b.setAttribute('aria-label', n + ' / 5: ' + L.label[n - 1]);
+      b.innerHTML = n + '★<small></small>'; b.querySelector('small').textContent = L.label[n - 1];
+      b.onclick = function () { stars = n; draw(); };
+      $('stars').appendChild(b);
+    });
+  }
+  draw();
+  if (!code) { $('msg').textContent = L.nocode; $('send').disabled = true; }
+  $('form').addEventListener('submit', async function (ev) {
+    ev.preventDefault();
+    if (!stars) { $('msg').textContent = L.pick; return; }
+    if (!cfg.script) { $('msg').textContent = L.err; return; }
+    $('send').disabled = true; $('msg').textContent = '…';
+    try {
+      var r = await fetch(cfg.script, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ type: 'review', code: code, stars: stars,
+        text: $('text').value, name: $('name').value, consent: $('consent').checked, lang: en ? 'en' : 'nl', website: $('website').value, renderedAt: rendered }) });
+      var d = await r.json();
+      if (d.ok) { $('form').hidden = true; $('done').hidden = false; if (window.pgTrack) window.pgTrack('review_sent', { stars: stars }); return; }
+      $('msg').textContent = d.error === 'code' ? L.bad : L.err;
+    } catch (e) { $('msg').textContent = L.err; }
+    $('send').disabled = false;
+  });
+})();
+</script>
+<script src="/analytics.js" defer></script>
+</body>
+</html>
