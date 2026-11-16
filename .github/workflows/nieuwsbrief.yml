@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       slug:
-        description: 'Stad, zoals in de link (bv. copenhagen). Of: status (alleen aantallen, geen adressen), of: welkom (welkomstmail naar Brevo zetten)'
+        description: 'Stad, zoals in de link (bv. copenhagen). Of: status (alleen aantallen, geen adressen), of: welkom (welkomstmail naar Brevo zetten), of: welkom-alle (welkomstmail eenmalig naar iedereen op de lijst)'
         required: true
       test_email:
         description: 'Testmail naar dit adres. Leeg laten = ECHT versturen naar de hele lijst. Bij status: dit adres opzoeken'

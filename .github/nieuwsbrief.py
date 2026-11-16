@@ -120,12 +120,61 @@ def welcome_changed():
     return bool(out.strip())
 
 
+def welcome_all(test):
+    """Welkomstmail eenmalig naar iedereen die nu op de lijst staat (ook wie zich aanmeldde voordat de automatisering bestond).
+    Als campagne, zodat de afmeldlink werkt: de huidige contacten (zonder afgemelde) gaan naar een eigen lijst "Welkom inhaal",
+    zodat de automatisering op lijst 2 niet opnieuw afgaat. Nooit twee keer (campagne "Welkom: iedereen" bestaat al = klaar), tenzij again."""
+    name = 'Welkom: iedereen'
+    again = os.environ.get('AGAIN', '').lower() == 'true'
+    if not test:
+        done, o = [], 0
+        while True:
+            page = call('GET', f'/emailCampaigns?limit=100&offset={o}').get('campaigns') or []
+            done += page; o += 100
+            if len(page) < 100: break
+        if any(c.get('name', '').startswith(name) for c in done) and not again:
+            print('already sent:', name); return
+    src = [int(x) for x in re.findall(r'\d+', os.environ.get('BREVO_LIST_IDS', ''))] or [2]
+    emails = set()
+    for lid in src:
+        o = 0
+        while True:
+            page = call('GET', f'/contacts/lists/{lid}/contacts?limit=500&offset={o}').get('contacts') or []
+            emails |= {c['email'] for c in page if c.get('email') and not c.get('emailBlacklisted')}
+            o += 500
+            if len(page) < 500: break
+    print('contacts on lists', src, '(without unsubscribed):', len(emails))
+    if not emails and not test: print('nobody to send to'); return
+    meta = json.load(open('nieuwsbrief/welkom.json', encoding='utf-8'))
+    body = {'subject': meta['subject'], 'previewText': meta['preheader'], 'htmlContent': open('nieuwsbrief/welkom.html', encoding='utf-8').read(),
+            'sender': {'name': 'Pubgolf', 'email': os.environ.get('SENDER_EMAIL') or 'pubgolf@forkit.nl'}, 'replyTo': 'bookings@forkit.nl'}
+    if test:
+        body.update(name=f'TEST welkom {datetime.datetime.now():%Y-%m-%d %H:%M}', recipients={'listIds': src})
+        cid = call('POST', '/emailCampaigns', body)['id']
+        call('POST', f'/emailCampaigns/{cid}/sendTest', {'emailTo': [test]}); print('test sent to', mask(test), '(draft campaign', cid, 'kept)')
+        return
+    folders = call('GET', '/contacts/folders?limit=10').get('folders') or []
+    fid = folders[0]['id'] if folders else call('POST', '/contacts/folders', {'name': 'Pubgolf'})['id']
+    stamp = f'{datetime.datetime.now(ZoneInfo("Europe/Amsterdam")):%Y-%m-%d %H:%M}'
+    lid = call('POST', '/contacts/lists', {'name': f'Welkom inhaal {stamp}', 'folderId': fid})['id']
+    em = sorted(emails)
+    for k in range(0, len(em), 150):
+        call('POST', f'/contacts/lists/{lid}/contacts/add', {'emails': em[k:k + 150]})
+    body.update(name=f'{name} {stamp}', recipients={'listIds': [lid]})
+    cid = call('POST', '/emailCampaigns', body)['id']
+    call('POST', f'/emailCampaigns/{cid}/sendNow')
+    print('sent', body['name'], 'to', len(em), 'contacts (list', lid, ')')
+
+
 if __name__ == '__main__':
     slug, test = os.environ.get('SLUG', '').strip().lower(), os.environ.get('TEST_EMAIL', '').strip()
     if slug == 'welkom' or (not slug and welcome_changed()):
         if not KEY: print('BREVO_API_KEY is not set'); sys.exit(0)
         welcome(test)
         if slug: sys.exit(0)
+    if slug == 'welkom-alle':
+        if not KEY: sys.exit('BREVO_API_KEY is not set')
+        welcome_all(test); sys.exit(0)
     if slug == 'status':
         if not KEY: sys.exit('BREVO_API_KEY is not set')
         status(test); sys.exit(0)
