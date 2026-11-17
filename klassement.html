@@ -37,7 +37,7 @@ li.first .pos { color: var(--ink); }
 <main>
   <div class="kick" id="kick">PUBGOLF · LIVE KLASSEMENT</div>
   <h1 id="title">Klassement</h1>
-  <p class="sub" id="sub">Laagste score wint. Ververst vanzelf.</p>
+  <p class="sub" id="sub"></p>
   <div class="groups" id="groups"></div>
   <ol id="list" aria-live="polite"></ol>
   <div class="empty" id="empty" hidden></div>
@@ -49,12 +49,12 @@ li.first .pos { color: var(--ink); }
   var q = new URLSearchParams(location.search), id = (q.get('e') || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   var en = q.get('lang') === 'en' || (q.get('lang') !== 'nl' && !/^nl/i.test(navigator.language || ''));
   var cfg = window.PC_BOOKING || {}, $ = function (x) { return document.getElementById(x); };
-  var L = en ? { kick: 'PUBGOLF · LIVE LEADERBOARD', title: 'Leaderboard', sub: 'Lowest score wins. Updates by itself.', group: 'Group', holes: function (n) { return n === 1 ? 'after 1 hole' : 'after ' + n + ' holes'; },
+  var L = en ? { kick: 'PUBGOLF · LIVE LEADERBOARD', title: 'Leaderboard', sub: 'Lowest score wins. During the game, the order is based on the average per hole, because the groups start at different times. Updates by itself.', group: 'Group', holes: function (n) { return n === 1 ? 'after 1 hole' : 'after ' + n + ' holes'; },
       notyet: 'not started', started: function (n) { return n ? n + ' holes' : 'started'; }, wait: 'No scores yet. As soon as the first team enters a score, the leaderboard appears here.',
-      bad: 'This leaderboard link is not right. Check the link you received.', err: 'Could not load the scores. Trying again…', upd: 'Updated', game: 'A game, not a drinking contest', pts: 'SCORE' }
-    : { kick: 'PUBGOLF · LIVE KLASSEMENT', title: 'Klassement', sub: 'Laagste score wint. Ververst vanzelf.', group: 'Groep', holes: function (n) { return 'na ' + n + (n === 1 ? ' hole' : ' holes'); },
+      bad: 'This leaderboard link is not right. Check the link you received.', err: 'Could not load the scores. Trying again…', upd: 'Updated', avg: 'avg per hole', game: 'A game, not a drinking contest', pts: 'SCORE' }
+    : { kick: 'PUBGOLF · LIVE KLASSEMENT', title: 'Klassement', sub: 'Laagste score wint. Tijdens het spel telt het gemiddelde per hole, omdat de groepen na elkaar starten. Ververst vanzelf.', group: 'Groep', holes: function (n) { return 'na ' + n + (n === 1 ? ' hole' : ' holes'); },
       notyet: 'nog niet gestart', started: function (n) { return n ? n + ' holes' : 'gestart'; }, wait: 'Nog geen scores. Zodra het eerste team een score invult, staat het klassement hier.',
-      bad: 'Deze klassement-link klopt niet. Kijk de link nog even na.', err: 'De scores laden nu niet. We proberen het zo opnieuw…', upd: 'Bijgewerkt', game: 'Spel, geen drinkwedstrijd', pts: 'SCORE' };
+      bad: 'Deze klassement-link klopt niet. Kijk de link nog even na.', err: 'De scores laden nu niet. We proberen het zo opnieuw…', upd: 'Bijgewerkt', avg: 'gem. per hole', game: 'Spel, geen drinkwedstrijd', pts: 'SCORE' };
   if (en) { document.documentElement.lang = 'en'; document.title = 'Leaderboard · Pubgolf'; }
   $('kick').textContent = L.kick; $('title').textContent = L.title; $('sub').textContent = L.sub; $('game').textContent = L.game;
   function msg(t) { $('empty').hidden = false; $('empty').textContent = t; }
@@ -64,13 +64,16 @@ li.first .pos { color: var(--ink); }
     $('groups').innerHTML = '';
     (d.groups || []).forEach(function (g) { var s = document.createElement('span'); s.textContent = L.group + ' ' + g.group + ' · ' + (g.started ? L.started(g.holes) : L.notyet); $('groups').appendChild(s); });
     $('list').innerHTML = '';
-    var T = d.teams || [], pos = 0, prev = null;
+    // groups start one after another, so mid-game they have played a different number of holes:
+    // rank on the average per hole played (at the end, with equal holes, that is the same as the total)
+    var avg = function (t) { return t.holes ? t.score / t.holes : Infinity; };
+    var T = (d.teams || []).slice().sort(function (a, b) { return avg(a) - avg(b) || a.score - b.score; }), pos = 0, prev = null;
     T.forEach(function (t, k) {
-      if (t.score !== prev) { pos = k + 1; prev = t.score; }
+      if (avg(t) !== prev) { pos = k + 1; prev = avg(t); }
       var li = document.createElement('li'); if (pos === 1 && t.holes > 0) li.className = 'first';
       var p = document.createElement('span'); p.className = 'pos'; p.textContent = pos;
       var n = document.createElement('div'); n.className = 'nm'; n.textContent = t.name;
-      var m = document.createElement('span'); m.className = 'meta'; m.textContent = L.group + ' ' + t.group + ' · ' + L.holes(t.holes); n.appendChild(m);
+      var m = document.createElement('span'); m.className = 'meta'; m.textContent = L.group + ' ' + t.group + ' · ' + L.holes(t.holes) + (t.holes ? ' · ' + L.avg + ' ' + num(Math.round(avg(t) * 10) / 10) : ''); n.appendChild(m);
       var s = document.createElement('div'); s.className = 'sc'; s.textContent = num(t.score); var sm = document.createElement('small'); sm.textContent = L.pts; s.appendChild(sm);
       li.appendChild(p); li.appendChild(n); li.appendChild(s); $('list').appendChild(li);
     });
