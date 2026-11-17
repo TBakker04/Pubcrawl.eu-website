@@ -50,10 +50,10 @@ li.first .pos { color: var(--ink); }
   var en = q.get('lang') === 'en' || (q.get('lang') !== 'nl' && !/^nl/i.test(navigator.language || ''));
   var cfg = window.PC_BOOKING || {}, $ = function (x) { return document.getElementById(x); };
   var L = en ? { kick: 'PUBGOLF · LIVE LEADERBOARD', title: 'Leaderboard', sub: 'Lowest score wins. During the game, the order is based on the average per hole, because the groups start at different times. Updates by itself.', group: 'Group', holes: function (n) { return n === 1 ? 'after 1 hole' : 'after ' + n + ' holes'; },
-      notyet: 'not started', started: function (n) { return n ? n + ' holes' : 'started'; }, wait: 'No scores yet. As soon as the first team enters a score, the leaderboard appears here.',
+      notyet: 'not started', started: function (n) { return n ? n + (n === 1 ? ' hole' : ' holes') : 'started'; }, wait: 'No scores yet. As soon as the first team enters a score, the leaderboard appears here.',
       bad: 'This leaderboard link is not right. Check the link you received.', err: 'Could not load the scores. Trying again…', upd: 'Updated', avg: 'avg per hole', game: 'A game, not a drinking contest', pts: 'SCORE' }
     : { kick: 'PUBGOLF · LIVE KLASSEMENT', title: 'Klassement', sub: 'Laagste score wint. Tijdens het spel telt het gemiddelde per hole, omdat de groepen na elkaar starten. Ververst vanzelf.', group: 'Groep', holes: function (n) { return 'na ' + n + (n === 1 ? ' hole' : ' holes'); },
-      notyet: 'nog niet gestart', started: function (n) { return n ? n + ' holes' : 'gestart'; }, wait: 'Nog geen scores. Zodra het eerste team een score invult, staat het klassement hier.',
+      notyet: 'nog niet gestart', started: function (n) { return n ? n + (n === 1 ? ' hole' : ' holes') : 'gestart'; }, wait: 'Nog geen scores. Zodra het eerste team een score invult, staat het klassement hier.',
       bad: 'Deze klassement-link klopt niet. Kijk de link nog even na.', err: 'De scores laden nu niet. We proberen het zo opnieuw…', upd: 'Bijgewerkt', avg: 'gem. per hole', game: 'Spel, geen drinkwedstrijd', pts: 'SCORE' };
   if (en) { document.documentElement.lang = 'en'; document.title = 'Leaderboard · Pubgolf'; }
   $('kick').textContent = L.kick; $('title').textContent = L.title; $('sub').textContent = L.sub; $('game').textContent = L.game;
