@@ -1,4 +1,4 @@
-/* "Wat spelers zeggen" op de homepage: alleen reviews die de beheerder in admin.html online zette (en waarvoor de speler toestemming gaf).
+/* "Wat spelers zeggen" op de homepage: alleen reviews die in admin.html online zijn gezet (en waarvoor de speler toestemming gaf).
    Komt van de Pubgolf-backend (Apps Script, ?action=reviews, 10 minuten in de cache). Geen reviews = de sectie blijft verborgen.
    Carousel: in het midden de uitgelichte review, links wazig de volgende, rechts wazig de vorige. Draait elke 5 seconden door
    (pauze bij muis erop, focus of als het tabblad niet zichtbaar is); pijltjes en bolletjes om zelf te kiezen. */
