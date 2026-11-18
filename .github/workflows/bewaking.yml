@@ -1,0 +1,27 @@
+# Dagelijkse bewaking van pubgolf.eu: site, alle steden, beheer- en klassementpagina, backend (Apps Script), geen packs openbaar.
+# Bij een fout faalt de run en gaat er een mail naar ALERT_EMAIL (variabele; standaard bookings@forkit.nl) via Brevo.
+# Met de hand: Actions → Bewaking → Run workflow (vink "testalarm" aan om de alarmmail te testen).
+name: Bewaking
+on:
+  schedule:
+    - cron: '17 6 * * *'   # elke dag 07:17 (wintertijd) / 08:17 (zomertijd) in Nederland
+  workflow_dispatch:
+    inputs:
+      force_fail:
+        description: 'Testalarm: laat één controle expres falen (stuurt de alarmmail)'
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - run: python3 .github/bewaking.py
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          ALERT_EMAIL: ${{ vars.ALERT_EMAIL }}
+          SENDER_EMAIL: ${{ vars.SENDER_EMAIL }}
+          FORCE_FAIL: ${{ inputs.force_fail }}
