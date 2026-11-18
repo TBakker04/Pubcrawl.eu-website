@@ -189,10 +189,10 @@
   function markPack(json, code) {
     var o; try { o = JSON.parse(json); } catch (e) { return json; }
     var bits = String(code).toUpperCase().split('').map(function (c) { var i = MARK_ABC.indexOf(c); return i < 0 ? '' : ('000000' + i.toString(2)).slice(-6); }).join('');
-    var z = '⁠' + bits.replace(/0/g, '​').replace(/1/g, '‌') + '⁠';
+    var z = '\u2060' + bits.replace(/0/g, '\u200B').replace(/1/g, '\u200C') + '\u2060';
     ((o.cfg && o.cfg.holes) || []).forEach(function (h) {
       if (!h.drink || typeof h.drink.note !== 'string') return;
-      var t = h.drink.note.replace(/[​‌⁠]/g, ''), i = t.indexOf('. ');
+      var t = h.drink.note.replace(/[\u200B\u200C\u2060]/g, ''), i = t.indexOf('. ');
       h.drink.note = i > 0 ? t.slice(0, i + 1) + z + t.slice(i + 1) : t + z;
     });
     return JSON.stringify(o);
