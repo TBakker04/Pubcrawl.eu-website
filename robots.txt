@@ -15,4 +15,5 @@ Disallow: /budapest/
 Disallow: /krakow/
 Disallow: /valencia/
 Disallow: /copenhagen/
+Disallow: /leiden/
 Sitemap: https://pubgolf.eu/sitemap.xml
