@@ -291,12 +291,17 @@
         btn.onclick = async function() {
           btn.disabled = true;
           try {
-            r.public = !r.public; var upd = {}; upd[it.path + '.public'] = r.public; upd.hasPublic = anyPublic(it.doc);
+            // read the booking fresh first: this page may show an old state (another tab, or open for a long time)
+            var fresh = (await db.doc('bookings/' + it.code).get()).data() || {};
+            var cur = it.path === 'review' ? fresh.review : (fresh.reviews || {})[it.path.slice(8)];
+            if (!cur) { $('rv-msg').textContent = 'Deze review bestaat niet meer.'; loadReviews(); return; }
+            var want = btn.textContent === 'Online zetten';   // what the button promised
+            if (!!cur.public === want) { $('rv-msg').textContent = 'Stond al ' + (want ? 'online' : 'offline') + '; de lijst is bijgewerkt.'; loadReviews(); return; }
+            cur.public = want; var upd = {}; upd[it.path + '.public'] = want; upd.hasPublic = anyPublic(fresh);
             await db.doc('bookings/' + it.code).update(upd);
-            btn.className = r.public ? 'alt' : ''; btn.textContent = r.public ? 'Offline halen' : 'Online zetten';
-            $('rv-msg').textContent = r.public ? 'Online gezet: binnen 10 minuten zichtbaar op de homepage.' : 'Offline gehaald.';
-          } catch (e) { r.public = !r.public; $('rv-msg').textContent = 'Lukte niet: ' + (e.code || e.message); }
-          btn.disabled = false;
+            $('rv-msg').textContent = want ? 'Online gezet: binnen 10 minuten zichtbaar op de homepage.' : 'Offline gehaald.';
+            loadReviews();   // show the real state from the database
+          } catch (e) { $('rv-msg').textContent = 'Lukte niet: ' + (e.code || e.message); btn.disabled = false; }
         };
         td.appendChild(btn); tr.appendChild(td); tb.appendChild(tr);
       });
@@ -304,6 +309,8 @@
     } catch (e) { $('rv-msg').textContent = 'Laden lukte niet: ' + (e.code || e.message); }
   }
   $('rv-reload').addEventListener('click', loadReviews);
+  // back to this tab: reload the reviews, so the buttons never show an old state
+  document.addEventListener('visibilitychange', function() { if (!document.hidden && $('rv-rows').children.length) loadReviews(); });
   $('clean').addEventListener('click', async function() {
     var b = $('clean'), now = Date.now(), cutoff = now - 30 * 86400000, photoCut = now - 7 * 86400000, photos = 0, wiped = 0;
     b.disabled = true; $('cmsg').textContent = 'Bezig…';
