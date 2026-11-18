@@ -1396,7 +1396,7 @@ window.PC_EN = {"Verbinden…": "Connecting…", "Live: scores op alle telefoons
     try { if (/[?&]lang=/.test(location.search)) { location.search = location.search.replace(/([?&])lang=(nl|en)/, '$1lang=' + l); return; } } catch (e) {}
     location.reload();
   };
-  function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
+  function norm(s) { return s.replace(/[\u200B\u200C\u2060]/g, '').replace(/\s+/g, ' ').trim(); }   // also ignores the invisible per-code mark (markPack)
   function look(s) { var k = norm(s); return Object.prototype.hasOwnProperty.call(EN, k) ? EN[k] : null; }
   function fmt(s, a) { return s.replace(/\{(\d+)\}/g, function(m, i) { return a[i] !== undefined ? a[i] : m; }); }
   // City flavour: the game's words are Milanese (Salute, Il Capo, Casinò…). Another city swaps them for its own

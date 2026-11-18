@@ -182,7 +182,22 @@
     }
     $('cstatus').innerHTML = h.join('');
   }
-  async function copyPack(code, p) { await db.doc('games/' + code + '/kv/pack').set({ json: p.json, built: p.built || '', at: Date.now() }); }
+  /** Onzichtbaar kenmerk per spelcode in de stadsinhoud (games/<code>/kv/pack): de spelcode, als tekens zonder breedte
+   *  (U+200B = 0, U+200C = 1, tussen twee U+2060) midden in elke drankjesnotitie. Lekt er ooit een route of quiz, dan zegt
+   *  `python3 find_mark.py <bestand>` van welke spelcode die komt. Spelers zien niets; het spel negeert de tekens bij vertalen. */
+  var MARK_ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-';
+  function markPack(json, code) {
+    var o; try { o = JSON.parse(json); } catch (e) { return json; }
+    var bits = String(code).toUpperCase().split('').map(function (c) { var i = MARK_ABC.indexOf(c); return i < 0 ? '' : ('000000' + i.toString(2)).slice(-6); }).join('');
+    var z = '⁠' + bits.replace(/0/g, '​').replace(/1/g, '‌') + '⁠';
+    ((o.cfg && o.cfg.holes) || []).forEach(function (h) {
+      if (!h.drink || typeof h.drink.note !== 'string') return;
+      var t = h.drink.note.replace(/[​‌⁠]/g, ''), i = t.indexOf('. ');
+      h.drink.note = i > 0 ? t.slice(0, i + 1) + z + t.slice(i + 1) : t + z;
+    });
+    return JSON.stringify(o);
+  }
+  async function copyPack(code, p) { await db.doc('games/' + code + '/kv/pack').set({ json: markPack(p.json, code), built: p.built || '', at: Date.now() }); }
   $('packfile').addEventListener('change', async function() {
     var f = this.files[0]; this.value = ''; if (!f) return;
     $('pmsg').textContent = 'Uploaden…';
