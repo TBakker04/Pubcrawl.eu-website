@@ -93,6 +93,7 @@
   </div>
 </main>
 <script src="firebase-config.js"></script>
+<script src="booking-config.js"></script>
 <script>document.write('<script src="cities.js?t=' + Date.now() + '"><\/script>'); // always the newest list of cities, never a cached one</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -253,10 +254,20 @@
     var st = $('mailstate'); st.style.color = '';
     if (!em) { st.textContent = 'Geen e-mailadres ingevuld: stuur de code zelf via de knoppen hieronder.'; return; }
     st.textContent = 'Mail met de code naar ' + em + ' wordt klaargezet…';
+    // no Cloud Functions yet: the Pubgolf backend (Apps Script) mails it via Brevo; it checks with your login that you are the admin
+    var B = window.PC_BOOKING || {};
+    if (B.script && auth.currentUser) {
+      var ac = (firebase.appCheck && window.PC_FIREBASE.appCheckKey) ? firebase.appCheck().getToken().then(function(x) { return x.token; }, function() { return ''; }) : Promise.resolve('');
+      Promise.all([auth.currentUser.getIdToken(), ac]).then(function(t2) {
+        return fetch(B.script, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ type: 'adminmail', code: code, token: t2[0], appCheck: t2[1] }) });
+      }).then(function(r) { return r.json(); }).then(function(r) {
+        if (r && r.error) { clearInterval(t); st.style.color = '#B5121B'; st.textContent = 'Automatisch mailen lukte niet (' + r.error + '). Stuur de code met "Stuur per mail".'; }
+      }).catch(function() {});
+    }
     var tries = 0, t = setInterval(async function() {
       tries++;
       try { var b = await db.doc('bookings/' + code).get(); if (b.exists && b.data().mail === 'queued') { clearInterval(t); st.textContent = '✓ De spelcode wordt automatisch gemaild naar ' + em + '.'; return; } } catch (e) {}
-      if (tries >= 8) { clearInterval(t); st.style.color = '#B5121B'; st.textContent = 'Geen automatische mail bevestigd (staat de server aan?). Stuur de code voor de zekerheid met "Stuur per mail".'; }
+      if (tries >= 15) { clearInterval(t); st.style.color = '#B5121B'; st.textContent = 'Geen automatische mail bevestigd (staat de server aan?). Stuur de code voor de zekerheid met "Stuur per mail".'; }
     }, 2000);
   }
   $('copy').addEventListener('click', function() { if (made) copy(link(made, madeCity), $('copy')); });
