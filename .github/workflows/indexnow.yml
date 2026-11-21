@@ -1,0 +1,29 @@
+name: IndexNow
+# After every deploy: tell Bing (and the other IndexNow engines) which pages are on the site, so ChatGPT/Copilot (Bing index) see changes quickly.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['.github/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for GitHub Pages
+        run: sleep 90
+      - name: Submit sitemap URLs
+        run: |
+          python3 - <<'PY'
+          import glob, json, os, re, urllib.request
+          keys = [os.path.basename(p)[:-4] for p in glob.glob('*.txt') if re.fullmatch(r'[0-9a-f]{32}\.txt', os.path.basename(p))]
+          assert keys, 'no IndexNow key file in the root'
+          key = keys[0]
+          urls = re.findall(r'<loc>([^<]+)</loc>', open('sitemap.xml', encoding='utf-8').read())
+          body = json.dumps({'host': 'pubgolf.eu', 'key': key, 'keyLocation': f'https://pubgolf.eu/{key}.txt', 'urlList': urls}).encode()
+          req = urllib.request.Request('https://api.indexnow.org/indexnow', data=body, headers={'Content-Type': 'application/json; charset=utf-8'})
+          r = urllib.request.urlopen(req, timeout=60)
+          print('IndexNow', r.status, len(urls), 'urls')
+          PY
