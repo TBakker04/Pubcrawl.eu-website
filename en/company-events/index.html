@@ -265,15 +265,19 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <p style="margin: 0; font-size: 17px; line-height: 1.55; color: #E4ECE8">Rather email us directly? Write to <a href="mailto:bookings@forkit.nl?subject=Company%20event%20request" style="font-weight: 800">bookings@forkit.nl</a>.</p>
 </div>
 <form class="rf" id="b2b" novalidate>
+<div><label class="l" for="b-name">Your name</label><input type="text" id="b-name" maxlength="80" autocomplete="name" placeholder="First and last name"></div>
+<div><label class="l" for="b-mail">Email</label><input type="email" id="b-mail" maxlength="120" autocomplete="email" inputmode="email" placeholder="name@company.com"></div>
+<div style="position: absolute; left: -9999px" aria-hidden="true"><label for="b-web">Website</label><input type="text" id="b-web" tabindex="-1" autocomplete="off"></div>
 <div class="full"><label class="l" for="b-co">COMPANY</label><input type="text" id="b-co" maxlength="80" autocomplete="organization" placeholder="Your company name"></div>
 <div><label class="l" for="b-city">CITY</label><select id="b-city"><option value="">Choose a city</option><option>Milan</option><option>Amsterdam</option><option>Barcelona</option><option>Prague</option><option>Dublin</option><option>Lisboa</option><option>Budapest</option><option>Kraków</option><option>València</option><option>København</option><option>Leiden</option><option>Madrid</option><option>Another city</option></select></div>
 <div><label class="l" for="b-n">NUMBER OF PEOPLE</label><input type="number" id="b-n" min="2" max="5000" inputmode="numeric" placeholder="E.g. 40"></div>
-<div class="full"><label class="l" for="b-date">PREFERRED DATE (OPTIONAL)</label><input type="date" id="b-date"></div>
+<div><label class="l" for="b-date">PREFERRED DATE (OPTIONAL)</label><input type="date" id="b-date"></div>
+<div><label class="l" for="b-tel">Phone (optional)</label><input type="tel" id="b-tel" maxlength="30" autocomplete="tel" inputmode="tel"></div>
 <fieldset class="full" style="border: 0; margin: 0; padding: 0"><legend class="l" style="padding: 0">WHAT ARE YOU LOOKING FOR?</legend>
 <div class="chips"><label><input type="checkbox" value="Large group">Large group</label><label><input type="checkbox" value="Own city">Own city</label><label><input type="checkbox" value="Own brand style">Own brand style</label><label><input type="checkbox" value="Own quiz and challenges">Own quiz and challenges</label><label><input type="checkbox" value="Alcohol-free edition">Alcohol-free edition</label></div></fieldset>
 <div class="full"><label class="l" for="b-msg">ANYTHING ELSE (OPTIONAL)</label><textarea id="b-msg" maxlength="1200" placeholder="E.g. the occasion, wishes or questions"></textarea></div>
 <div class="full" style="display: flex; flex-direction: column; gap: 10px">
-<button type="submit" class="btn btn-main">Open the email</button>
+<button type="submit" class="btn btn-main" id="b-send">Open the email</button>
 <p id="b-msgline" role="status" style="margin: 0; font-size: 15px; color: #B5121B; font-weight: 600"></p>
 </div>
 </form>
@@ -296,6 +300,8 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <div style="display: flex; gap: 26px; flex-wrap: wrap">
 <a href="/en/bachelor-party/" class="navlink">Bachelor parties</a>
 <a href="/en/company-events/" class="navlink">Company events</a>
+<a href="/en/pub-golf-rules/" class="navlink">Pub golf rules</a>
+<a href="/en/about/" class="navlink">About Pubgolf</a>
 <a href="/en/#info" class="navlink">FAQ</a>
 <a href="/en/#info" class="navlink">Responsible drinking</a>
 <a href="/privacy.html#en" class="navlink">Privacy</a>
@@ -340,17 +346,27 @@ a{color:#F2D16B}a:hover{color:#FFFFFF}
 <script>
 (function () {
   var f = document.getElementById('b2b'); if (!f) return;
-  var M = {"need": "Fill in your company and the number of people.", "hi": "Hello Pubgolf,", "intro": "We would like a proposal for a company event.", "co": "Company", "city": "City", "n": "Number of people", "date": "Preferred date", "opt": "Options", "msg": "Notes", "tel": "Phone number (optional):", "subj": "Company event request"}, $ = function (id) { return document.getElementById(id); };
+  var M = {"need_mail": "Enter a valid email address so we can send you the proposal.", "sending": "Sending…", "ok": "Thank you! We have received your request. You will get a proposal by email within one working day.", "need": "Fill in your company and the number of people.", "hi": "Hello Pubgolf,", "intro": "We would like a proposal for a company event.", "co": "Company", "city": "City", "n": "Number of people", "date": "Preferred date", "opt": "Options", "msg": "Notes", "tel": "Phone number (optional):", "subj": "Company event request"}, $ = function (id) { return document.getElementById(id); };
   try { var d = $('b-date'); d.min = new Date().toISOString().slice(0, 10); d.addEventListener('click', function () { if (d.showPicker) try { d.showPicker(); } catch (e) {} }); } catch (e) {}
   f.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    var co = $('b-co').value.trim(), n = $('b-n').value.trim();
+    var co = $('b-co').value.trim(), n = $('b-n').value.trim(), mail = $('b-mail').value.trim();
+    if ($('b-web').value) return;
     if (!co || !n) { $('b-msgline').textContent = M.need; (co ? $('b-n') : $('b-co')).focus(); return; }
     $('b-msgline').textContent = '';
     var opts = [].map.call(f.querySelectorAll('.chips input:checked'), function (c) { return c.value; });
     var lines = [M.hi, '', M.intro, '', M.co + ': ' + co, M.city + ': ' + ($('b-city').value || '-'), M.n + ': ' + n, M.date + ': ' + ($('b-date').value || '-'), M.opt + ': ' + (opts.join(', ') || '-'), M.msg + ': ' + ($('b-msg').value.trim() || '-'), '', M.tel + ' '];
     if (window.pgTrack) window.pgTrack('b2b_request', { city: $('b-city').value || 'none', options: opts.length });
-    location.href = 'mailto:bookings@forkit.nl?subject=' + encodeURIComponent(M.subj + ' · ' + co) + '&body=' + encodeURIComponent(lines.join('\n'));
+    var mailto = function () { location.href = 'mailto:bookings@forkit.nl?subject=' + encodeURIComponent(M.subj + ' · ' + co) + '&body=' + encodeURIComponent(lines.join('\n')); };
+    var cfg = window.PC_BOOKING || {};
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(mail)) { $('b-msgline').textContent = M.need_mail; $('b-mail').focus(); return; }
+    if (!cfg.script || !window.fetch) return mailto();
+    var btn = $('b-send'), label = btn.textContent; btn.disabled = true; btn.textContent = M.sending;
+    fetch(cfg.script, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ type: 'lead', kind: 'company', lang: document.documentElement.lang === 'en' ? 'en' : 'nl',
+      name: $('b-name').value.trim(), email: mail, phone: $('b-tel').value.trim(), company: co, city: $('b-city').value, people: n, date: $('b-date').value, options: opts, message: $('b-msg').value.trim(), page: location.pathname }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (!d || !d.ok) throw new Error('lead'); f.innerHTML = '<p role="status" style="margin: 0; font-size: 19px; line-height: 1.55; font-weight: 600">' + M.ok + '</p>'; })
+      .catch(function () { btn.disabled = false; btn.textContent = label; mailto(); });
   });
 })();
 </script>
