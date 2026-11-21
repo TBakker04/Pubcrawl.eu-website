@@ -34,6 +34,7 @@
     if (!list.length) return;
     var n = list.length, slots = n === 2 ? list.concat(list) : list;   // with two reviews: left and right show the other one
     var grid = box.querySelector('[data-grid]');
+    grid.innerHTML = '';   // the static cards from the build (static_reviews.py) make way for the carousel
     grid.removeAttribute('style'); grid.style.cssText = 'display:flex;flex-direction:column;gap:16px';
     grid.setAttribute('role', 'region'); grid.setAttribute('aria-roledescription', 'carousel'); grid.setAttribute('aria-label', en ? 'Reviews' : 'Reviews');
     var stage = document.createElement('div'); stage.className = 'rv-stage'; stage.setAttribute('aria-live', 'off'); grid.appendChild(stage);
