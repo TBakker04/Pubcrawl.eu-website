@@ -1,6 +1,6 @@
 # Pubgolf
 
-> Pubgolf (pubgolf.eu) turns a pub crawl into a game: every bar is a hole, your phone is the scorecard and the lowest score wins. Ready-made routes in 12 European cities, for 2 to 12 players in 2 to 6 teams. 18+. A game, not a drinking contest: alcohol-free drinks count the same.
+> Pubgolf (pubgolf.eu) turns a pub crawl into a game: every bar is a hole, your phone is the scorecard and the lowest score wins. Ready-made routes in 13 European cities, for 2 to 12 players in 2 to 6 teams. 18+. A game, not a drinking contest: alcohol-free drinks count the same.
 
 - Price: €5 per group (introductory price, later €10). One game code for the whole group, sent by email. Erasmus students play for free until 31 January 2027 (code via Instagram DM @pubgolf.eu).
 - How it works: book a city, date and start time; open the link on your phones (no app); walk the route; along the way special holes, a city quiz, photo challenges and a casino alarm every 45 minutes.
@@ -20,6 +20,7 @@
 - [Pubgolf København](https://pubgolf.eu/en/cities/copenhagen/): 15 holes
 - [Pubgolf Leiden](https://pubgolf.eu/en/cities/leiden/): 13 holes
 - [Pubgolf Madrid](https://pubgolf.eu/en/cities/madrid/): 18 holes
+- [Pubgolf Rome](https://pubgolf.eu/en/cities/rome/): 15 holes
 
 ## Pages
 - [How it works / rules](https://pubgolf.eu/en/how-it-works/)
