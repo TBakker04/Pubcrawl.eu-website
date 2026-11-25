@@ -40,6 +40,7 @@ a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;m
       <button class="btn ghost" id="copy" type="button" data-t="copy">Kopieer link</button>
     </div>
     <p data-t="mail">Je krijgt de link en de code ook per e-mail.</p>
+    <p data-t="ig">Op de avond zelf: tag <a href="https://www.instagram.com/pubgolf.eu/" style="color:#F2D16B;font-weight:800">@pubgolf.eu</a> in je stories. We delen de leukste teamfoto's.</p>
   </div>
   <p id="err" hidden data-t="err">Het duurt langer dan normaal. Je krijgt de spelcode per e-mail; geen mail binnen een uur? Mail ons via bookings@forkit.nl.</p>
   <form class="news" id="news" novalidate>
@@ -58,7 +59,7 @@ a.btn,button.btn{display:inline-flex;align-items:center;justify-content:center;m
   var en = /^#en/.test(location.hash) || (function () { try { return localStorage.getItem('pubcrawl-lang') === 'en'; } catch (e) { return false; } })();
   var T = { t: 'Booked. <span>See you on the course.</span>', wait: 'One moment, your game code is being made…', open: 'Open the game', wa: 'Share via WhatsApp', copy: 'Copy link',
     nk: 'NEW CITIES', nt: 'Up for another round in another city? Get an email when a new Pubgolf goes live. Now and then, unsubscribe any time.', na: 'I am 18 or older', nb: 'Keep me posted',
-    mail: 'You also get the link and the code by email.', err: "It's taking longer than usual. You'll get the game code by email; no email within an hour? Email us at bookings@forkit.nl.",
+    mail: 'You also get the link and the code by email.', ig: 'On the night: tag <a href="https://www.instagram.com/pubgolf.eu/" style="color:#F2D16B;font-weight:800">@pubgolf.eu</a> in your stories. We repost the best team photos.', err: "It's taking longer than usual. You'll get the game code by email; no email within an hour? Email us at bookings@forkit.nl.",
     adult: '18+ · Drink responsibly · Alcohol-free always welcome' };
   if (en) { document.getElementById('nmail').placeholder = 'name@example.com'; document.documentElement.lang = 'en'; document.title = 'Thank you · Pubgolf'; document.querySelectorAll('[data-t]').forEach(function (e) { e.innerHTML = T[e.getAttribute('data-t')]; }); }
   var sid = new URLSearchParams(location.search).get('session_id'), api = (window.PC_BOOKING || {}).api, tries = 0;
